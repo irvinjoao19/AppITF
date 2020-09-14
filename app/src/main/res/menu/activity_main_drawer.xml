@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/sync"
+            android:title="Inicio" />
+        <item
+            android:id="@+id/ordenes"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/proveedor"
+            android:title="Descargar Información" />
+    </group>
+
+    <item android:title="Datos Maestros">
+        <menu>
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_points"
+                android:title="Roles" />
+            <item
+                android:id="@+id/logout2"
+                android:icon="@drawable/ic_points"
+                android:title="Opción por Rol" />
+            <item
+                android:id="@+id/logout3"
+                android:icon="@drawable/ic_points"
+                android:title="Usuarios" />
+            <item
+                android:id="@+id/logout4"
+                android:icon="@drawable/ic_points"
+                android:title="Ubigeo" />
+            <item
+                android:id="@+id/logout5"
+                android:icon="@drawable/ic_points"
+                android:title="Tipo de cambio" />
+            <item
+                android:id="@+id/logout6"
+                android:icon="@drawable/ic_points"
+                android:title="Feriados" />
+            <item
+                android:id="@+id/logout7"
+                android:icon="@drawable/ic_points"
+                android:title="Monedas" />
+        </menu>
+    </item>
+    <item android:title="Visita Médica">
+        <menu>
+            <item
+                android:id="@+id/opc1"
+                android:icon="@drawable/ic_points"
+                android:title="Categorias" />
+            <item
+                android:id="@+id/opc2"
+                android:icon="@drawable/ic_points"
+                android:title="Especialidades" />
+            <item
+                android:id="@+id/opc3"
+                android:icon="@drawable/ic_points"
+                android:title="Tipos de producto" />
+            <item
+                android:id="@+id/opc4"
+                android:icon="@drawable/ic_points"
+                android:title="Resultados de visita" />
+            <item
+                android:id="@+id/opc5"
+                android:icon="@drawable/ic_points"
+                android:title="Productos" />
+            <item
+                android:id="@+id/opc6"
+                android:icon="@drawable/ic_points"
+                android:title="Médicos" />
+            <item
+                android:id="@+id/opc7"
+                android:icon="@drawable/ic_points"
+                android:title="Target" />
+            <item
+                android:id="@+id/opc8"
+                android:icon="@drawable/ic_points"
+                android:title="Ciclos" />
+            <item
+                android:id="@+id/opc9"
+                android:icon="@drawable/ic_points"
+                android:title="Reja promocional" />
+            <item
+                android:id="@+id/opc10"
+                android:icon="@drawable/ic_points"
+                android:title="Programación de reporte" />
+            <item
+                android:id="@+id/opc11"
+                android:icon="@drawable/ic_points"
+                android:title="Actividades" />
+            <item
+                android:id="@+id/opc12"
+                android:icon="@drawable/ic_points"
+                android:title="Reporte de cumplimientos" />
+            <item
+                android:id="@+id/opc13"
+                android:icon="@drawable/ic_points"
+                android:title="Visitas pendientes" />
+            <item
+                android:id="@+id/opc14"
+                android:icon="@drawable/ic_points"
+                android:title="Cumpleaños" />
+            <item
+                android:id="@+id/opc15"
+                android:icon="@drawable/ic_points"
+                android:title="Avance de cobertura" />
+            <item
+                android:id="@+id/opc16"
+                android:icon="@drawable/ic_points"
+                android:title="Mapeo" />
+            <item
+                android:id="@+id/opc17"
+                android:icon="@drawable/ic_points"
+                android:title="Altas" />
+            <item
+                android:id="@+id/opc18"
+                android:icon="@drawable/ic_points"
+                android:title="Bajas" />
+            <item
+                android:id="@+id/opc19"
+                android:icon="@drawable/ic_points"
+                android:title="Nuevos médicos" />
+            <item
+                android:id="@+id/opc20"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación altas" />
+            <item
+                android:id="@+id/opc21"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación bajas" />
+            <item
+                android:id="@+id/opc22"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación médicas" />
+            <item
+                android:id="@+id/opc23"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación actividades" />
+            <item
+                android:id="@+id/opc24"
+                android:icon="@drawable/ic_points"
+                android:title="Stock" />
+            <item
+                android:id="@+id/opc25"
+                android:icon="@drawable/ic_points"
+                android:title="Reporte Diario" />
+        </menu>
+    </item>
+    <item android:title="Control de Gastos">
+        <menu>
+            <item
+                android:id="@+id/c1"
+                android:icon="@drawable/ic_points"
+                android:title="Tipos de liquidación" />
+            <item
+                android:id="@+id/c2"
+                android:icon="@drawable/ic_points"
+                android:title="Tipos de gasto" />
+            <item
+                android:id="@+id/c3"
+                android:icon="@drawable/ic_points"
+                android:title="Clases de documento" />
+            <item
+                android:id="@+id/c4"
+                android:icon="@drawable/ic_points"
+                android:title="Bancos" />
+            <item
+                android:id="@+id/c5"
+                android:icon="@drawable/ic_points"
+                android:title="Centro de gastos" />
+            <item
+                android:id="@+id/c6"
+                android:icon="@drawable/ic_points"
+                android:title="Proveedores" />
+            <item
+                android:id="@+id/c7"
+                android:icon="@drawable/ic_points"
+                android:title="Solicitud de gastos" />
+            <item
+                android:id="@+id/c8"
+                android:icon="@drawable/ic_points"
+                android:title="Reporte de gastos" />
+            <item
+                android:id="@+id/c9"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación de solicitudes" />
+        </menu>
+    </item>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/lt"
+            android:title="Cerrar Sesión" />
+    </group>
+</menu>
