@@ -1,13 +1,23 @@
 package com.itfperu.appitf.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.itfperu.appitf.R
-import com.itfperu.appitf.ui.fragments.*
+import com.itfperu.appitf.ui.fragments.edition.*
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_form.*
 
-class FormActivity : AppCompatActivity() {
+/**
+ * 1 -> categoria
+ * 2 -> especialidad
+ * 3 -> feriado
+ * 4 -> moneda
+ * 5 -> perfil
+ * 6 -> producto
+ * 7 -> tipo producto
+ * 8 -> visita
+ */
+class FormActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
@@ -16,15 +26,38 @@ class FormActivity : AppCompatActivity() {
             bindUI(b.getString("title")!!)
             when (b.getInt("tipo")) {
                 1 -> replaceFragment(
-                    savedInstanceState, EditPerfilFragment.newInstance("", "")
+                    savedInstanceState,
+                    EditCategoriaFragment.newInstance(b.getInt("id"), b.getInt("uId"))
                 )
-//                2 -> replaceFragment(
-//                    savedInstanceState, PersonalMapFragment.newInstance(
-//                        b.getInt("servicioId"), b.getInt("tipoId"), b.getInt("proveedorId")
-//                    )
+                2 -> replaceFragment(
+                    savedInstanceState,
+                    EditEspecialidadFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                3 -> replaceFragment(
+                    savedInstanceState,
+                    EditFeriadoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                4 -> replaceFragment(
+                    savedInstanceState,
+                    EditMonedaFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                5 -> replaceFragment(
+                    savedInstanceState,
+                    EditPerfilFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+//                6 -> replaceFragment(
+//                    savedInstanceState,
+//                    EditProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+//                )
+//                7 -> replaceFragment(
+//                    savedInstanceState,
+//                    EditTipoProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+//                )
+//                8 -> replaceFragment(
+//                    savedInstanceState,
+//                    EditVisitaFragment.newInstance(b.getInt("id"), b.getInt("uId"))
 //                )
             }
-
         }
     }
 

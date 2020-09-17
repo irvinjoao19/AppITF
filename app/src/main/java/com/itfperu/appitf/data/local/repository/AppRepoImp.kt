@@ -39,7 +39,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun getLogout(login: String): Observable<Mensaje> {
-        val u = Filtro(login)
+        val u = Filtro(login, "", "", "")
         val json = Gson().toJson(u)
         Log.i("TAG", json)
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
@@ -48,7 +48,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertUsuario(u: Usuario): Completable {
         return Completable.fromAction {
-//            dataBase.usuarioDao().insertUsuarioTask(u)
+            dataBase.usuarioDao().insertUsuarioTask(u)
 //            val a: List<Accesos>? = u.accesos
 //            if (a != null) {
 //                dataBase.accesosDao().insertAccesosListTask(a)
@@ -70,7 +70,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun getSync(u: Int, e: Int, p: Int): Observable<Sync> {
-        val f = Filtro(u, e, p)
+        val f = Filtro("", "", "", "")
         val json = Gson().toJson(f)
         Log.i("TAG", json)
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
@@ -79,52 +79,70 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun saveSync(s: Sync): Completable {
         return Completable.fromAction {
-//            val o: List<Ot>? = s.ots
-//            if (o != null) {
-//                dataBase.otDao().insertOtListTask(o)
-//            }
-//            val g: List<Grupo>? = s.groups
-//            if (g != null) {
-//                dataBase.grupoDao().insertGrupoListTask(g)
-//            }
-//            val e: List<Estado>? = s.estados
-//            if (e != null) {
-//                dataBase.estadoDao().insertEstadoListTask(e)
-//            }
-//            val d: List<Distrito>? = s.distritos
-//            if (d != null) {
-//                dataBase.distritoDao().insertDistritoListTask(d)
-//            }
 //            val m: List<Material>? = s.materials
 //            if (m != null) {
 //                dataBase.materialDao().insertMaterialListTask(m)
 //            }
-//            val se: List<Servicio>? = s.servicios
-//            if (se != null) {
-//                dataBase.servicioDao().insertServicioListTask(se)
-//                if (se.isNotEmpty()) {
-//                    dataBase.usuarioDao().updateServicio(se[0].nombreServicio, se[0].servicioId)
-//                }
-//            }
         }
     }
 
-    override fun syncPerfiles(): Observable<List<Perfil>> {
+    override fun clearPerfil(): Completable {
+        return Completable.fromAction {
+            dataBase.perfilDao().deleteAll()
+        }
+    }
+
+    override fun syncPerfil(): Observable<List<Perfil>> {
         return apiService.getPerfiles()
     }
 
-    override fun insertPerfiles(p: List<Perfil>): Completable {
+    override fun insertPerfils(p: List<Perfil>): Completable {
         return Completable.fromAction {
             dataBase.perfilDao().insertPerfilListTask(p)
         }
     }
 
-    override fun getPerfiles(): LiveData<List<Perfil>> {
+    override fun getPerfils(): LiveData<List<Perfil>> {
         return dataBase.perfilDao().getPerfiles()
     }
 
+    override fun verificatePerfil(c: Perfil): Completable {
+        return Completable.fromAction {
+            if (c.codigo == "1") {
+                Throwable("Error de Codigo")
+            }
+        }
+    }
 
-    override fun syncMonedas(): Observable<List<Moneda>> {
+    override fun sendPerfil(c: Perfil): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.savePerfil(body)
+    }
+
+    override fun insertPerfil(c: Perfil, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.perfilId = m.codigoRetorno
+                dataBase.perfilDao().insertPerfilTask(c)
+            } else {
+                dataBase.perfilDao().updatePerfilTask(c)
+            }
+        }
+    }
+
+    override fun getPerfilById(id: Int): LiveData<Perfil> {
+        return dataBase.perfilDao().getPerfilById(id)
+    }
+
+    override fun clearMoneda(): Completable {
+        return Completable.fromAction {
+            dataBase.monedaDao().deleteAll()
+        }
+    }
+
+    override fun syncMoneda(): Observable<List<Moneda>> {
         return apiService.getMonedas()
     }
 
@@ -134,13 +152,337 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun syncFeriados(): Observable<List<Feriado>> {
-        return apiService.syncFeriados()
+    override fun getMonedas(): LiveData<List<Moneda>> {
+        return dataBase.monedaDao().getMonedaes()
     }
 
-    override fun insertFeriados(t: List<Feriado>): Completable {
+    override fun verificateMoneda(c: Moneda): Completable {
         return Completable.fromAction {
-            dataBase.feriadoDao().insertFeriadoListTask(t)
+            if (c.codigo == "1") {
+                Throwable("Error de Codigo")
+            }
         }
+    }
+
+    override fun sendMoneda(c: Moneda): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveMoneda(body)
+    }
+
+    override fun insertMoneda(c: Moneda, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.monedaId = m.codigoRetorno
+                dataBase.monedaDao().insertMonedaTask(c)
+            } else {
+                dataBase.monedaDao().updateMonedaTask(c)
+            }
+        }
+    }
+
+    override fun getMonedaById(id: Int): LiveData<Moneda> {
+        return dataBase.monedaDao().getMonedaById(id)
+    }
+
+    override fun clearCategoria(): Completable {
+        return Completable.fromAction {
+            dataBase.categoriaDao().deleteAll()
+        }
+    }
+
+    override fun syncCategoria(): Observable<List<Categoria>> {
+        return apiService.getCategorias()
+    }
+
+    override fun insertCategorias(p: List<Categoria>): Completable {
+        return Completable.fromAction {
+            dataBase.categoriaDao().insertCategoriaListTask(p)
+        }
+    }
+
+    override fun getCategorias(): LiveData<List<Categoria>> {
+        return dataBase.categoriaDao().getCategorias()
+    }
+
+    override fun verificateCategoria(c: Categoria): Completable {
+        return Completable.fromAction {
+            if (c.codigo == "1") {
+                Throwable("Error de Codigo")
+            }
+        }
+    }
+
+    override fun sendCategoria(c: Categoria): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveCategoria(body)
+    }
+
+    override fun insertCategoria(c: Categoria, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.categoriaId = m.codigoRetorno
+                dataBase.categoriaDao().insertCategoriaTask(c)
+            } else {
+                dataBase.categoriaDao().updateCategoriaTask(c)
+            }
+        }
+    }
+
+    override fun getCategoriaById(id: Int): LiveData<Categoria> {
+        return dataBase.categoriaDao().getCategoriaById(id)
+    }
+
+    override fun clearEspecialidad(): Completable {
+        return Completable.fromAction {
+            dataBase.especialidadDao().deleteAll()
+        }
+    }
+
+    override fun syncEspecialidad(): Observable<List<Especialidad>> {
+        return apiService.getEspecialidades()
+    }
+
+    override fun insertEspecialidads(p: List<Especialidad>): Completable {
+        return Completable.fromAction {
+            dataBase.especialidadDao().insertEspecialidadListTask(p)
+        }
+    }
+
+    override fun getEspecialidads(): LiveData<List<Especialidad>> {
+        return dataBase.especialidadDao().getEspecialidades()
+    }
+
+    override fun verificateEspecialidad(c: Especialidad): Completable {
+        return Completable.fromAction {
+            if (c.codigo == "1") {
+                Throwable("Error de Codigo")
+            }
+        }
+    }
+
+    override fun sendEspecialidad(c: Especialidad): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveEspecialidades(body)
+    }
+
+    override fun insertEspecialidad(c: Especialidad, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.especialidadId = m.codigoRetorno
+                dataBase.especialidadDao().insertEspecialidadTask(c)
+            } else {
+                dataBase.especialidadDao().updateEspecialidadTask(c)
+            }
+        }
+    }
+
+    override fun getEspecialidadById(id: Int): LiveData<Especialidad> {
+        return dataBase.especialidadDao().getEspecialidadById(id)
+    }
+
+    override fun clearProducto(): Completable {
+        return Completable.fromAction {
+            dataBase.productoDao().deleteAll()
+        }
+    }
+
+    override fun syncProducto(): Observable<List<Producto>> {
+        return apiService.getProductos()
+    }
+
+    override fun insertProductos(p: List<Producto>): Completable {
+        return Completable.fromAction {
+            dataBase.productoDao().insertProductoListTask(p)
+        }
+    }
+
+    override fun getProductos(): LiveData<List<Producto>> {
+        return dataBase.productoDao().getProductos()
+    }
+
+    override fun verificateProducto(c: Producto): Completable {
+        return Completable.fromAction {
+            if (c.codigo == "1") {
+                Throwable("Error de codigo")
+            }
+        }
+    }
+
+    override fun sendProducto(c: Producto): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveProducto(body)
+    }
+
+    override fun insertProducto(c: Producto, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.productoId = m.codigoRetorno
+                dataBase.productoDao().insertProductoTask(c)
+            } else {
+                dataBase.productoDao().updateProductoTask(c)
+            }
+        }
+    }
+
+    override fun getProductoById(id: Int): LiveData<Producto> {
+        return dataBase.productoDao().getProductoById(id)
+    }
+
+    override fun clearTipoProducto(): Completable {
+        return Completable.fromAction {
+            dataBase.tipoProductoDao().deleteAll()
+        }
+    }
+
+    override fun syncTipoProducto(): Observable<List<TipoProducto>> {
+        return apiService.getTipoProductos()
+    }
+
+    override fun insertTipoProductos(p: List<TipoProducto>): Completable {
+        return Completable.fromAction {
+            dataBase.tipoProductoDao().insertTipoProductoListTask(p)
+        }
+    }
+
+    override fun getTipoProductos(): LiveData<List<TipoProducto>> {
+        return dataBase.tipoProductoDao().getTipoProductos()
+    }
+
+    override fun verificateTipoProducto(c: TipoProducto): Completable {
+        return Completable.fromAction {
+            if (c.codigo == "1") {
+                Throwable("Error de codigo")
+            }
+        }
+    }
+
+    override fun sendTipoProducto(c: TipoProducto): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveTipoProducto(body)
+    }
+
+    override fun insertTipoProducto(c: TipoProducto, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.tipoProductoId = m.codigoRetorno
+                dataBase.tipoProductoDao().insertTipoProductoTask(c)
+            } else {
+                dataBase.tipoProductoDao().updateTipoProductoTask(c)
+            }
+        }
+    }
+
+    override fun getTipoProductoById(id: Int): LiveData<TipoProducto> {
+        return dataBase.tipoProductoDao().getTipoProductoById(id)
+    }
+
+    override fun clearVisita(): Completable {
+        return Completable.fromAction {
+            dataBase.visitaDao().deleteAll()
+        }
+    }
+
+    override fun syncVisita(): Observable<List<Visita>> {
+        return apiService.getVisitas()
+    }
+
+    override fun insertVisitas(p: List<Visita>): Completable {
+        return Completable.fromAction {
+            dataBase.visitaDao().insertVisitaListTask(p)
+        }
+    }
+
+    override fun getVisitas(): LiveData<List<Visita>> {
+        return dataBase.visitaDao().getVisitas()
+    }
+
+    override fun verificateVisita(c: Visita): Completable {
+        return Completable.fromAction {
+//            if (c. == "1"){
+//                Throwable("Error de codigo")
+//            }
+        }
+    }
+
+    override fun sendVisita(c: Visita): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveVisita(body)
+    }
+
+    override fun insertVisita(c: Visita, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.visitaId = m.codigoRetorno
+                dataBase.visitaDao().insertVisitaTask(c)
+            } else {
+                dataBase.visitaDao().updateVisitaTask(c)
+            }
+        }
+    }
+
+    override fun getVisitaById(id: Int): LiveData<Visita> {
+        return dataBase.visitaDao().getVisitaById(id)
+    }
+
+    override fun clearFeriado(): Completable {
+        return Completable.fromAction {
+            dataBase.feriadoDao().deleteAll()
+        }
+    }
+
+    override fun syncFeriado(): Observable<List<Feriado>> {
+        return apiService.getFeriados()
+    }
+
+    override fun insertFeriados(p: List<Feriado>): Completable {
+        return Completable.fromAction {
+            dataBase.feriadoDao().insertFeriadoListTask(p)
+        }
+    }
+
+    override fun getFeriados(): LiveData<List<Feriado>> {
+        return dataBase.feriadoDao().getFeriados()
+    }
+
+    override fun verificateFeriado(c: Feriado): Completable {
+        return Completable.fromAction {
+//            if (c. == "1"){
+//                Throwable("Error de codigo")
+//            }
+        }
+    }
+
+    override fun sendFeriado(c: Feriado): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveFeriado(body)
+    }
+
+    override fun insertFeriado(c: Feriado, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.feriadoId = m.codigoRetorno
+                dataBase.feriadoDao().insertFeriadoTask(c)
+            } else {
+                dataBase.feriadoDao().updateFeriadoTask(c)
+            }
+        }
+    }
+
+    override fun getFeriadoById(id: Int): LiveData<Feriado> {
+        return dataBase.feriadoDao().getFeriadoById(id)
     }
 }

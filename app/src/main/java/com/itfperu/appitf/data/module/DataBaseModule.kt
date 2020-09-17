@@ -53,4 +53,29 @@ class DataBaseModule {
     internal fun provideFeriadoDao(appDataBase: AppDataBase): FeriadoDao {
         return appDataBase.feriadoDao()
     }
+
+    @Provides
+    internal fun provideCategoriDao(appDataBase: AppDataBase): CategoriaDao {
+        return appDataBase.categoriaDao()
+    }
+
+    @Provides
+    internal fun provideEspecialidadDao(appDataBase: AppDataBase): EspecialidadDao {
+        return appDataBase.especialidadDao()
+    }
+
+    @Provides
+    internal fun provideProductoDao(appDataBase: AppDataBase): ProductoDao {
+        return appDataBase.productoDao()
+    }
+
+    @Provides
+    internal fun provideTipoProductoDao(appDataBase: AppDataBase): TipoProductoDao {
+        return appDataBase.tipoProductoDao()
+    }
+
+    @Provides
+    internal fun provideVisitaDao(appDataBase: AppDataBase): VisitaDao {
+        return appDataBase.visitaDao()
+    }
 }

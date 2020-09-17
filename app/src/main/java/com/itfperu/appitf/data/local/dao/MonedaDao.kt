@@ -31,4 +31,7 @@ interface MonedaDao {
 
     @Query("DELETE FROM Moneda")
     fun deleteAll()
+
+    @Query("SELECT * FROM Moneda WHERE monedaId=:id")
+    fun getMonedaById(id: Int): LiveData<Moneda>
 }

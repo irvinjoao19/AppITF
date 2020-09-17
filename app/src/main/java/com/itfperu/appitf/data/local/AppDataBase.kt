@@ -13,9 +13,14 @@ import com.itfperu.appitf.data.local.model.*
         Accesos::class,
         Perfil::class,
         Moneda::class,
-        Feriado::class
+        Feriado::class,
+        Categoria::class,
+        Especialidad::class,
+        Producto::class,
+        TipoProducto::class,
+        Visita::class
     ],
-    version = 3, // version 1 en play store
+    version = 6, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -25,6 +30,11 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun perfilDao(): PerfilDao
     abstract fun monedaDao(): MonedaDao
     abstract fun feriadoDao(): FeriadoDao
+    abstract fun categoriaDao():CategoriaDao
+    abstract fun especialidadDao(): EspecialidadDao
+    abstract fun productoDao(): ProductoDao
+    abstract fun tipoProductoDao(): TipoProductoDao
+    abstract fun visitaDao(): VisitaDao
 
     companion object {
         @Volatile

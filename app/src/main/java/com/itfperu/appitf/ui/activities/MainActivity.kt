@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -20,8 +19,7 @@ import com.itfperu.appitf.data.local.model.Usuario
 import com.itfperu.appitf.data.viewModel.UsuarioViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
-import com.itfperu.appitf.ui.fragments.MainFragment
-import com.itfperu.appitf.ui.fragments.PerfilFragment
+import com.itfperu.appitf.ui.fragments.*
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -36,10 +34,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var builder: AlertDialog.Builder
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
-    private var empresaId: Int = 0
-    private var personalId: Int = 0
-    private var servicioId: Int = 0
-    private var nombreServicio: String = ""
     private var logout: String = "off"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +45,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private fun bindUI() {
         usuarioViewModel =
             ViewModelProvider(this, viewModelFactory).get(UsuarioViewModel::class.java)
-//        usuarioViewModel.user.observe(this, { u ->
-//            if (u != null) {
-//                getUser(u)
+        usuarioViewModel.user.observe(this, { u ->
+            if (u != null) {
+                getUser(u)
                 setSupportActionBar(toolbar)
                 val toggle = ActionBarDrawerToggle(
                     this@MainActivity,
@@ -88,10 +82,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
                 fragmentByDefault()
                 message()
-//            } else {
-//                goLogin()
-//            }
-//        })
+            } else {
+                goLogin()
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -104,33 +98,31 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.title) {
-            "Roles" ->  changeFragment(
-                PerfilFragment.newInstance("", ""), item.title.toString()
+            "Roles" -> changeFragment(
+                PerfilFragment.newInstance(usuarioId), item.title.toString()
             )
-//            "Sincronizar" -> dialogFunction(
-//                1, "Se elimiran todos tus avances deseas volver a sincronizar ?"
-//            )
-//            "Mapa" -> changeFragment(
-//                GeneralMapFragment.newInstance("", ""), item.title.toString()
-//            )
-//            "Lista de Ordenes" -> changeFragment(
-//                MainFragment.newInstance(
-//                    usuarioId,
-//                    empresaId,
-//                    personalId,
-//                    servicioId,
-//                    nombreServicio
-//                ), item.title.toString()
-//            )
-//            "Resumen de Ordenes de Trabajo por Proveedor" -> changeFragment(
-//                ResumenFragment.newInstance(usuarioId, empresaId, personalId,servicioId,nombreServicio), item.title.toString()
-//            )
-//            "OT fuera de Plazo" -> changeFragment(
-//                PlazoFragment.newInstance(usuarioId, empresaId, personalId,servicioId,nombreServicio), item.title.toString()
-//            )
-//            "Ubicacion del Personal" -> Util.toastMensaje(this, item.title.toString())
-//            "Enviar Pendientes" -> dialogFunction(2, "Deseas enviar registros ?")
-//            "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
+            "Feriados" -> changeFragment(
+                FeriadoFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Monedas" -> changeFragment(
+                MonedaFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Categorias" -> changeFragment(
+                MonedaFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Especialidades" -> changeFragment(
+                EspecialidadFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Tipos de producto" -> changeFragment(
+                TipoProductoFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Resutados de visita" -> changeFragment(
+                VisitaFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Productos" -> changeFragment(
+                ProductoFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -173,19 +165,15 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 MainFragment.newInstance("", "")
             )
             .commit()
-        supportActionBar!!.title = "Reparación de Veredas"
+        supportActionBar!!.title = "ITF"
 //        navigationView.menu.getItem(1).isChecked = true
     }
 
     private fun getUser(u: Usuario) {
         val header = navigationView.getHeaderView(0)
-        header.textViewName.text = u.nombres
-        header.textViewEmail.text = String.format("Cod : %s", u.usuarioId)
+        header.textViewName.text = u.nombre
+        header.textViewEmail.text = u.email
         usuarioId = u.usuarioId
-        empresaId = u.empresaId
-        personalId = u.personalId
-        servicioId = u.servicioId
-        nombreServicio = u.nombreServicio
     }
 
     private fun goLogin() {
@@ -223,7 +211,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             .setTitle("Mensaje")
             .setMessage(title)
             .setPositiveButton("SI") { dialog, _ ->
-//                when (tipo) {
+                when (tipo) {
 //                    1 -> {
 //                        load("Sincronizando..")
 //                        usuarioViewModel.getSync(usuarioId, empresaId, personalId)
@@ -232,12 +220,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 //                        load("Enviando..")
 //                        usuarioViewModel.sendData(this)
 //                    }
-//                    3 -> {
-//                        logout = "on"
-//                        load("Cerrando Session")
-//                        usuarioViewModel.logout(usuarioId.toString())
-//                    }
-//                }
+                    3 -> {
+                        logout = "on"
+                        load("Cerrando Session")
+                        usuarioViewModel.logout(usuarioId.toString())
+                    }
+                }
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

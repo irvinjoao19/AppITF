@@ -1,6 +1,5 @@
 package com.itfperu.appitf.data.viewModel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,21 +7,12 @@ import androidx.lifecycle.ViewModel
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
-import com.itfperu.appitf.helper.Mensaje
-import com.itfperu.appitf.helper.Util
-import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -84,8 +74,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onComplete() {
-//                    getSync(u, v)
-                    sync(u.usuarioId, u.empresaId, u.personalId)
+                    mensajeSuccess.value = "Login"
+////                    getSync(u, v)
+//                    sync(u.usuarioId, 0, 0)
                 }
 
                 override fun onError(e: Throwable) {

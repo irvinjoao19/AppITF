@@ -2,7 +2,6 @@ package com.itfperu.appitf.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,36 +11,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Moneda
-import com.itfperu.appitf.data.local.model.Perfil
-import com.itfperu.appitf.data.viewModel.ITFViewModel
+import com.itfperu.appitf.data.viewModel.MonedaViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.FormActivity
 import com.itfperu.appitf.ui.adapters.MonedaAdapter
-import com.itfperu.appitf.ui.adapters.PerfilAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_perfil.*
+import kotlinx.android.synthetic.main.fragment_moneda.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
+class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
+    View.OnClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var itfViewModel: ITFViewModel
+    lateinit var itfViewModel: MonedaViewModel
     lateinit var monedaAdapter: MonedaAdapter
-
-    private var param1: String? = null
-    private var param2: String? = null
+    private var usuarioId: Int = 0
+    private var tipo: Int = 4
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            usuarioId = it.getInt(ARG_PARAM1)
         }
     }
 
@@ -58,14 +53,14 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun bindUI() {
         itfViewModel =
-            ViewModelProvider(this, viewModelFactory).get(ITFViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(MonedaViewModel::class.java)
 
         monedaAdapter = MonedaAdapter(object : OnItemClickListener.MonedaListener {
             override fun onItemClick(m: Moneda, view: View, position: Int) {
                 startActivity(
                     Intent(context, FormActivity::class.java)
                         .putExtra("title", "Modificar Moneda")
-                        .putExtra("tipo", 2)
+                        .putExtra("tipo", tipo)
                         .putExtra("id", m.monedaId)
                 )
             }
@@ -77,9 +72,10 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView.adapter = monedaAdapter
 
         itfViewModel.setLoading(true)
-        itfViewModel.syncMonedas()
+        itfViewModel.syncMoneda()
 
         refreshLayout.setOnRefreshListener(this)
+        fab.setOnClickListener(this)
 
         itfViewModel.getMonedas().observe(viewLifecycleOwner, {
             refreshLayout.isRefreshing = false
@@ -102,17 +98,26 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: Int) =
             MonedaFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putInt(ARG_PARAM1, param1)
                 }
             }
     }
 
     override fun onRefresh() {
         itfViewModel.setLoading(false)
-        itfViewModel.syncMonedas()
+        itfViewModel.syncMoneda()
+    }
+
+    override fun onClick(v: View) {
+        startActivity(
+            Intent(context, FormActivity::class.java)
+                .putExtra("title", "Nueva Categoria")
+                .putExtra("tipo", tipo)
+                .putExtra("id", 0)
+                .putExtra("usuarioId", usuarioId)
+        )
     }
 }

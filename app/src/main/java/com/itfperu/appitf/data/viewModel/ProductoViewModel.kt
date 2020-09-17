@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
+import com.itfperu.appitf.helper.Mensaje
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -21,16 +22,13 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ITFViewModel @Inject
+class ProductoViewModel @Inject
 internal constructor(private val roomRepository: AppRepository, private val retrofit: ApiError) :
     ViewModel() {
 
     val mensajeError = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
-    val perfiles = MutableLiveData<List<Perfil>>()
-    val monedas = MutableLiveData<List<Moneda>>()
-    val feriados = MutableLiveData<List<Feriado>>()
 
     fun setError(s: String) {
         mensajeError.value = s
@@ -40,32 +38,41 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         loading.value = s
     }
 
-    fun syncPerfiles() {
-        roomRepository.syncPerfiles()
+    fun syncProducto() {
+        roomRepository.clearProducto()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    especialidad()
+                }
+
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    private fun especialidad() {
+        roomRepository.syncProducto()
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Perfil>> {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onNext(t: List<Perfil>) {
-                    insertPerfiles(t)
+            .subscribe(object : Observer<List<Producto>> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: List<Producto>) {
+                    insertProductos(t)
                 }
 
                 override fun onError(e: Throwable) {
 
                 }
 
-                override fun onComplete() {
-
-                }
+                override fun onComplete() {}
             })
     }
 
-    private fun insertPerfiles(p: List<Perfil>) {
-        roomRepository.insertPerfiles(p)
+    private fun insertProductos(p: List<Producto>) {
+        roomRepository.insertProductos(p)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -75,7 +82,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 override fun onComplete() {
                     loading.value = false
-                    perfiles.value = p
                 }
 
                 override fun onError(e: Throwable) {
@@ -85,105 +91,69 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getPerfiles(): LiveData<List<Perfil>> {
-        return perfiles
+
+    fun getProductos(): LiveData<List<Producto>> {
+        return roomRepository.getProductos()
     }
 
-    fun syncMonedas() {
-        roomRepository.syncMonedas()
-            .delay(1000, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Moneda>> {
-                override fun onSubscribe(d: Disposable) {
+    fun validateProducto(c: Producto) {
 
-                }
 
-                override fun onNext(t: List<Moneda>) {
-                    insertMonedas(t)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {
-
-                }
-            })
+        verificateProducto(c)
     }
 
-    private fun insertMonedas(t: List<Moneda>) {
-        roomRepository.insertMonedas(t)
+
+    private fun verificateProducto(c: Producto) {
+        roomRepository.verificateProducto(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    loading.value = false
-                    monedas.value = t
+                    sendProducto(c)
                 }
 
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
-                    loading.value = false
                 }
             })
     }
 
-    fun getMonedas(): LiveData<List<Moneda>> {
-        return monedas
-    }
 
-    fun syncFeriados() {
-        roomRepository.syncFeriados()
-            .delay(1000, TimeUnit.MILLISECONDS)
+    private fun sendProducto(c: Producto) {
+        roomRepository.sendProducto(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Feriado>> {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onNext(t: List<Feriado>) {
-                    insertFeriados(t)
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    insertProducto(c, t)
                 }
 
                 override fun onError(e: Throwable) {
-
                 }
 
-                override fun onComplete() {
-
-                }
+                override fun onComplete() {}
             })
     }
 
-    private fun insertFeriados(t: List<Feriado>) {
-        roomRepository.insertFeriados(t)
+    private fun insertProducto(c: Producto, m: Mensaje) {
+        roomRepository.insertProducto(c, m)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    loading.value = false
-                    feriados.value = t
+                    mensajeSuccess.value = "Save"
                 }
 
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
-                    loading.value = false
                 }
             })
     }
 
-    fun getFeriados(): LiveData<List<Feriado>> {
-        return feriados
+    fun getProductoById(productoId: Int): LiveData<Producto> {
+        return roomRepository.getProductoById(productoId)
     }
 }

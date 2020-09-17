@@ -27,8 +27,11 @@ interface FeriadoDao {
     fun getFeriadoIdTask(): Int
 
     @Query("SELECT * FROM Feriado")
-    fun getFeriadoes(): LiveData<List<Feriado>>
+    fun getFeriados(): LiveData<List<Feriado>>
 
     @Query("DELETE FROM Feriado")
     fun deleteAll()
+
+    @Query("SELECT * FROM Feriado WHERE feriadoId=:id")
+    fun getFeriadoById(id: Int): LiveData<Feriado>
 }

@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
+                android:visibility="gone"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold" />
 
@@ -48,5 +49,4 @@
         app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/colorWhite" />
-
 </FrameLayout>

@@ -32,4 +32,7 @@ interface PerfilDao {
 
     @Query("DELETE FROM Perfil")
     fun deleteAll()
+
+    @Query("SELECT * FROM Perfil WHERE perfilId=:id")
+    fun getPerfilById(id: Int): LiveData<Perfil>
 }

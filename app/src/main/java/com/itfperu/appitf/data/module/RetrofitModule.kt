@@ -61,6 +61,7 @@ class RetrofitModule {
     }
 
     companion object {
-        private val BASE_URL = "http://www.dsige.com/webApiDominion/api/ITF/"
+//        private val BASE_URL = "http://www.dsige.com/webApiDominion/api/ITF/"
+        private val BASE_URL = "http://www.cobra-peru.com/WebApiCalidda_Lectura/api/Demo/"
     }
 }
