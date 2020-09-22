@@ -56,5 +56,10 @@ abstract class ViewModelModule {
     internal abstract fun bindVisitaViewModel(visitaViewModel: VisitaViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(PersonalViewModel::class)
+    internal abstract fun bindPersonalViewModel(personalViewModel: PersonalViewModel): ViewModel
+
+    @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

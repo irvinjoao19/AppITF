@@ -29,7 +29,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".ui.activities.PerfilActivity"></activity>
+        <activity android:name=".ui.activities.PreviewCameraActivity" />
+        <activity android:name=".ui.activities.CameraActivity" />
+        <activity android:name=".ui.activities.PerfilActivity" />
         <activity android:name=".ui.activities.FormActivity" />
         <activity android:name=".ui.activities.LoginActivity" />
         <activity android:name=".ui.activities.MainActivity">
@@ -40,5 +42,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

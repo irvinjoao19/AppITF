@@ -20,9 +20,13 @@ import com.itfperu.appitf.data.viewModel.UsuarioViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.fragments.*
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import javax.inject.Inject
 
@@ -98,8 +102,15 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.title) {
+            "Perfil" -> startActivity(
+                Intent(this, PerfilActivity::class.java)
+                    .putExtra("usuarioId", usuarioId)
+            )
             "Roles" -> changeFragment(
                 PerfilFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Usuarios" -> changeFragment(
+                PersonalFragment.newInstance(usuarioId), item.title.toString()
             )
             "Feriados" -> changeFragment(
                 FeriadoFragment.newInstance(usuarioId), item.title.toString()
@@ -116,7 +127,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Tipos de producto" -> changeFragment(
                 TipoProductoFragment.newInstance(usuarioId), item.title.toString()
             )
-            "Resutados de visita" -> changeFragment(
+            "Resultados de visita" -> changeFragment(
                 VisitaFragment.newInstance(usuarioId), item.title.toString()
             )
             "Productos" -> changeFragment(
@@ -174,6 +185,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         header.textViewName.text = u.nombre
         header.textViewEmail.text = u.email
         usuarioId = u.usuarioId
+
+        Picasso.get().load(String.format("%s%s", Util.UrlFoto, u.foto))
+            .memoryPolicy(MemoryPolicy.NO_CACHE)
+            .into(header.imageView)
     }
 
     private fun goLogin() {

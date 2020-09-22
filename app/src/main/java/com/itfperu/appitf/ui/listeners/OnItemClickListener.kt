@@ -36,4 +36,16 @@ interface OnItemClickListener {
     interface VisitaListener {
         fun onItemClick(v: Visita, view: View, position: Int)
     }
+
+    interface ComboListener {
+        fun onItemClick(c : Combos, view: View, position: Int)
+    }
+
+    interface ControlListener {
+        fun onItemClick(c : Control, view: View, position: Int)
+    }
+
+    interface PersonalListener {
+        fun onItemClick(p : Personal, view: View, position: Int)
+    }
 }

@@ -76,7 +76,6 @@ class PerfilFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener {
 
         refreshLayout.setOnRefreshListener(this)
 
-
         itfViewModel.getPerfils().observe(viewLifecycleOwner, {
             textviewMessage.text = String.format("Se encontraron %s registros", it.size)
             refreshLayout.isRefreshing = false

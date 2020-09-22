@@ -1,27 +1,25 @@
 package com.itfperu.appitf.data.local.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.paging.Config
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
 import com.itfperu.appitf.data.local.AppDataBase
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
-import com.itfperu.appitf.helper.Util
 import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import retrofit2.Call
 
 class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDataBase) :
     AppRepository {
 
     override fun getUsuarioIdTask(): Int {
         return dataBase.usuarioDao().getUsuarioIdTask()
+    }
+
+    override fun getUsuarioById(id: Int): LiveData<Usuario> {
+        return dataBase.usuarioDao().getUsuarioById(id)
     }
 
     override fun getUsuario(): LiveData<Usuario> {
@@ -86,6 +84,24 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
+    override fun updateUsuario(u: Usuario): Completable {
+        return Completable.fromAction {
+            dataBase.usuarioDao().updateUsuarioTask(u)
+        }
+    }
+
+    override fun getUsuarioTask(): Observable<Usuario> {
+        return Observable.create { e ->
+            val u = dataBase.usuarioDao().getUsuarioTask()
+            e.onNext(u)
+            e.onComplete()
+        }
+    }
+
+    override fun sendUsuario(body: RequestBody): Observable<Mensaje> {
+        return apiService.sendUsuario(body)
+    }
+
     override fun clearPerfil(): Completable {
         return Completable.fromAction {
             dataBase.perfilDao().deleteAll()
@@ -134,6 +150,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getPerfilById(id: Int): LiveData<Perfil> {
         return dataBase.perfilDao().getPerfilById(id)
+    }
+
+    override fun removePerfil(i: Int): Observable<Mensaje> {
+        return apiService.removePerfil(i)
+    }
+
+    override fun deletePerfil(m: Perfil): Completable {
+        return Completable.fromAction {
+            dataBase.perfilDao().deletePerfilTask(m)
+        }
     }
 
     override fun clearMoneda(): Completable {
@@ -186,6 +212,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.monedaDao().getMonedaById(id)
     }
 
+    override fun removeMoneda(i: Int): Observable<Mensaje> {
+        return apiService.removeMoneda(i)
+    }
+
+    override fun deleteMoneda(m: Moneda): Completable {
+        return Completable.fromAction {
+            dataBase.monedaDao().deleteMonedaTask(m)
+        }
+    }
+
     override fun clearCategoria(): Completable {
         return Completable.fromAction {
             dataBase.categoriaDao().deleteAll()
@@ -236,6 +272,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.categoriaDao().getCategoriaById(id)
     }
 
+    override fun removeCategoria(i: Int): Observable<Mensaje> {
+        return apiService.removeCategoria(i)
+    }
+
+    override fun deleteCategoria(c: Categoria): Completable {
+        return Completable.fromAction {
+            dataBase.categoriaDao().deleteCategoriaTask(c)
+        }
+    }
+
     override fun clearEspecialidad(): Completable {
         return Completable.fromAction {
             dataBase.especialidadDao().deleteAll()
@@ -279,6 +325,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             } else {
                 dataBase.especialidadDao().updateEspecialidadTask(c)
             }
+        }
+    }
+
+    override fun removeEspecialidad(i: Int): Observable<Mensaje> {
+        return apiService.removeEspecialidades(i)
+    }
+
+    override fun deleteEspecialidad(e: Especialidad): Completable {
+        return Completable.fromAction {
+            dataBase.especialidadDao().deleteEspecialidadTask(e)
         }
     }
 
@@ -336,6 +392,17 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.productoDao().getProductoById(id)
     }
 
+
+    override fun removeProducto(i: Int): Observable<Mensaje> {
+        return apiService.removeProductos(i)
+    }
+
+    override fun deleteProducto(p: Producto): Completable {
+        return Completable.fromAction {
+            dataBase.productoDao().deleteProductoTask(p)
+        }
+    }
+
     override fun clearTipoProducto(): Completable {
         return Completable.fromAction {
             dataBase.tipoProductoDao().deleteAll()
@@ -384,6 +451,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getTipoProductoById(id: Int): LiveData<TipoProducto> {
         return dataBase.tipoProductoDao().getTipoProductoById(id)
+    }
+
+    override fun removeTipoProducto(i: Int): Observable<Mensaje> {
+        return apiService.removeTipoProducto(i)
+    }
+
+    override fun deleteTipoProducto(t: TipoProducto): Completable {
+        return Completable.fromAction {
+            dataBase.tipoProductoDao().deleteTipoProductoTask(t)
+        }
     }
 
     override fun clearVisita(): Completable {
@@ -436,6 +513,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.visitaDao().getVisitaById(id)
     }
 
+    override fun removeVisita(i: Int): Observable<Mensaje> {
+        return apiService.removeVisita(i)
+    }
+
+    override fun deleteVisita(v: Visita): Completable {
+        return Completable.fromAction {
+            dataBase.visitaDao().deleteVisitaTask(v)
+        }
+    }
+
     override fun clearFeriado(): Completable {
         return Completable.fromAction {
             dataBase.feriadoDao().deleteAll()
@@ -484,5 +571,91 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getFeriadoById(id: Int): LiveData<Feriado> {
         return dataBase.feriadoDao().getFeriadoById(id)
+    }
+
+    override fun removeFeriado(i: Int): Observable<Mensaje> {
+        return apiService.removeFeriado(i)
+    }
+
+    override fun deleteFeriado(f: Feriado): Completable {
+        return Completable.fromAction {
+            dataBase.feriadoDao().deleteFeriadoTask(f)
+        }
+    }
+
+    override fun syncControl(): Observable<List<Control>> {
+        return apiService.getControl()
+    }
+
+    override fun insertControls(t: List<Control>): Completable {
+        return Completable.fromAction {
+            dataBase.controlDao().insertControlListTask(t)
+        }
+    }
+
+    override fun getControls(): LiveData<List<Control>> {
+        return dataBase.controlDao().getControls()
+    }
+
+    override fun clearPersonal(): Completable {
+        return Completable.fromAction {
+            dataBase.personalDao().deleteAll()
+        }
+    }
+
+    override fun syncPersonal(): Observable<List<Personal>> {
+        return apiService.getPersonals()
+    }
+
+    override fun insertPersonals(p: List<Personal>): Completable {
+        return Completable.fromAction {
+            dataBase.personalDao().insertPersonalListTask(p)
+        }
+    }
+
+    override fun getPersonals(): LiveData<List<Personal>> {
+        return dataBase.personalDao().getPersonals()
+    }
+
+    override fun verificatePersonal(c: Personal): Completable {
+        return Completable.fromAction {
+
+        }
+    }
+
+    override fun sendPersonal(c: Personal): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.savePersonal(body)
+    }
+
+    override fun insertPersonal(c: Personal, m: Mensaje): Completable {
+        return Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.personalId = m.codigoRetorno
+                dataBase.personalDao().insertPersonalTask(c)
+            } else {
+                dataBase.personalDao().updatePersonalTask(c)
+            }
+        }
+    }
+
+    override fun getPersonalById(id: Int): LiveData<Personal> {
+        return dataBase.personalDao().getPersonalById(id)
+    }
+
+    override fun getSupervisores(): LiveData<List<Personal>> {
+        return dataBase.personalDao().getSupervisores()
+    }
+
+    override fun removePersonal(i: Int): Observable<Mensaje> {
+        return apiService.removeUsuario(i)
+    }
+
+    override fun deletePersonal(p: Personal): Completable {
+        return Completable.fromAction {
+            dataBase.personalDao().deletePersonalTask(p)
+        }
     }
 }

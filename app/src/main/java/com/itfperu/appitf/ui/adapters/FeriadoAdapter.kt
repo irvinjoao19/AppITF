@@ -8,7 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Feriado
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
+import kotlinx.android.synthetic.main.cardview_categoria.view.*
 import kotlinx.android.synthetic.main.cardview_feriado.view.*
+import kotlinx.android.synthetic.main.cardview_feriado.view.card
+import kotlinx.android.synthetic.main.cardview_feriado.view.imgDelete
+import kotlinx.android.synthetic.main.cardview_feriado.view.imgEdit
+import kotlinx.android.synthetic.main.cardview_feriado.view.textView1
+import kotlinx.android.synthetic.main.cardview_feriado.view.textView2
+import kotlinx.android.synthetic.main.cardview_feriado.view.textView3
 
 class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) :
     RecyclerView.Adapter<FeriadoAdapter.ViewHolder>() {
@@ -21,7 +28,8 @@ class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.cardview_feriado, parent, false)
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.cardview_feriado, parent, false)
         return ViewHolder(v)
     }
 
@@ -46,10 +54,11 @@ class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) 
                     )
                 }
                 textView1.text = p.descripcion
-                textView2.text = p.descripcion
-                textView3.text = p.fecha
-                textView4.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textView2.text = p.fecha
+                //textView3.text = p.fecha
+                textView3.text = p.estado
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

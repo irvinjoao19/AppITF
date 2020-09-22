@@ -35,6 +35,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providVisitaFragment(): VisitaFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providPersonakFragment(): PersonalFragment
     }
 
     @Module
@@ -55,13 +58,18 @@ abstract class FragmentBindingModule {
         internal abstract fun providEditPerfilFragment(): EditPerfilFragment
 
         @ContributesAndroidInjector
-        internal abstract fun providEditProductoFragment(): ProductoFragment
+        internal abstract fun providEditProductoFragment(): EditProductoFragment
 
         @ContributesAndroidInjector
-        internal abstract fun providEditTipoProductoFragment(): TipoProductoFragment
+        internal abstract fun providEditTipoProductoFragment(): EditTipoProductoFragment
 
         @ContributesAndroidInjector
         internal abstract fun providEditVisitaFragment(): EditVisitaFragment
 
+        @ContributesAndroidInjector
+        internal abstract fun providEditPersonalFragment(): EditPersonalFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditUsuarioFragment(): EditUsuarioFragment
     }
 }

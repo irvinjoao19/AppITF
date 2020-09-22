@@ -1,16 +1,22 @@
 package com.itfperu.appitf.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.TipoProducto
+import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.TipoProductoViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -30,6 +36,8 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: TipoProductoViewModel
     lateinit var adapter: TipoProductoAdapter
+    lateinit var builder: AlertDialog.Builder
+    private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var tipo: Int = 7
 
@@ -57,13 +65,16 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
 
         adapter = TipoProductoAdapter(object : OnItemClickListener.TipoProductoListener {
             override fun onItemClick(t: TipoProducto, view: View, position: Int) {
-                startActivity(
-                    Intent(context, FormActivity::class.java)
-                        .putExtra("title", "Modificar TipoProducto")
-                        .putExtra("tipo", tipo)
-                        .putExtra("id", t.tipoProductoId)
-                        .putExtra("usuarioId", usuarioId)
-                )
+                when (view.id) {
+                    R.id.imgEdit -> startActivity(
+                        Intent(context, FormActivity::class.java)
+                            .putExtra("title", "Modificar TipoProducto")
+                            .putExtra("tipo", tipo)
+                            .putExtra("id", t.tipoProductoId)
+                            .putExtra("uId", usuarioId)
+                    )
+                    R.id.imgDelete -> confirmDelete(t)
+                }
             }
         })
 
@@ -94,9 +105,47 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
+            closeLoad()
             Util.toastMensaje(context!!, it)
         })
     }
+
+    private fun confirmDelete(v: TipoProducto) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage("Deseas eliminar este Tipo Producto ?")
+            .setPositiveButton("SI") { dialog, _ ->
+                load()
+                itfViewModel.delete(v)
+                dialog.dismiss()
+            }
+            .setNegativeButton("NO") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
+    }
+
+    private fun load() {
+        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
+        builder.setView(view)
+        val textViewTitle: TextView = view.findViewById(R.id.textView)
+        textViewTitle.text = String.format("Eliminando..")
+        dialog = builder.create()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.setCancelable(false)
+        dialog!!.show()
+    }
+
+    private fun closeLoad() {
+        if (dialog != null) {
+            if (dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+        }
+    }
+
 
     companion object {
         @JvmStatic
@@ -119,7 +168,7 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
                 .putExtra("title", "Nuevo TipoProducto")
                 .putExtra("tipo", tipo)
                 .putExtra("id", 0)
-                .putExtra("usuarioId", usuarioId)
+                .putExtra("uId", usuarioId)
         )
     }
 }

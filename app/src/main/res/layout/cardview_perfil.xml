@@ -11,7 +11,6 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="3dp"
     app:cardMaxElevation="3dp"
-    app:contentPadding="3dp"
     tools:context="ui.adapters.PerfilAdapter">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +45,6 @@
             android:layout_margin="8dp"
             android:ellipsize="end"
             android:text="@string/descripcion"
-
             app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintTop_toBottomOf="@+id/textView1" />
 

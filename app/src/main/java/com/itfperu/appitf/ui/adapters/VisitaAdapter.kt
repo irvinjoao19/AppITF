@@ -45,11 +45,11 @@ class VisitaAdapter(private var listener: OnItemClickListener.VisitaListener) :
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-//                textView1.text = p.descripcion
-//                textView2.text = p.codigo
-//                textView3.text = p.simbolo
-//                textView4.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textView1.text = p.descripcion
+                textView2.text = p.resultado
+                textView3.text = p.estado
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

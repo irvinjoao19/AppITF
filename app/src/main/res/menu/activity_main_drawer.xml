@@ -22,21 +22,11 @@
                 android:icon="@drawable/ic_points"
                 android:title="Roles" />
             <item
-                android:id="@+id/logout2"
-                android:icon="@drawable/ic_points"
-                android:title="Opción por Rol" />
-            <item
                 android:id="@+id/logout3"
                 android:icon="@drawable/ic_points"
                 android:title="Usuarios" />
-            <item
-                android:id="@+id/logout4"
-                android:icon="@drawable/ic_points"
-                android:title="Ubigeo" />
-            <item
-                android:id="@+id/logout5"
-                android:icon="@drawable/ic_points"
-                android:title="Tipo de cambio" />
+
+
             <item
                 android:id="@+id/logout6"
                 android:icon="@drawable/ic_points"

@@ -156,4 +156,38 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun getMonedaById(monedaId: Int): LiveData<Moneda> {
         return roomRepository.getMonedaById(monedaId)
     }
+
+    fun delete(v: Moneda) {
+        roomRepository.removeMoneda(v.monedaId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    deleteObject(v)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    private fun deleteObject(v:Moneda){
+        roomRepository.deleteMoneda(v)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeError.value = "Eliminado"
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
+    }
 }

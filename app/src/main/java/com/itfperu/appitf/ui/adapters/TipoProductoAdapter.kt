@@ -8,7 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.TipoProducto
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
+import kotlinx.android.synthetic.main.cardview_categoria.view.*
 import kotlinx.android.synthetic.main.cardview_tipo_producto.view.*
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.card
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.imgDelete
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.imgEdit
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.textView1
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.textView2
+import kotlinx.android.synthetic.main.cardview_tipo_producto.view.textView3
 
 class TipoProductoAdapter(private var listener: OnItemClickListener.TipoProductoListener) :
     RecyclerView.Adapter<TipoProductoAdapter.ViewHolder>() {
@@ -21,7 +28,8 @@ class TipoProductoAdapter(private var listener: OnItemClickListener.TipoProducto
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.cardview_tipo_producto, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.cardview_tipo_producto, parent, false)
         return ViewHolder(v)
     }
 
@@ -34,7 +42,9 @@ class TipoProductoAdapter(private var listener: OnItemClickListener.TipoProducto
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TipoProducto, position: Int, listener: OnItemClickListener.TipoProductoListener) =
+        fun bind(
+            p: TipoProducto, position: Int, listener: OnItemClickListener.TipoProductoListener
+        ) =
             with(itemView) {
                 if (position % 2 == 1) {
                     card.setCardBackgroundColor(
@@ -45,11 +55,11 @@ class TipoProductoAdapter(private var listener: OnItemClickListener.TipoProducto
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-//                textView1.text = p.descripcion
-//                textView2.text = p.codigo
-//                textView3.text = p.simbolo
-//                textView4.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textView1.text = p.codigo
+                textView2.text = p.descripcion
+                textView3.text = p.estado
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

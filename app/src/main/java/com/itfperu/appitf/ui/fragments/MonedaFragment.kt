@@ -1,16 +1,22 @@
 package com.itfperu.appitf.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Moneda
+import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.MonedaViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -30,6 +36,8 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: MonedaViewModel
     lateinit var monedaAdapter: MonedaAdapter
+    lateinit var builder: AlertDialog.Builder
+    private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var tipo: Int = 4
 
@@ -57,12 +65,16 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         monedaAdapter = MonedaAdapter(object : OnItemClickListener.MonedaListener {
             override fun onItemClick(m: Moneda, view: View, position: Int) {
-                startActivity(
-                    Intent(context, FormActivity::class.java)
-                        .putExtra("title", "Modificar Moneda")
-                        .putExtra("tipo", tipo)
-                        .putExtra("id", m.monedaId)
-                )
+                when (view.id) {
+                    R.id.imgEdit -> startActivity(
+                        Intent(context, FormActivity::class.java)
+                            .putExtra("title", "Modificar Moneda")
+                            .putExtra("tipo", tipo)
+                            .putExtra("id", m.monedaId)
+                            .putExtra("uId", usuarioId)
+                    )
+                    R.id.imgDelete -> confirmDelete(m)
+                }
             }
         })
 
@@ -92,8 +104,45 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
+            closeLoad()
             Util.toastMensaje(context!!, it)
         })
+    }
+
+    private fun confirmDelete(m:Moneda) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage("Deseas eliminar este tipo de Moneda ?")
+            .setPositiveButton("SI") { dialog, _ ->
+                load()
+                itfViewModel.delete(m)
+                dialog.dismiss()
+            }
+            .setNegativeButton("NO") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
+    }
+
+    private fun load() {
+        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
+        builder.setView(view)
+        val textViewTitle: TextView = view.findViewById(R.id.textView)
+        textViewTitle.text = String.format("Eliminando..")
+        dialog = builder.create()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.setCancelable(false)
+        dialog!!.show()
+    }
+
+    private fun closeLoad() {
+        if (dialog != null) {
+            if (dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+        }
     }
 
     companion object {
@@ -117,7 +166,7 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
                 .putExtra("title", "Nueva Categoria")
                 .putExtra("tipo", tipo)
                 .putExtra("id", 0)
-                .putExtra("usuarioId", usuarioId)
+                .putExtra("uId", usuarioId)
         )
     }
 }

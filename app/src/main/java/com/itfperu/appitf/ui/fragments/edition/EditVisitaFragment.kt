@@ -2,21 +2,33 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
+import com.itfperu.appitf.data.local.model.Combos
 import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.VisitaViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
+import com.itfperu.appitf.ui.adapters.ComboAdapter
+import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_edit_feriado.*
 import kotlinx.android.synthetic.main.fragment_edit_visita.*
+import kotlinx.android.synthetic.main.fragment_edit_visita.editTextEstado
+import kotlinx.android.synthetic.main.fragment_edit_visita.editTextNombre
+import kotlinx.android.synthetic.main.fragment_edit_visita.fabGenerate
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -26,6 +38,7 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.editTextEstado -> spinnerDialog()
             R.id.fabGenerate -> formVisita()
         }
     }
@@ -63,6 +76,8 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(VisitaViewModel::class.java)
 
+        p.estadoId = 1
+        editTextEstado.setText(String.format("ACTIVO"))
         itfViewModel.getVisitaById(visitaId).observe(viewLifecycleOwner, {
             if (it != null) {
                 p = it
@@ -74,6 +89,7 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
         })
 
         fabGenerate.setOnClickListener(this)
+        editTextEstado.setOnClickListener(this)
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
@@ -115,6 +131,43 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
                 dialog!!.dismiss()
             }
         }
+    }
+
+    private fun spinnerDialog() {
+        val builder =
+            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val v =
+            LayoutInflater.from(context).inflate(R.layout.dialog_combo, null)
+        val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
+        val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
+        val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        progressBar.visibility = View.GONE
+        builder.setView(v)
+        val dialog = builder.create()
+        dialog.show()
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                recyclerView.context, DividerItemDecoration.VERTICAL
+            )
+        )
+        textViewTitulo.text = String.format("Estado")
+
+        val estadoAdapter = ComboAdapter(object : OnItemClickListener.ComboListener {
+            override fun onItemClick(c: Combos, view: View, position: Int) {
+                p.estadoId = c.id
+                editTextEstado.setText(c.title)
+                dialog.dismiss()
+            }
+        })
+        recyclerView.adapter = estadoAdapter
+
+        val a = ArrayList<Combos>()
+        a.add(Combos(1, "ACTIVO"))
+        a.add(Combos(0, "INACTIVO"))
+        estadoAdapter.addItems(a)
     }
 
     companion object {

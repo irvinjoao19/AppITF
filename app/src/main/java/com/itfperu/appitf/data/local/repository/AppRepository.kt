@@ -14,6 +14,7 @@ interface AppRepository {
 
     //usuario
     fun getUsuarioIdTask(): Int
+    fun getUsuarioById(id: Int): LiveData<Usuario>
     fun getUsuario(): LiveData<Usuario>
     fun getUsuarioService(
         usuario: String, password: String, imei: String, version: String
@@ -25,6 +26,9 @@ interface AppRepository {
     fun deleteSync(): Completable
     fun getSync(u: Int, e: Int, p: Int): Observable<Sync>
     fun saveSync(s: Sync): Completable
+    fun updateUsuario(u: Usuario): Completable
+    fun getUsuarioTask(): Observable<Usuario>
+    fun sendUsuario(body: RequestBody): Observable<Mensaje>
 
     //Perfiles
     fun clearPerfil(): Completable
@@ -35,6 +39,8 @@ interface AppRepository {
     fun sendPerfil(c: Perfil): Observable<Mensaje>
     fun insertPerfil(c: Perfil, m: Mensaje): Completable
     fun getPerfilById(id: Int): LiveData<Perfil>
+    fun removePerfil(i:Int): Observable<Mensaje>
+    fun deletePerfil(m:Perfil): Completable
 
     //Moneda
     fun clearMoneda(): Completable
@@ -45,6 +51,8 @@ interface AppRepository {
     fun sendMoneda(c: Moneda): Observable<Mensaje>
     fun insertMoneda(c: Moneda, m: Mensaje): Completable
     fun getMonedaById(id: Int): LiveData<Moneda>
+    fun removeMoneda(i:Int): Observable<Mensaje>
+    fun deleteMoneda(m:Moneda): Completable
 
     //CATEGORIA
     fun clearCategoria(): Completable
@@ -55,6 +63,8 @@ interface AppRepository {
     fun sendCategoria(c: Categoria): Observable<Mensaje>
     fun insertCategoria(c: Categoria, m: Mensaje): Completable
     fun getCategoriaById(id: Int): LiveData<Categoria>
+    fun removeCategoria(i:Int): Observable<Mensaje>
+    fun deleteCategoria(c:Categoria): Completable
 
     // ESPECIALIDAD
     fun clearEspecialidad(): Completable
@@ -65,6 +75,8 @@ interface AppRepository {
     fun sendEspecialidad(c: Especialidad): Observable<Mensaje>
     fun insertEspecialidad(c: Especialidad, m: Mensaje): Completable
     fun getEspecialidadById(id: Int): LiveData<Especialidad>
+    fun removeEspecialidad(i:Int): Observable<Mensaje>
+    fun deleteEspecialidad(e:Especialidad): Completable
 
     // PRODUCTO
     fun clearProducto(): Completable
@@ -75,6 +87,8 @@ interface AppRepository {
     fun sendProducto(c: Producto): Observable<Mensaje>
     fun insertProducto(c: Producto, m: Mensaje): Completable
     fun getProductoById(id: Int): LiveData<Producto>
+    fun removeProducto(i:Int): Observable<Mensaje>
+    fun deleteProducto(p:Producto): Completable
 
     // TIPO PRODUCTO
     fun clearTipoProducto(): Completable
@@ -85,6 +99,8 @@ interface AppRepository {
     fun sendTipoProducto(c: TipoProducto): Observable<Mensaje>
     fun insertTipoProducto(c: TipoProducto, m: Mensaje): Completable
     fun getTipoProductoById(id: Int): LiveData<TipoProducto>
+    fun removeTipoProducto(i:Int): Observable<Mensaje>
+    fun deleteTipoProducto(t:TipoProducto): Completable
 
     // VISITA
     fun clearVisita(): Completable
@@ -95,6 +111,8 @@ interface AppRepository {
     fun sendVisita(c: Visita): Observable<Mensaje>
     fun insertVisita(c: Visita, m: Mensaje): Completable
     fun getVisitaById(id: Int): LiveData<Visita>
+    fun removeVisita(i:Int): Observable<Mensaje>
+    fun deleteVisita(v: Visita): Completable
 
     //FERIADO
     fun clearFeriado(): Completable
@@ -105,5 +123,24 @@ interface AppRepository {
     fun sendFeriado(c: Feriado): Observable<Mensaje>
     fun insertFeriado(c: Feriado, m: Mensaje): Completable
     fun getFeriadoById(id: Int): LiveData<Feriado>
+    fun removeFeriado(i:Int): Observable<Mensaje>
+    fun deleteFeriado(f:Feriado): Completable
 
+    //CONTROL
+    fun syncControl(): Observable<List<Control>>
+    fun insertControls(t: List<Control>): Completable
+    fun getControls(): LiveData<List<Control>>
+
+    //Personal
+    fun clearPersonal(): Completable
+    fun syncPersonal(): Observable<List<Personal>>
+    fun insertPersonals(p: List<Personal>): Completable
+    fun getPersonals(): LiveData<List<Personal>>
+    fun verificatePersonal(c: Personal): Completable
+    fun sendPersonal(c: Personal): Observable<Mensaje>
+    fun insertPersonal(c: Personal, m: Mensaje): Completable
+    fun getPersonalById(id: Int): LiveData<Personal>
+    fun getSupervisores(): LiveData<List<Personal>>
+    fun removePersonal(i:Int): Observable<Mensaje>
+    fun deletePersonal(p:Personal): Completable
 }

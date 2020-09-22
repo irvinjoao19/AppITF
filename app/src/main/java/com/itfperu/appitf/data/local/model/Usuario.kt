@@ -24,6 +24,10 @@ open class Usuario {
     var foto: String = ""
     var login: String = ""
     var pass: String = ""
+    var nombreSupervisor : String = ""
+    var nombreEstado : String = ""
+    var nombrePerfil : String = ""
+
 
 
 //    @Ignore

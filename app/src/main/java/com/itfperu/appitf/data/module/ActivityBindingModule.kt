@@ -16,4 +16,9 @@ abstract class ActivityBindingModule {
     @ContributesAndroidInjector(modules = [FragmentBindingModule.Form::class])
     internal abstract fun bindFormActivity(): FormActivity
 
+    @ContributesAndroidInjector
+    internal abstract fun bindPerfilActivity(): PerfilActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun bindPreviewCameraActivity(): PreviewCameraActivity
 }

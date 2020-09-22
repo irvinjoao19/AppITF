@@ -21,7 +21,8 @@ class ProductoAdapter(private var listener: OnItemClickListener.ProductoListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.cardview_producto, parent, false)
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.cardview_producto, parent, false)
         return ViewHolder(v)
     }
 
@@ -45,11 +46,12 @@ class ProductoAdapter(private var listener: OnItemClickListener.ProductoListener
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-//                textView1.text = p.descripcion
-//                textView2.text = p.codigo
-//                textView3.text = p.simbolo
-//                textView4.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textView1.text = p.codigo
+                textView2.text = p.descripcion
+                textView3.text = p.estado
+                textView4.text = p.tipo
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

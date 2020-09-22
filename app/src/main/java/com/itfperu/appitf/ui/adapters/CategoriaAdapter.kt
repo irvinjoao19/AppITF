@@ -21,7 +21,8 @@ class CategoriaAdapter(private var listener: OnItemClickListener.CategoriaListen
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.cardview_categoria, parent, false)
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.cardview_categoria, parent, false)
         return ViewHolder(v)
     }
 
@@ -45,11 +46,12 @@ class CategoriaAdapter(private var listener: OnItemClickListener.CategoriaListen
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-//                textView1.text = p.descripcion
-//                textView2.text = p.descripcion
-//                textView3.text = p.fecha
-//                textView4.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+
+                textView1.text = p.codigo
+                textView2.text = p.descripcion
+                textView3.text = p.estado
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

@@ -6,7 +6,6 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.ui.fragments.edition.*
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_form.*
-
 /**
  * 1 -> categoria
  * 2 -> especialidad
@@ -16,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_form.*
  * 6 -> producto
  * 7 -> tipo producto
  * 8 -> visita
+ * 9 -> personal
+ * 10 -> usuario
  */
 class FormActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,18 +46,26 @@ class FormActivity : DaggerAppCompatActivity() {
                     savedInstanceState,
                     EditPerfilFragment.newInstance(b.getInt("id"), b.getInt("uId"))
                 )
-//                6 -> replaceFragment(
-//                    savedInstanceState,
-//                    EditProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
-//                )
-//                7 -> replaceFragment(
-//                    savedInstanceState,
-//                    EditTipoProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
-//                )
-//                8 -> replaceFragment(
-//                    savedInstanceState,
-//                    EditVisitaFragment.newInstance(b.getInt("id"), b.getInt("uId"))
-//                )
+                6 -> replaceFragment(
+                    savedInstanceState,
+                    EditProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                7 -> replaceFragment(
+                    savedInstanceState,
+                    EditTipoProductoFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                8 -> replaceFragment(
+                    savedInstanceState,
+                    EditVisitaFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                9 -> replaceFragment(
+                    savedInstanceState,
+                    EditPersonalFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                10 -> replaceFragment(
+                    savedInstanceState,
+                    EditUsuarioFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
             }
         }
     }

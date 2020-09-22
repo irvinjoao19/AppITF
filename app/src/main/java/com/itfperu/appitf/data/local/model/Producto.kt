@@ -17,4 +17,5 @@ open class Producto {
     var estado: String = ""
     var estadoId: Int = 0
     var usuarioId: Int = 0
+    var descripcionTipoProducto: String  = ""
 }

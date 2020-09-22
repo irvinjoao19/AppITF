@@ -78,4 +78,14 @@ class DataBaseModule {
     internal fun provideVisitaDao(appDataBase: AppDataBase): VisitaDao {
         return appDataBase.visitaDao()
     }
+
+    @Provides
+    internal fun provideControlDao(appDataBase: AppDataBase): ControlDao {
+        return appDataBase.controlDao()
+    }
+
+    @Provides
+    internal fun providePersonalDao(appDataBase: AppDataBase): PersonalDao {
+        return appDataBase.personalDao()
+    }
 }

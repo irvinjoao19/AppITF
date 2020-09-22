@@ -22,6 +22,9 @@ interface UsuarioDao {
     @Query("SELECT * FROM Usuario")
     fun getUsuario(): LiveData<Usuario>
 
+    @Query("SELECT * FROM Usuario")
+    fun getUsuarioTask(): Usuario
+
     @Query("SELECT usuarioId FROM Usuario")
     fun getUsuarioId(): Int
 

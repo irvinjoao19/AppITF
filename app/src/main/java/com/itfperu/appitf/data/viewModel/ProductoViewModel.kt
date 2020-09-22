@@ -7,6 +7,7 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -130,7 +131,18 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     insertProducto(c, t)
                 }
 
-                override fun onError(e: Throwable) {
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
                 }
 
                 override fun onComplete() {}
@@ -155,5 +167,77 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getProductoById(productoId: Int): LiveData<Producto> {
         return roomRepository.getProductoById(productoId)
+    }
+
+    fun syncControl() {
+        roomRepository.syncControl()
+            .delay(1000, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<Control>> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: List<Control>) {
+                    insertControls(t)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    private fun insertControls(t: List<Control>) {
+        roomRepository.insertControls(t)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    fun getControls(): LiveData<List<Control>> {
+        return roomRepository.getControls()
+    }
+
+    fun delete(v: Producto) {
+        roomRepository.removeProducto(v.productoId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    deletevisita(v)
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    private fun deletevisita(v:Producto){
+        roomRepository.deleteProducto(v)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeError.value = "Eliminado"
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
     }
 }
