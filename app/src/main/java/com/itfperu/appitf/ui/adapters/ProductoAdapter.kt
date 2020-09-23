@@ -27,6 +27,7 @@ class ProductoAdapter(private var listener: OnItemClickListener.ProductoListener
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(perfiles[position], position, listener)
     }
 
@@ -50,6 +51,13 @@ class ProductoAdapter(private var listener: OnItemClickListener.ProductoListener
                 textView2.text = p.descripcion
                 textView3.text = p.estado
                 textView4.text = p.tipo
+                if (p.estadoId == 0) {
+                    textView3.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }

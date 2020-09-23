@@ -16,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Personal
-import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.PersonalViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -116,7 +115,7 @@ class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(p: Personal) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este usuario ?")
+            .setMessage("Deseas inactivar el usuario ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(p)
@@ -134,7 +133,7 @@ class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)

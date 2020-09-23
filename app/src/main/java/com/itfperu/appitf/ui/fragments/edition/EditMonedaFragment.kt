@@ -30,7 +30,9 @@ import kotlinx.android.synthetic.main.fragment_edit_moneda.editTextEstado
 import kotlinx.android.synthetic.main.fragment_edit_moneda.editTextNombre
 import kotlinx.android.synthetic.main.fragment_edit_moneda.fabGenerate
 import kotlinx.android.synthetic.main.fragment_edit_visita.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -106,7 +108,7 @@ class EditMonedaFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formMoneda() {
-        p.codigo = editTextCodigo.text.toString()
+        p.codigo = editTextCodigo.text.toString().toUpperCase(Locale.getDefault())
         p.descripcion = editTextNombre.text.toString()
         p.simbolo = editTextSimbolo.text.toString()
         p.estado = editTextEstado.text.toString()

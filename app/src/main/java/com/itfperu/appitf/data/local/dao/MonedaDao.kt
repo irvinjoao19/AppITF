@@ -34,4 +34,7 @@ interface MonedaDao {
 
     @Query("SELECT * FROM Moneda WHERE monedaId=:id")
     fun getMonedaById(id: Int): LiveData<Moneda>
+
+    @Query("SELECT * FROM Moneda WHERE codigo =:c")
+    fun getMonedaByCod(c: String): Moneda
 }

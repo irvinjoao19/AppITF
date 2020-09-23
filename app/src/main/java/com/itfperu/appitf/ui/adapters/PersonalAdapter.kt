@@ -33,6 +33,7 @@ class PersonalAdapter(private val listener: OnItemClickListener.PersonalListener
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(dList[position], position, listener)
     }
 
@@ -56,9 +57,15 @@ class PersonalAdapter(private val listener: OnItemClickListener.PersonalListener
                 textView1.text = m.login
                 textView2.text = String.format("%s %s %s", m.nombre, m.apellidoP, m.apellidoM)
                 textView3.text = m.email
-                textView4.text = m.nombreSupervisor
-                textView5.text = m.nombreEstado
-                textView6.text = m.nombrePerfil
+                textView4.text = m.nombreEstado
+                textView5.text = m.nombrePerfil
+                if (m.estado == 0) {
+                    textView4.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
             }

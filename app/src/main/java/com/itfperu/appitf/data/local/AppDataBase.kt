@@ -20,9 +20,10 @@ import com.itfperu.appitf.data.local.model.*
         TipoProducto::class,
         Visita::class,
         Control::class,
-        Personal::class
+        Personal::class,
+        Ciclo::class
     ],
-    version = 13, // version 1 en play store
+    version = 14, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -39,6 +40,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun visitaDao(): VisitaDao
     abstract fun controlDao(): ControlDao
     abstract fun personalDao(): PersonalDao
+    abstract fun cicloDao(): CicloDao
 
     companion object {
         @Volatile

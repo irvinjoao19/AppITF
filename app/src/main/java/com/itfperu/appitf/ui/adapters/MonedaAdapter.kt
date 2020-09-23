@@ -8,14 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Moneda
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
-import kotlinx.android.synthetic.main.cardview_categoria.view.*
 import kotlinx.android.synthetic.main.cardview_moneda.view.*
-import kotlinx.android.synthetic.main.cardview_moneda.view.card
-import kotlinx.android.synthetic.main.cardview_moneda.view.imgDelete
-import kotlinx.android.synthetic.main.cardview_moneda.view.imgEdit
-import kotlinx.android.synthetic.main.cardview_moneda.view.textView1
-import kotlinx.android.synthetic.main.cardview_moneda.view.textView2
-import kotlinx.android.synthetic.main.cardview_moneda.view.textView3
 
 class MonedaAdapter(private var listener: OnItemClickListener.MonedaListener) :
     RecyclerView.Adapter<MonedaAdapter.ViewHolder>() {
@@ -33,6 +26,7 @@ class MonedaAdapter(private var listener: OnItemClickListener.MonedaListener) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(perfiles[position], position, listener)
     }
 
@@ -52,10 +46,17 @@ class MonedaAdapter(private var listener: OnItemClickListener.MonedaListener) :
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-                textView1.text = p.descripcion
-                textView2.text = p.codigo
-                textView3.text = p.simbolo
+                textView1.text = p.codigo
+                textView2.text = p.simbolo
+                textView3.text = p.descripcion
                 textView4.text = p.estado
+                if (p.estadoId == 0) {
+                    textView4.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }

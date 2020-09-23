@@ -6,23 +6,23 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
-import com.itfperu.appitf.data.local.model.Feriado
+import com.itfperu.appitf.data.local.model.Ciclo
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
-import kotlinx.android.synthetic.main.cardview_feriado.view.*
+import kotlinx.android.synthetic.main.cardview_ciclo.view.*
 
-class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) :
-    RecyclerView.Adapter<FeriadoAdapter.ViewHolder>() {
+class CicloAdapter(private var listener: OnItemClickListener.CicloListener) :
+    RecyclerView.Adapter<CicloAdapter.ViewHolder>() {
 
-    private var perfiles = emptyList<Feriado>()
+    private var perfiles = emptyList<Ciclo>()
 
-    fun addItems(list: List<Feriado>) {
+    fun addItems(list: List<Ciclo>) {
         perfiles = list
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.cardview_feriado, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.cardview_ciclo, parent, false)
         return ViewHolder(v)
     }
 
@@ -36,7 +36,7 @@ class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: Feriado, position: Int, listener: OnItemClickListener.FeriadoListener) =
+        fun bind(p: Ciclo, position: Int, listener: OnItemClickListener.CicloListener) =
             with(itemView) {
                 if (position % 2 == 1) {
                     card.setCardBackgroundColor(
@@ -47,18 +47,19 @@ class FeriadoAdapter(private var listener: OnItemClickListener.FeriadoListener) 
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-                textView1.text = p.fecha
-                textView2.text = p.descripcion
-                textView3.text = p.estado
-                if (p.estadoId == 0) {
-                    textView3.setTextColor(
+
+                textView1.text = p.nombre
+                textView2.text = p.desde
+                textView3.text = p.hasta
+                textView4.text = p.nombreEstado
+                if (p.estado == 0) {
+                    textView4.setTextColor(
                         ContextCompat.getColor(
                             itemView.context, R.color.colorRed
                         )
                     )
                 }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
-                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

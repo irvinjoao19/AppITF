@@ -113,7 +113,7 @@ class ProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(p:Producto) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este producto ?")
+            .setMessage("Deseas inactivar este producto ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(p)
@@ -131,7 +131,7 @@ class ProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)

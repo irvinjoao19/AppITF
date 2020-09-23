@@ -61,6 +61,10 @@ interface ApiService {
     fun getControl(): Observable<List<Control>>
 
     @Headers("Cache-Control: no-cache")
+    @GET("Ciclos")
+    fun getCiclos(): Observable<List<Ciclo>>
+
+    @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
     fun saveCategoria(@Body body: RequestBody): Observable<Mensaje>
 
@@ -99,6 +103,10 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveUsuario")
     fun savePersonal(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveCiclo")
+    fun saveCiclo(@Body body: RequestBody): Observable<Mensaje>
 
     // remove - delete
 

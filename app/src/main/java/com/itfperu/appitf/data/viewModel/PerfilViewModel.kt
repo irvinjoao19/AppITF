@@ -7,11 +7,13 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -89,6 +91,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getPerfils()
     }
 
+    fun getPerfilsActive():LiveData<List<Perfil>> {
+        return roomRepository.getPerfilsActive()
+    }
+
     fun validatePerfil(c: Perfil) {
         if (c.codigo.isEmpty()) {
             mensajeError.value = "Ingrese Codigo"
@@ -156,5 +162,49 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getPerfilById(perfilId: Int): LiveData<Perfil> {
         return roomRepository.getPerfilById(perfilId)
+    }
+
+    fun delete(v: Perfil) {
+        roomRepository.removePerfil(v.perfilId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    deleteObject(v)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    private fun deleteObject(v:Perfil){
+        roomRepository.deletePerfil(v)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeError.value = "Actualizado"
+                }
+
+                override fun onError(e: Throwable) {
+
+                }
+            })
     }
 }

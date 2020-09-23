@@ -26,6 +26,7 @@ class VisitaAdapter(private var listener: OnItemClickListener.VisitaListener) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(perfiles[position], position, listener)
     }
 
@@ -46,8 +47,16 @@ class VisitaAdapter(private var listener: OnItemClickListener.VisitaListener) :
                     )
                 }
                 textView1.text = p.descripcion
-                textView2.text = p.resultado
+                textView2.text =
+                    String.format("IND. Motivo: %s", if (p.resultado == "1" || p.resultado == "SI") "SI" else "NO")
                 textView3.text = p.estado
+                if (p.estadoId == 0) {
+                    textView3.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }

@@ -88,4 +88,9 @@ class DataBaseModule {
     internal fun providePersonalDao(appDataBase: AppDataBase): PersonalDao {
         return appDataBase.personalDao()
     }
+
+    @Provides
+    internal fun provideCicloDao(appDataBase: AppDataBase): CicloDao {
+        return appDataBase.cicloDao()
+    }
 }

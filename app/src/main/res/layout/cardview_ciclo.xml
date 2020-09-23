@@ -11,7 +11,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="3dp"
     app:cardMaxElevation="3dp"
-    tools:context="ui.adapters.CategoriaAdapter">
+    tools:context="ui.adapters.CicloAdapter">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -55,10 +55,20 @@
             android:layout_margin="8dp"
             android:ellipsize="end"
             android:text="@string/descripcion"
+            app:layout_constraintStart_toEndOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ellipsize="end"
+            android:text="@string/descripcion"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <ImageView
             android:id="@+id/imgEdit"
@@ -67,19 +77,8 @@
             android:layout_margin="8dp"
             android:contentDescription="@string/img"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imgDelete"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_modificate" />
-
-        <ImageView
-            android:id="@+id/imgDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:contentDescription="@string/img"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_delete" />
+            app:srcCompat="@drawable/ic_modificate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -24,11 +24,7 @@ import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
 import kotlinx.android.synthetic.main.fragment_edit_visita.*
-import kotlinx.android.synthetic.main.fragment_edit_visita.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_visita.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_visita.fabGenerate
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -81,10 +77,9 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.getVisitaById(visitaId).observe(viewLifecycleOwner, {
             if (it != null) {
                 p = it
-//                editTextCodigo.setText(it.codigo)
-//                editTextCodigo.isEnabled = false
-//                editTextNombre.setText(it.descripcion)
-//                editTextEstado.setText(it.estado)
+                editTextNombre.setText(it.descripcion)
+                checkDefecto.isChecked = it.resultado == "1"
+                editTextEstado.setText(it.estado)
             }
         })
 
@@ -104,9 +99,9 @@ class EditVisitaFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formVisita() {
-//        p.codigo = editTextCodigo.text.toString()
         p.descripcion = editTextNombre.text.toString()
         p.estado = editTextEstado.text.toString()
+        p.resultado = if (checkDefecto.isChecked) "1" else "0"
         p.usuarioId = usuarioId
         load()
         itfViewModel.validateVisita(p)

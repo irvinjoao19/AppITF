@@ -177,7 +177,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : Observer<Mensaje> {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Mensaje) {
-                    deletevisita(v)
+                    deleteObject(v)
                 }
 
                 override fun onError(t: Throwable) {
@@ -198,14 +198,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun deletevisita(v:Personal){
+    private fun deleteObject(v:Personal){
         roomRepository.deletePersonal(v)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeError.value = "Eliminado"
+                    mensajeError.value = "Actualizado"
                 }
 
                 override fun onError(e: Throwable) {

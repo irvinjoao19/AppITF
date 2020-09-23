@@ -2,6 +2,8 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -183,7 +185,6 @@ class EditProductoFragment : DaggerFragment(), View.OnClickListener {
                     }
                 })
                 recyclerView.adapter = estadoAdapter
-
                 val a = ArrayList<Combos>()
                 a.add(Combos(1, "ACTIVO"))
                 a.add(Combos(0, "INACTIVO"))
@@ -202,8 +203,12 @@ class EditProductoFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = tipoAdapter
 
-                tipoProductoViewModel.getTipoProductos().observe(this, {
-                    progressBar.visibility = View.GONE
+                tipoProductoViewModel.getTipoProductoActive().observe(this, {
+                    if (it.isNotEmpty()) {
+                        progressBar.visibility = View.GONE
+                    } else {
+                        progressBar.visibility = View.VISIBLE
+                    }
                     tipoAdapter.addItems(it)
                 })
             }
@@ -219,7 +224,11 @@ class EditProductoFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = controlAdapter
                 itfViewModel.getControls().observe(this, {
-                    progressBar.visibility = View.GONE
+                    if (it.isNotEmpty()) {
+                        progressBar.visibility = View.GONE
+                    } else {
+                        progressBar.visibility = View.VISIBLE
+                    }
                     controlAdapter.addItems(it)
                 })
             }

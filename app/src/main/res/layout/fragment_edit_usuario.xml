@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Codigo"
+            android:text="Login"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutCodigo"
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Nombre"
+            android:text="Nombres"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutNombre"
@@ -301,6 +301,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Es Supervisor"
+            android:enabled="false"
             app:layout_constraintStart_toStartOf="@+id/layout12"
             app:layout_constraintTop_toBottomOf="@+id/layoutEmail" />
 
@@ -350,6 +351,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:enabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout13">

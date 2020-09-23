@@ -62,7 +62,7 @@ class PerfilActivity : DaggerAppCompatActivity(),
                 .into(imageViewPortada)
 
             textViewCodigo.text = it.login
-            textViewNombre.text = String.format("%s %s %s", it.nombre, it.apellidoM, it.apellidoP)
+            textViewNombre.text = String.format("%s %s %s", it.nombre, it.apellidoP, it.apellidoM)
             textViewDni.text = it.nroDoc
             textViewFechaN.text = it.fechaNacimiento
             textViewSexo.text = if (it.sexo == "M") "Masculino" else "Femenino"

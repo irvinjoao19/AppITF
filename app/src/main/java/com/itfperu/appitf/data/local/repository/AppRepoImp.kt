@@ -122,6 +122,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.perfilDao().getPerfiles()
     }
 
+    override fun getPerfilsActive(): LiveData<List<Perfil>> {
+        return dataBase.perfilDao().getPerfilsActive()
+    }
+
     override fun verificatePerfil(c: Perfil): Completable {
         return Completable.fromAction {
             if (c.codigo == "1") {
@@ -158,7 +162,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deletePerfil(m: Perfil): Completable {
         return Completable.fromAction {
-            dataBase.perfilDao().deletePerfilTask(m)
+            m.estado = "INACTIVO"
+            m.estadoId = 0
+            dataBase.perfilDao().updatePerfilTask(m)
         }
     }
 
@@ -184,8 +190,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateMoneda(c: Moneda): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de Codigo")
+            if (c.monedaId == 0) {
+                val m: Moneda? =
+                    dataBase.monedaDao().getMonedaByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de moneda existe... Ingrese otro")
+                }
             }
         }
     }
@@ -218,7 +228,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteMoneda(m: Moneda): Completable {
         return Completable.fromAction {
-            dataBase.monedaDao().deleteMonedaTask(m)
+            m.estado = "INACTIVO"
+            m.estadoId = 0
+            dataBase.monedaDao().updateMonedaTask(m)
         }
     }
 
@@ -244,8 +256,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateCategoria(c: Categoria): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de Codigo")
+            if (c.categoriaId == 0) {
+                val m: Categoria? =
+                    dataBase.categoriaDao().getCategoriaByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de categoria existe... Ingrese otro")
+                }
             }
         }
     }
@@ -278,7 +294,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteCategoria(c: Categoria): Completable {
         return Completable.fromAction {
-            dataBase.categoriaDao().deleteCategoriaTask(c)
+            c.estado = "INACTIVO"
+            c.estadoId = 0
+            dataBase.categoriaDao().updateCategoriaTask(c)
         }
     }
 
@@ -304,8 +322,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateEspecialidad(c: Especialidad): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de Codigo")
+            if (c.especialidadId == 0) {
+                val m: Especialidad? =
+                    dataBase.especialidadDao().getEspecialidadByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de especialidad existe... Ingrese otro")
+                }
             }
         }
     }
@@ -334,7 +356,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteEspecialidad(e: Especialidad): Completable {
         return Completable.fromAction {
-            dataBase.especialidadDao().deleteEspecialidadTask(e)
+            e.estado = "INACTIVO"
+            e.estadoId = 0
+            dataBase.especialidadDao().updateEspecialidadTask(e)
         }
     }
 
@@ -364,8 +388,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateProducto(c: Producto): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de codigo")
+            if (c.productoId == 0) {
+                val m: Producto? =
+                    dataBase.productoDao().getProductoByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de Producto existe... Ingrese otro")
+                }
             }
         }
     }
@@ -399,7 +427,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteProducto(p: Producto): Completable {
         return Completable.fromAction {
-            dataBase.productoDao().deleteProductoTask(p)
+            p.estado = "INACTIVO"
+            p.estadoId = 0
+            dataBase.productoDao().updateProductoTask(p)
         }
     }
 
@@ -423,10 +453,18 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.tipoProductoDao().getTipoProductos()
     }
 
+    override fun getTipoProductoActive(): LiveData<List<TipoProducto>> {
+        return dataBase.tipoProductoDao().getTipoProductoActive()
+    }
+
     override fun verificateTipoProducto(c: TipoProducto): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de codigo")
+            if (c.tipoProductoId == 0) {
+                val m: TipoProducto? =
+                    dataBase.tipoProductoDao().getTipoProductoByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de Tipo Producto existe... Ingrese otro")
+                }
             }
         }
     }
@@ -459,7 +497,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteTipoProducto(t: TipoProducto): Completable {
         return Completable.fromAction {
-            dataBase.tipoProductoDao().deleteTipoProductoTask(t)
+            t.estado = "INACTIVO"
+            t.estadoId = 0
+            dataBase.tipoProductoDao().updateTipoProductoTask(t)
         }
     }
 
@@ -519,7 +559,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteVisita(v: Visita): Completable {
         return Completable.fromAction {
-            dataBase.visitaDao().deleteVisitaTask(v)
+            v.estado = "INACTIVO"
+            v.estadoId = 0
+            dataBase.visitaDao().updateVisitaTask(v)
         }
     }
 
@@ -579,7 +621,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteFeriado(f: Feriado): Completable {
         return Completable.fromAction {
-            dataBase.feriadoDao().deleteFeriadoTask(f)
+            f.estado = "INACTIVO"
+            f.estadoId = 0
+            dataBase.feriadoDao().updateFeriadoTask(f)
         }
     }
 
@@ -655,7 +699,51 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deletePersonal(p: Personal): Completable {
         return Completable.fromAction {
-            dataBase.personalDao().deletePersonalTask(p)
+            p.nombreEstado = "INACTIVO"
+            p.estado = 0
+            dataBase.personalDao().updatePersonalTask(p)
         }
+    }
+
+    override fun clearCiclo(): Completable {
+        return Completable.fromAction {
+            dataBase.cicloDao().deleteAll()
+        }
+    }
+
+    override fun syncCiclo(): Observable<List<Ciclo>> {
+        return apiService.getCiclos()
+    }
+
+    override fun insertCiclos(p: List<Ciclo>): Completable {
+        return Completable.fromAction {
+            dataBase.cicloDao().insertCicloListTask(p)
+        }
+    }
+
+    override fun getCiclos(): LiveData<List<Ciclo>> {
+        return dataBase.cicloDao().getCiclos()
+    }
+
+    override fun sendCiclo(c: Ciclo): Observable<Mensaje> {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveCiclo(body)
+    }
+
+    override fun insertCiclo(c: Ciclo, m: Mensaje): Completable {
+        return  Completable.fromAction {
+            if (m.codigoBase == 0) {
+                c.cicloId = m.codigoRetorno
+                dataBase.cicloDao().insertCicloTask(c)
+            } else {
+                dataBase.cicloDao().updateCicloTask(c)
+            }
+        }
+    }
+
+    override fun getCicloById(id: Int): LiveData<Ciclo> {
+        return dataBase.cicloDao().getCicloById(id)
     }
 }

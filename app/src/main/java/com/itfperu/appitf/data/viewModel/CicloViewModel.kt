@@ -7,6 +7,7 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
+import com.itfperu.appitf.helper.Util
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -22,7 +23,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class CategoriaViewModel @Inject
+class CicloViewModel @Inject
 internal constructor(private val roomRepository: AppRepository, private val retrofit: ApiError) :
     ViewModel() {
 
@@ -38,8 +39,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         loading.value = s
     }
 
-    fun syncCategoria() {
-        roomRepository.clearCategoria()
+    fun syncCiclo() {
+        roomRepository.clearCiclo()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -48,7 +49,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onComplete() {
-                    categoria()
+                    ciclo()
                 }
 
                 override fun onError(e: Throwable) {
@@ -57,18 +58,18 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun categoria() {
-        roomRepository.syncCategoria()
+    private fun ciclo() {
+        roomRepository.syncCiclo()
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Categoria>> {
+            .subscribe(object : Observer<List<Ciclo>> {
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
-                override fun onNext(t: List<Categoria>) {
-                    insertCategorias(t)
+                override fun onNext(t: List<Ciclo>) {
+                    insertCiclos(t)
                 }
 
                 override fun onError(e: Throwable) {
@@ -81,8 +82,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun insertCategorias(p: List<Categoria>) {
-        roomRepository.insertCategorias(p)
+    private fun insertCiclos(p: List<Ciclo>) {
+        roomRepository.insertCiclos(p)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -102,46 +103,32 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
 
-    fun getCategorias(): LiveData<List<Categoria>> {
-        return roomRepository.getCategorias()
+    fun getCiclos(): LiveData<List<Ciclo>> {
+        return roomRepository.getCiclos()
     }
 
-    fun validateCategoria(c: Categoria) {
-        if (c.codigo.isEmpty()){
-            mensajeError.value = "Ingrese Codigo de Categoría"
+    fun validateCiclo(c: Ciclo) {
+        if (c.nombre.isEmpty()) {
+            mensajeError.value = "Ingrese Nombre de Ciclo"
             return
         }
-        if (c.descripcion.isEmpty()){
-            mensajeError.value = "Ingrese Descripción de Categoría"
+        if (c.desde.isEmpty()) {
+            mensajeError.value = "Seleccione Fecha Desde"
             return
         }
-
-        verificateCategoria(c)
+        if (c.hasta.isEmpty()) {
+            mensajeError.value = "Seleccione Fecha Hasta"
+            return
+        }
+        if (Util.getCompareFecha(c.desde, c.hasta)) {
+            mensajeError.value = "La Fecha Hasta debe ser mayor o igual a la Fecha Desde"
+            return
+        }
+        sendCiclo(c)
     }
 
-
-    private fun verificateCategoria(c: Categoria) {
-        roomRepository.verificateCategoria(c)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onComplete() {
-                    sendCategoria(c)
-                }
-
-                override fun onError(e: Throwable) {
-                    mensajeError.value = e.message
-                }
-            })
-    }
-
-
-    private fun sendCategoria(c: Categoria) {
-        roomRepository.sendCategoria(c)
+    private fun sendCiclo(c: Ciclo) {
+        roomRepository.sendCiclo(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
@@ -150,7 +137,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onNext(t: Mensaje) {
-                    insertCategoria(c, t)
+                    insertCiclo(c, t)
                 }
 
                 override fun onError(e: Throwable) {
@@ -163,8 +150,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun insertCategoria(c: Categoria, m: Mensaje) {
-        roomRepository.insertCategoria(c, m)
+    private fun insertCiclo(c: Ciclo, m: Mensaje) {
+        roomRepository.insertCiclo(c, m)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -182,41 +169,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getCategoriaById(categoriaId: Int): LiveData<Categoria> {
-        return roomRepository.getCategoriaById(categoriaId)
-    }
-
-    fun delete(v: Categoria) {
-        roomRepository.removeCategoria(v.categoriaId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v:Categoria){
-        roomRepository.deleteCategoria(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
+    fun getCicloById(categoriaId: Int): LiveData<Ciclo> {
+        return roomRepository.getCicloById(categoriaId)
     }
 }

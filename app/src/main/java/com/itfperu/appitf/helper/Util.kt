@@ -53,7 +53,7 @@ import kotlin.math.*
 object Util {
 
     val FolderImg = "Dsige/Lds"
-    val UrlFoto = "http://190.117.104.122/webApiITF/Image/"
+    val UrlFoto = "http://190.117.104.122/WebApi_Itf/Imagen/"
 
     private var FechaActual: String? = ""
     private var date: Date? = null
@@ -616,7 +616,7 @@ object Util {
         timePickerDialog.show()
     }
 
-    private fun getCompareFecha(fechaInicial: String, fechaFinal: String): Boolean {
+    fun getCompareFecha(fechaInicial: String, fechaFinal: String): Boolean {
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd/MM/yyyy")
         var date1 = Date()
         try {

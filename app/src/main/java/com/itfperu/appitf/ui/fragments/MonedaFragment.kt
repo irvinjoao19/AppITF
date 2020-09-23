@@ -109,10 +109,10 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
     }
 
-    private fun confirmDelete(m:Moneda) {
+    private fun confirmDelete(m: Moneda) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este tipo de Moneda ?")
+            .setMessage("Deseas inactivar esta Moneda ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(m)
@@ -130,7 +130,7 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)

@@ -48,7 +48,15 @@ class PerfilAdapter(private var listener: OnItemClickListener.PerfilListener) :
                 textView1.text = p.codigo
                 textView2.text = p.descripcion
                 textView3.text = p.estado
-                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                if (p.estadoId == 0) {
+                    textView3.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

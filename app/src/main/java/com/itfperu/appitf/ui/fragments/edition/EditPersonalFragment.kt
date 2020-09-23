@@ -44,8 +44,8 @@ class EditPersonalFragment : DaggerFragment(), View.OnClickListener {
             } else {
                 p.supervisorId = 0
                 editTextSupervisor.text = null
+                editTextSupervisor.isEnabled = true
             }
-
             return
         }
 
@@ -216,7 +216,7 @@ class EditPersonalFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = perfilAdapter
 
-                perfilViewModel.getPerfils().observe(this, {
+                perfilViewModel.getPerfilsActive().observe(this, {
                     progressBar.visibility = View.GONE
                     perfilAdapter.addItems(it)
                 })

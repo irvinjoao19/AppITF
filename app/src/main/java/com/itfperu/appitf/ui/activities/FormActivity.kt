@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_form.*
  * 8 -> visita
  * 9 -> personal
  * 10 -> usuario
+ * 11 -> ciclos
  */
 class FormActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +66,10 @@ class FormActivity : DaggerAppCompatActivity() {
                 10 -> replaceFragment(
                     savedInstanceState,
                     EditUsuarioFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                11 ->replaceFragment(
+                    savedInstanceState,
+                    EditCicloFragment.newInstance(b.getInt("id"), b.getInt("uId"))
                 )
             }
         }

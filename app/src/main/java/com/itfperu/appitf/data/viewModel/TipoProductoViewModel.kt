@@ -89,6 +89,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getTipoProductos()
     }
 
+    fun getTipoProductoActive(): LiveData<List<TipoProducto>> {
+        return roomRepository.getTipoProductoActive()
+    }
+
     fun validateTipoProducto(c: TipoProducto) {
 
 
@@ -137,7 +141,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeSuccess.value = "Save"
+                    mensajeSuccess.value = "Guardado"
                 }
 
                 override fun onError(e: Throwable) {
@@ -175,7 +179,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeError.value = "Eliminado"
+                    mensajeError.value = "Actualizado"
                 }
 
                 override fun onError(e: Throwable) {

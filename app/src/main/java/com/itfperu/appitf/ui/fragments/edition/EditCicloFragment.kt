@@ -14,51 +14,47 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.itfperu.appitf.R
-import com.itfperu.appitf.data.local.model.Categoria
+import com.itfperu.appitf.data.local.model.Ciclo
 import com.itfperu.appitf.data.local.model.Combos
-import com.itfperu.appitf.data.viewModel.CategoriaViewModel
+import com.itfperu.appitf.data.viewModel.CicloViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_categoria.*
-import kotlinx.android.synthetic.main.fragment_edit_categoria.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_categoria.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_categoria.fabGenerate
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
-import java.util.*
+import kotlinx.android.synthetic.main.fragment_edit_ciclo.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
+class EditCicloFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.editTextDesde -> Util.getDateDialog(context!!, editTextDesde)
+            R.id.editTextHasta -> Util.getDateDialog(context!!, editTextHasta)
             R.id.editTextEstado -> spinnerDialog()
-            R.id.fabGenerate -> formCategoria()
+            R.id.fabGenerate -> formCiclo()
         }
     }
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var itfViewModel: CategoriaViewModel
-    lateinit var p: Categoria
+    lateinit var itfViewModel: CicloViewModel
+    lateinit var p: Ciclo
     private var usuarioId: Int = 0
-    private var categoriaId: Int = 0
+    private var cicloId: Int = 0
     lateinit var builder: AlertDialog.Builder
     private var dialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        p = Categoria()
+        p = Ciclo()
         arguments?.let {
-            categoriaId = it.getInt(ARG_PARAM1)
+            cicloId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
         }
     }
@@ -66,7 +62,7 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_edit_categoria, container, false)
+        return inflater.inflate(R.layout.fragment_edit_ciclo, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,23 +72,25 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
 
     private fun bindUI() {
         itfViewModel =
-            ViewModelProvider(this, viewModelFactory).get(CategoriaViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(CicloViewModel::class.java)
 
-        p.estadoId = 1
-        editTextEstado.setText(String.format("ACTIVO"))
+        p.estado = 3
+        editTextEstado.setText(String.format("Activo"))
 
-        itfViewModel.getCategoriaById(categoriaId).observe(viewLifecycleOwner, {
+        itfViewModel.getCicloById(cicloId).observe(viewLifecycleOwner, {
             if (it != null) {
                 p = it
-                editTextCodigo.setText(it.codigo)
-                editTextCodigo.isEnabled = false
-                editTextNombre.setText(it.descripcion)
-                editTextEstado.setText(it.estado)
+                editTextDescripcion.setText(it.nombre)
+                editTextDesde.setText(it.desde)
+                editTextHasta.setText(it.hasta)
+                editTextEstado.setText(it.nombreEstado)
             }
         })
 
         fabGenerate.setOnClickListener(this)
         editTextEstado.setOnClickListener(this)
+        editTextDesde.setOnClickListener(this)
+        editTextHasta.setOnClickListener(this)
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
@@ -106,13 +104,14 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
         })
     }
 
-    private fun formCategoria() {
-        p.codigo = editTextCodigo.text.toString().toUpperCase(Locale.getDefault())
-        p.descripcion = editTextNombre.text.toString()
-        p.estado = editTextEstado.text.toString()
+    private fun formCiclo() {
+        p.nombre = editTextDescripcion.text.toString()
+        p.desde = editTextDesde.text.toString()
+        p.hasta = editTextHasta.text.toString()
+        p.nombreEstado = editTextEstado.text.toString()
         p.usuarioId = usuarioId
         load()
-        itfViewModel.validateCategoria(p)
+        itfViewModel.validateCiclo(p)
     }
 
     private fun load() {
@@ -158,9 +157,10 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
         )
         textViewTitulo.text = String.format("Estado")
 
+
         val estadoAdapter = ComboAdapter(object : OnItemClickListener.ComboListener {
             override fun onItemClick(c: Combos, view: View, position: Int) {
-                p.estadoId = c.id
+                p.estado = c.id
                 editTextEstado.setText(c.title)
                 dialog.dismiss()
             }
@@ -168,15 +168,16 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.adapter = estadoAdapter
 
         val a = ArrayList<Combos>()
-        a.add(Combos(1, "ACTIVO"))
-        a.add(Combos(0, "INACTIVO"))
+        a.add(Combos(3, "Activo"))
+        a.add(Combos(4, "En Proceso"))
+        a.add(Combos(5, "Cerrado"))
         estadoAdapter.addItems(a)
     }
 
     companion object {
         @JvmStatic
         fun newInstance(param1: Int, param2: Int) =
-            EditCategoriaFragment().apply {
+            EditCicloFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)

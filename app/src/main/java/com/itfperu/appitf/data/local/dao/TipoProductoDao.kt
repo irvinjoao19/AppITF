@@ -29,9 +29,15 @@ interface TipoProductoDao {
     @Query("SELECT * FROM TipoProducto")
     fun getTipoProductos(): LiveData<List<TipoProducto>>
 
+    @Query("SELECT * FROM TipoProducto WHERE estadoId = 1")
+    fun getTipoProductoActive(): LiveData<List<TipoProducto>>
+
     @Query("DELETE FROM TipoProducto")
     fun deleteAll()
 
     @Query("SELECT * FROM TipoProducto WHERE tipoProductoId=:id")
     fun getTipoProductoById(id: Int): LiveData<TipoProducto>
+
+    @Query("SELECT * FROM TipoProducto WHERE codigo =:c")
+    fun getTipoProductoByCod(c: String): TipoProducto
 }

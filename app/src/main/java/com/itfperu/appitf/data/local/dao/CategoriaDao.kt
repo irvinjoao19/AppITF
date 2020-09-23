@@ -34,4 +34,7 @@ interface CategoriaDao {
 
     @Query("SELECT * FROM Categoria WHERE categoriaId=:id")
     fun getCategoriaById(id: Int): LiveData<Categoria>
+
+    @Query("SELECT * FROM Categoria WHERE codigo =:c")
+    fun getCategoriaByCod(c: String): Categoria
 }

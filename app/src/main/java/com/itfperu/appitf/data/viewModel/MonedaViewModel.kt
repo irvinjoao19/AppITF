@@ -97,8 +97,18 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateMoneda(c: Moneda) {
-
-
+        if (c.codigo.isEmpty()){
+            mensajeError.value = "Ingrese Codigo de Moneda"
+            return
+        }
+        if (c.descripcion.isEmpty()){
+            mensajeError.value = "Ingrese Descripción de Moneda"
+            return
+        }
+        if (c.simbolo.isEmpty()){
+            mensajeError.value = "Ingrese Simbolo de Moneda"
+            return
+        }
         verificateMoneda(c)
     }
 
@@ -144,7 +154,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeSuccess.value = "Save"
+                    mensajeSuccess.value = "Guardado"
                 }
 
                 override fun onError(e: Throwable) {
@@ -182,7 +192,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeError.value = "Eliminado"
+                    mensajeError.value = "Actualizado"
                 }
 
                 override fun onError(e: Throwable) {

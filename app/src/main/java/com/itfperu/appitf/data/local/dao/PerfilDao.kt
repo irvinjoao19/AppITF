@@ -28,6 +28,9 @@ interface PerfilDao {
 
     @Query("SELECT * FROM Perfil")
     fun getPerfiles(): LiveData<List<Perfil>>
+
+    @Query("SELECT * FROM Perfil WHERE estadoId = 1")
+    fun getPerfilsActive(): LiveData<List<Perfil>>
 //    fun getPerfiles(id: Int): DataSource.Factory<Int,Perfil>
 
     @Query("DELETE FROM Perfil")

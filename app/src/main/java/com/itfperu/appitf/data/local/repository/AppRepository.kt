@@ -35,6 +35,7 @@ interface AppRepository {
     fun syncPerfil(): Observable<List<Perfil>>
     fun insertPerfils(p: List<Perfil>): Completable
     fun getPerfils(): LiveData<List<Perfil>>
+    fun getPerfilsActive(): LiveData<List<Perfil>>
     fun verificatePerfil(c: Perfil): Completable
     fun sendPerfil(c: Perfil): Observable<Mensaje>
     fun insertPerfil(c: Perfil, m: Mensaje): Completable
@@ -95,6 +96,7 @@ interface AppRepository {
     fun syncTipoProducto(): Observable<List<TipoProducto>>
     fun insertTipoProductos(p: List<TipoProducto>): Completable
     fun getTipoProductos(): LiveData<List<TipoProducto>>
+    fun getTipoProductoActive(): LiveData<List<TipoProducto>>
     fun verificateTipoProducto(c: TipoProducto): Completable
     fun sendTipoProducto(c: TipoProducto): Observable<Mensaje>
     fun insertTipoProducto(c: TipoProducto, m: Mensaje): Completable
@@ -143,4 +145,13 @@ interface AppRepository {
     fun getSupervisores(): LiveData<List<Personal>>
     fun removePersonal(i:Int): Observable<Mensaje>
     fun deletePersonal(p:Personal): Completable
+
+    //CATEGORIA
+    fun clearCiclo(): Completable
+    fun syncCiclo(): Observable<List<Ciclo>>
+    fun insertCiclos(p: List<Ciclo>): Completable
+    fun getCiclos(): LiveData<List<Ciclo>>
+    fun sendCiclo(c: Ciclo): Observable<Mensaje>
+    fun insertCiclo(c: Ciclo, m: Mensaje): Completable
+    fun getCicloById(id: Int): LiveData<Ciclo>
 }

@@ -34,4 +34,7 @@ interface ProductoDao {
 
     @Query("SELECT * FROM Producto WHERE productoId=:id")
     fun getProductoById(id: Int): LiveData<Producto>
+
+    @Query("SELECT * FROM Producto WHERE codigo=:c")
+    fun getProductoByCod(c: String): Producto
 }

@@ -117,7 +117,7 @@ class EspecialidadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
     private fun confirmDelete(e:Especialidad) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar esta especialidad ?")
+            .setMessage("Deseas inactivar esta especialidad ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(e)
@@ -135,7 +135,7 @@ class EspecialidadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)

@@ -11,61 +11,16 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/layout1"
+            android:id="@+id/textViewT1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Codigo"
-            android:textSize="18sp"
+            android:layout_margin="16dp"
+            android:textSize="21sp"
+            android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/layoutCodigo"
+            android:text="Datos Generales"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutCodigo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout1">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextCodigo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/layout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Rol"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/layoutRol"
-            app:layout_constraintTop_toBottomOf="@+id/layoutCodigo" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutRol"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout2">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextRol"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_down"
-                android:focusable="false" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/layout3"
@@ -76,7 +31,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutNombre"
-            app:layout_constraintTop_toBottomOf="@+id/layoutRol" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewT1"           />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutNombre"
@@ -295,33 +250,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/layout11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Contraseña"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/layoutPass"
-            app:layout_constraintTop_toBottomOf="@+id/layoutEmail" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPass"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout11">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkSupervisor"
@@ -330,7 +259,7 @@
             android:layout_margin="8dp"
             android:text="Es Supervisor"
             app:layout_constraintStart_toStartOf="@+id/layout12"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPass" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutEmail" />
 
         <TextView
             android:id="@+id/layout12"
@@ -361,6 +290,125 @@
                 android:focusable="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
+
+
+
+
+
+
+        <TextView
+            android:id="@+id/textViewT2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:textSize="21sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:text="Ingreso de Sistema"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSupervisor" />
+
+
+        <TextView
+            android:id="@+id/layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Login"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutCodigo"
+            app:layout_constraintTop_toBottomOf="@+id/textViewT2"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutCodigo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextCodigo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <TextView
+            android:id="@+id/layout11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Contraseña"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutPass"
+            app:layout_constraintTop_toBottomOf="@+id/layoutCodigo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutPass"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:passwordToggleEnabled="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout11">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Rol"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutRol"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPass" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutRol"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextRol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_down"
+                android:focusable="false" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+
         <TextView
             android:id="@+id/layout13"
             android:layout_width="wrap_content"
@@ -370,7 +418,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutEstado"
-            app:layout_constraintTop_toBottomOf="@+id/layoutSupervisor" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutRol" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutEstado"

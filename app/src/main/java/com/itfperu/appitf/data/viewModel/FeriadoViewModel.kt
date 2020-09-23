@@ -183,7 +183,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeError.value = "Eliminado"
+                    mensajeError.value = "Actualizado"
                 }
 
                 override fun onError(e: Throwable) {

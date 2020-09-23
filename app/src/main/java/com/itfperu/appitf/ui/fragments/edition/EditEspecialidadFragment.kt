@@ -30,7 +30,9 @@ import kotlinx.android.synthetic.main.fragment_edit_especialidad.editTextEstado
 import kotlinx.android.synthetic.main.fragment_edit_especialidad.editTextNombre
 import kotlinx.android.synthetic.main.fragment_edit_especialidad.fabGenerate
 import kotlinx.android.synthetic.main.fragment_edit_feriado.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -105,7 +107,7 @@ class EditEspecialidadFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formEspecialidad() {
-        p.codigo = editTextCodigo.text.toString()
+        p.codigo = editTextCodigo.text.toString().toUpperCase(Locale.getDefault())
         p.descripcion = editTextNombre.text.toString()
         p.estado = editTextEstado.text.toString()
         p.usuarioId = usuarioId

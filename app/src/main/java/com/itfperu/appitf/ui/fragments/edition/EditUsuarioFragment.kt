@@ -219,7 +219,7 @@ class EditUsuarioFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = perfilAdapter
 
-                perfilViewModel.getPerfils().observe(this, {
+                perfilViewModel.getPerfilsActive().observe(this, {
                     progressBar.visibility = View.GONE
                     perfilAdapter.addItems(it)
                 })

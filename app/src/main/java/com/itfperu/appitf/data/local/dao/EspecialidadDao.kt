@@ -34,4 +34,7 @@ interface EspecialidadDao {
 
     @Query("SELECT * FROM Especialidad WHERE especialidadId=:id")
     fun getEspecialidadById(id: Int): LiveData<Especialidad>
+
+    @Query("SELECT * FROM Especialidad WHERE codigo=:c")
+    fun getEspecialidadByCod(c: String): Especialidad
 }

@@ -35,6 +35,6 @@ interface PersonalDao {
     @Query("SELECT * FROM Personal WHERE personalId=:id")
     fun getPersonalById(id: Int): LiveData<Personal>
 
-    @Query("SELECT * FROM Personal WHERE esSupervisorId = 1")
+    @Query("SELECT * FROM Personal WHERE esSupervisorId = 1 AND estado = 1 ")
     fun getSupervisores(): LiveData<List<Personal>>
 }

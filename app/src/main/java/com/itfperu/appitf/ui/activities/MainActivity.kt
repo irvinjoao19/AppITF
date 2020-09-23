@@ -102,10 +102,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.title) {
-            "Perfil" -> startActivity(
-                Intent(this, PerfilActivity::class.java)
-                    .putExtra("usuarioId", usuarioId)
-            )
             "Roles" -> changeFragment(
                 PerfilFragment.newInstance(usuarioId), item.title.toString()
             )
@@ -118,20 +114,23 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Monedas" -> changeFragment(
                 MonedaFragment.newInstance(usuarioId), item.title.toString()
             )
-            "Categorias" -> changeFragment(
-                MonedaFragment.newInstance(usuarioId), item.title.toString()
+            "Categorías" -> changeFragment(
+                CategoriaFragment.newInstance(usuarioId), item.title.toString()
             )
             "Especialidades" -> changeFragment(
                 EspecialidadFragment.newInstance(usuarioId), item.title.toString()
             )
-            "Tipos de producto" -> changeFragment(
+            "Tipos de Productos" -> changeFragment(
                 TipoProductoFragment.newInstance(usuarioId), item.title.toString()
             )
-            "Resultados de visita" -> changeFragment(
+            "Resultados de Visita" -> changeFragment(
                 VisitaFragment.newInstance(usuarioId), item.title.toString()
             )
             "Productos" -> changeFragment(
                 ProductoFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Ciclos" -> changeFragment(
+                CicloFragment.newInstance(usuarioId), item.title.toString()
             )
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }
@@ -186,9 +185,19 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         header.textViewEmail.text = u.email
         usuarioId = u.usuarioId
 
+        header.textViewName.setOnClickListener { goPerfil() }
+        header.textViewEmail.setOnClickListener { goPerfil() }
+
         Picasso.get().load(String.format("%s%s", Util.UrlFoto, u.foto))
             .memoryPolicy(MemoryPolicy.NO_CACHE)
             .into(header.imageView)
+    }
+
+    private fun goPerfil() {
+        startActivity(
+            Intent(this, PerfilActivity::class.java)
+                .putExtra("usuarioId", usuarioId)
+        )
     }
 
     private fun goLogin() {

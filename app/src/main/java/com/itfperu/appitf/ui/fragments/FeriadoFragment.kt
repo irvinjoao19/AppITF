@@ -114,7 +114,7 @@ class FeriadoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(f:Feriado) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este feriado ?")
+            .setMessage("Deseas inactivar este feriado ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(f)
@@ -132,7 +132,7 @@ class FeriadoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)

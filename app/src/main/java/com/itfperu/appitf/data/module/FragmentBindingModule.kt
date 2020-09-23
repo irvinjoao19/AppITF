@@ -38,6 +38,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providPersonakFragment(): PersonalFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providCicloFragment(): CicloFragment
     }
 
     @Module
@@ -71,5 +74,8 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providEditUsuarioFragment(): EditUsuarioFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditCicloFragment(): EditCicloFragment
     }
 }

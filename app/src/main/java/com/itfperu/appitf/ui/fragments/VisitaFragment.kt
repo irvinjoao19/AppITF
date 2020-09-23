@@ -67,7 +67,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
                 when (view.id) {
                     R.id.imgEdit -> startActivity(
                         Intent(context, FormActivity::class.java)
-                            .putExtra("title", "Modificar Visita")
+                            .putExtra("title", "Modificar Resultado de Visita")
                             .putExtra("tipo", tipo)
                             .putExtra("id", v.visitaId)
                             .putExtra("uId", usuarioId)
@@ -112,7 +112,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(v: Visita) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas eliminar esta visita ?")
+            .setMessage("Deseas inactivar esta visita ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(v)
@@ -130,7 +130,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
         builder.setView(view)
         val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Eliminando..")
+        textViewTitle.text = String.format("Actualizando..")
         dialog = builder.create()
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)
@@ -163,7 +163,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     override fun onClick(v: View) {
         startActivity(
             Intent(context, FormActivity::class.java)
-                .putExtra("title", "Nueva Visita")
+                .putExtra("title", "Nuevo Resultado de Visita")
                 .putExtra("tipo", tipo)
                 .putExtra("id", 0)
                 .putExtra("uId", usuarioId)

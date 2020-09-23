@@ -48,4 +48,8 @@ interface OnItemClickListener {
     interface PersonalListener {
         fun onItemClick(p : Personal, view: View, position: Int)
     }
+
+    interface CicloListener {
+        fun onItemClick(c : Ciclo, view: View, position: Int)
+    }
 }

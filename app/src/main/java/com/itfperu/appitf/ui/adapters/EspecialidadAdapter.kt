@@ -8,14 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Especialidad
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
-import kotlinx.android.synthetic.main.cardview_categoria.view.*
 import kotlinx.android.synthetic.main.cardview_especialidad.view.*
-import kotlinx.android.synthetic.main.cardview_especialidad.view.card
-import kotlinx.android.synthetic.main.cardview_especialidad.view.imgDelete
-import kotlinx.android.synthetic.main.cardview_especialidad.view.imgEdit
-import kotlinx.android.synthetic.main.cardview_especialidad.view.textView1
-import kotlinx.android.synthetic.main.cardview_especialidad.view.textView2
-import kotlinx.android.synthetic.main.cardview_especialidad.view.textView3
 
 class EspecialidadAdapter(private var listener: OnItemClickListener.EspecialidadListener) :
     RecyclerView.Adapter<EspecialidadAdapter.ViewHolder>() {
@@ -34,6 +27,7 @@ class EspecialidadAdapter(private var listener: OnItemClickListener.Especialidad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(perfiles[position], position, listener)
     }
 
@@ -57,9 +51,16 @@ class EspecialidadAdapter(private var listener: OnItemClickListener.Especialidad
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-                textView1.text = p.descripcion
-                textView2.text = p.codigo
+                textView1.text = p.codigo
+                textView2.text = p.descripcion
                 textView3.text = p.estado
+                if (p.estadoId == 0) {
+                    textView3.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                }
                 imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
