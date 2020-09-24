@@ -124,7 +124,23 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "La Fecha Hasta debe ser mayor o igual a la Fecha Desde"
             return
         }
-        sendCiclo(c)
+        verificateCiclo(c)
+    }
+
+    private fun verificateCiclo(c: Ciclo) {
+        roomRepository.verificateCiclo(c)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    sendCiclo(c)
+                }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
     }
 
     private fun sendCiclo(c: Ciclo) {

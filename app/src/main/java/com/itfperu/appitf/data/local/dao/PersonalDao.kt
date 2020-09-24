@@ -37,4 +37,7 @@ interface PersonalDao {
 
     @Query("SELECT * FROM Personal WHERE esSupervisorId = 1 AND estado = 1 ")
     fun getSupervisores(): LiveData<List<Personal>>
+
+    @Query("SELECT * FROM Personal WHERE login=:l")
+    fun getPersonalByCod(l: String): Personal
 }

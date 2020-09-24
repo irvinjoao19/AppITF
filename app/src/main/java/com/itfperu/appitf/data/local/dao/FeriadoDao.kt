@@ -34,4 +34,7 @@ interface FeriadoDao {
 
     @Query("SELECT * FROM Feriado WHERE feriadoId=:id")
     fun getFeriadoById(id: Int): LiveData<Feriado>
+
+    @Query("SELECT * FROM Feriado WHERE fecha=:f")
+    fun getPersonalByCod(f: String): Feriado
 }

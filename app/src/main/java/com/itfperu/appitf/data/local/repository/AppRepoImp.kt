@@ -128,8 +128,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificatePerfil(c: Perfil): Completable {
         return Completable.fromAction {
-            if (c.codigo == "1") {
-                Throwable("Error de Codigo")
+            if (c.perfilId == 0) {
+                val m: Perfil? =
+                    dataBase.perfilDao().getPerfilByCod(c.codigo)
+                if (m != null) {
+                    error("El codigo de Rol existe... Ingrese otro")
+                }
             }
         }
     }
@@ -587,9 +591,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateFeriado(c: Feriado): Completable {
         return Completable.fromAction {
-//            if (c. == "1"){
-//                Throwable("Error de codigo")
-//            }
+            if (c.feriadoId == 0) {
+                val m: Feriado? = dataBase.feriadoDao().getPersonalByCod(c.fecha)
+                if (m != null) {
+                    error("La fecha de feriado existe... Ingrese otro")
+                }
+            }
         }
     }
 
@@ -663,7 +670,13 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificatePersonal(c: Personal): Completable {
         return Completable.fromAction {
-
+            if (c.personalId == 0) {
+                val m: Personal? =
+                    dataBase.personalDao().getPersonalByCod(c.login)
+                if (m != null) {
+                    error("El login de usuario existe... Ingrese otro")
+                }
+            }
         }
     }
 
@@ -725,6 +738,17 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.cicloDao().getCiclos()
     }
 
+    override fun verificateCiclo(c:Ciclo): Completable {
+        return Completable.fromAction {
+            if (c.estado == 4){
+                val m : Ciclo? = dataBase.cicloDao().getCicloProceso(4)
+                if (m != null){
+                    error("No puede haber varios ciclos en PROCESO")
+                }
+            }
+        }
+    }
+
     override fun sendCiclo(c: Ciclo): Observable<Mensaje> {
         val json = Gson().toJson(c)
         Log.i("TAG", json)
@@ -733,7 +757,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun insertCiclo(c: Ciclo, m: Mensaje): Completable {
-        return  Completable.fromAction {
+        return Completable.fromAction {
             if (m.codigoBase == 0) {
                 c.cicloId = m.codigoRetorno
                 dataBase.cicloDao().insertCicloTask(c)

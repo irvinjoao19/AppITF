@@ -151,6 +151,7 @@ interface AppRepository {
     fun syncCiclo(): Observable<List<Ciclo>>
     fun insertCiclos(p: List<Ciclo>): Completable
     fun getCiclos(): LiveData<List<Ciclo>>
+    fun verificateCiclo(c:Ciclo) : Completable
     fun sendCiclo(c: Ciclo): Observable<Mensaje>
     fun insertCiclo(c: Ciclo, m: Mensaje): Completable
     fun getCicloById(id: Int): LiveData<Ciclo>

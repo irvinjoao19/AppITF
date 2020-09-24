@@ -38,4 +38,7 @@ interface PerfilDao {
 
     @Query("SELECT * FROM Perfil WHERE perfilId=:id")
     fun getPerfilById(id: Int): LiveData<Perfil>
+
+    @Query("SELECT * FROM Perfil WHERE codigo=:c")
+    fun getPerfilByCod(c: String): Perfil
 }

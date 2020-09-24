@@ -115,6 +115,7 @@ class EditPersonalFragment : DaggerFragment(), View.OnClickListener {
                 if (it.esSupervisorId == 1) {
                     editTextSupervisor.isEnabled = false
                 }
+                editTextPass.setText(it.pass)
                 checkSupervisor.isChecked = it.esSupervisorId == 1
                 editTextSupervisor.setText(it.nombreSupervisor)
                 editTextEstado.setText(it.nombreEstado)

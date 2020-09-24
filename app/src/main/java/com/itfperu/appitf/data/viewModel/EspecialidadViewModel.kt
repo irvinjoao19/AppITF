@@ -90,8 +90,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateEspecialidad(c: Especialidad) {
-
-
+        if (c.codigo.isEmpty()) {
+            mensajeError.value = "Debe de ingresar codigo de especialidad"
+            return
+        }
+        if (c.descripcion.isEmpty()) {
+            mensajeError.value = "Debe de ingresar descripción de especialidad"
+            return
+        }
         verificateEspecialidad(c)
     }
 
@@ -168,7 +174,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun deleteObject(v:Especialidad){
+    private fun deleteObject(v: Especialidad) {
         roomRepository.deleteEspecialidad(v)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

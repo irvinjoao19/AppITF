@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Nombre"
+            android:text="Nombres"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutNombre"
@@ -290,15 +290,6 @@
                 android:focusable="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
-
-
-
-
-
-
         <TextView
             android:id="@+id/textViewT2"
             android:layout_width="wrap_content"
@@ -307,7 +298,7 @@
             android:textSize="21sp"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            android:text="Ingreso de Sistema"
+            android:text="Ingreso al Sistema"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutSupervisor" />
 

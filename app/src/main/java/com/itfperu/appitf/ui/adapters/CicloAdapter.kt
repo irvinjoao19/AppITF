@@ -49,17 +49,18 @@ class CicloAdapter(private var listener: OnItemClickListener.CicloListener) :
                 }
 
                 textView1.text = p.nombre
-                textView2.text = p.desde
-                textView3.text = p.hasta
+                textView2.text = String.format("Desde: %s",p.desde)
+                textView3.text = String.format("Hasta: %s",p.hasta)
                 textView4.text = p.nombreEstado
-                if (p.estado == 0) {
-                    textView4.setTextColor(
-                        ContextCompat.getColor(
-                            itemView.context, R.color.colorRed
-                        )
-                    )
+                if (p.estado == 5) {
+                    imgEdit.visibility = View.GONE
+//                    textView4.setTextColor(
+//                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+//                    )
+                }else{
+                    imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 }
-                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                // 3	-> Activo    4	-> En Proceso     5	-> Cerrado
             }
     }
 }

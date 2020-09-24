@@ -102,15 +102,32 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validatePersonal(c: Personal) {
-        if (c.login.isEmpty()) {
-            mensajeError.value = "Ingrese Codigo de Usuario"
+        if (c.nombre.isEmpty()) {
+            mensajeError.value = "Debe ingresar el nombre del usuario"
             return
         }
-
-
+        if (c.apellidoP.isEmpty()) {
+            mensajeError.value = "Debe ingresar el apellido paterno"
+            return
+        }
+        if (c.apellidoM.isEmpty()) {
+            mensajeError.value = "Debe ingresar el apellido materno"
+            return
+        }
+        if (c.login.isEmpty()) {
+            mensajeError.value = "Debe ingresar el login"
+            return
+        }
+        if (c.pass.isEmpty()){
+            mensajeError.value = "Debe ingresar la contraseña"
+            return
+        }
+        if (c.perfilId == 0){
+            mensajeError.value = "Debe elegir un Rol"
+            return
+        }
         verificatePersonal(c)
     }
-
 
     private fun verificatePersonal(c: Personal) {
         roomRepository.verificatePersonal(c)
@@ -198,7 +215,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun deleteObject(v:Personal){
+    private fun deleteObject(v: Personal) {
         roomRepository.deletePersonal(v)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

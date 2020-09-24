@@ -90,16 +90,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateFeriado(c: Feriado) {
-        if (c.descripcion.isEmpty()) {
-            mensajeError.value = "Ingrese Nombre de Feriado"
-            return
-        }
-
         if (c.fecha.isEmpty()) {
             mensajeError.value = "Seleccione Fecha"
             return
         }
-
+        if (c.descripcion.isEmpty()) {
+            mensajeError.value = "Ingrese Nombre de Feriado"
+            return
+        }
         verificateFeriado(c)
     }
 

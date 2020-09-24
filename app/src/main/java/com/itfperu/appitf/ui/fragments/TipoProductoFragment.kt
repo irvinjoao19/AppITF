@@ -68,7 +68,7 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
                 when (view.id) {
                     R.id.imgEdit -> startActivity(
                         Intent(context, FormActivity::class.java)
-                            .putExtra("title", "Modificar TipoProducto")
+                            .putExtra("title", "Modificar Tipo Producto")
                             .putExtra("tipo", tipo)
                             .putExtra("id", t.tipoProductoId)
                             .putExtra("uId", usuarioId)
@@ -165,7 +165,7 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
     override fun onClick(v: View) {
         startActivity(
             Intent(context, FormActivity::class.java)
-                .putExtra("title", "Nuevo TipoProducto")
+                .putExtra("title", "Nuevo Tipo Producto")
                 .putExtra("tipo", tipo)
                 .putExtra("id", 0)
                 .putExtra("uId", usuarioId)

@@ -97,11 +97,12 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateVisita(c: Visita) {
-
-
+        if (c.descripcion.isEmpty()) {
+            mensajeError.value = "Debe ingresar descripción de visita"
+            return
+        }
         verificateVisita(c)
     }
-
 
     private fun verificateVisita(c: Visita) {
         roomRepository.verificateVisita(c)
@@ -118,7 +119,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
             })
     }
-
 
     private fun sendVisita(c: Visita) {
         roomRepository.sendVisita(c)
@@ -175,7 +175,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun deleteObject(v:Visita){
+    private fun deleteObject(v: Visita) {
         roomRepository.deleteVisita(v)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

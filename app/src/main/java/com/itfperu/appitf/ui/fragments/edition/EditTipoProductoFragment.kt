@@ -2,7 +2,6 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,11 +23,7 @@ import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
-import kotlinx.android.synthetic.main.fragment_edit_producto.*
-import kotlinx.android.synthetic.main.fragment_edit_producto.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_producto.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_producto.fabGenerate
+import kotlinx.android.synthetic.main.fragment_edit_tipo_producto.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList

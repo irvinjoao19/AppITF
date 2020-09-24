@@ -48,7 +48,7 @@ class VisitaAdapter(private var listener: OnItemClickListener.VisitaListener) :
                 }
                 textView1.text = p.descripcion
                 textView2.text =
-                    String.format("IND. Motivo: %s", if (p.resultado == "1" || p.resultado == "SI") "SI" else "NO")
+                    String.format("Ind. por defecto: %s", if (p.resultado == "1" || p.resultado == "SI") "SI" else "NO")
                 textView3.text = p.estado
                 if (p.estadoId == 0) {
                     textView3.setTextColor(

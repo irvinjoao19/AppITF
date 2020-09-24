@@ -113,7 +113,7 @@ class PerfilFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(p: Perfil) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas inactivar el usuario ?")
+            .setMessage("Desea anular el Rol ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(p)

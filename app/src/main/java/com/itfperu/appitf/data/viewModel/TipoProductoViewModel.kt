@@ -12,6 +12,8 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_edit_producto.*
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -94,6 +96,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateTipoProducto(c: TipoProducto) {
+        if (c.codigo.isEmpty()) {
+            mensajeError.value = "Debe de ingresar codigo de Tipo Producto"
+            return
+        }
+        if (c.descripcion.isEmpty()) {
+            mensajeError.value = "Debe de ingresar descripción"
+            return
+        }
 
 
         verificateTipoProducto(c)

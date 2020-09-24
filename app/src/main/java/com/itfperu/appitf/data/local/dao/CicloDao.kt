@@ -35,4 +35,7 @@ interface CicloDao {
     @Query("SELECT * FROM Ciclo WHERE cicloId=:id")
     fun getCicloById(id: Int): LiveData<Ciclo>
 
+    @Query("SELECT * FROM Ciclo WHERE estado=:e")
+    fun getCicloProceso(e: Int): Ciclo
+
 }

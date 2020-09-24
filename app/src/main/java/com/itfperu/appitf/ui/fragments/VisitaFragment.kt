@@ -112,7 +112,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun confirmDelete(v: Visita) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
-            .setMessage("Deseas inactivar esta visita ?")
+            .setMessage("Deseas inactivar este resultado de visita?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
                 itfViewModel.delete(v)
