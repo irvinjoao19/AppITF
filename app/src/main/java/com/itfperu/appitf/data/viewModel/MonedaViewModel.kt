@@ -8,17 +8,10 @@ import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
 import io.reactivex.CompletableObserver
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -97,21 +90,20 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateMoneda(c: Moneda) {
-        if (c.codigo.isEmpty()){
+        if (c.codigo.isEmpty()) {
             mensajeError.value = "Ingrese Codigo de Moneda"
             return
         }
-        if (c.descripcion.isEmpty()){
+        if (c.descripcion.isEmpty()) {
             mensajeError.value = "Ingrese Descripción de Moneda"
             return
         }
-        if (c.simbolo.isEmpty()){
+        if (c.simbolo.isEmpty()) {
             mensajeError.value = "Ingrese Simbolo de Moneda"
             return
         }
         verificateMoneda(c)
     }
-
 
     private fun verificateMoneda(c: Moneda) {
         roomRepository.verificateMoneda(c)
@@ -129,8 +121,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendMoneda(c: Moneda) {
+    fun sendMoneda(c: Moneda) {
         roomRepository.sendMoneda(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -165,39 +156,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getMonedaById(monedaId: Int): LiveData<Moneda> {
         return roomRepository.getMonedaById(monedaId)
-    }
-
-    fun delete(v: Moneda) {
-        roomRepository.removeMoneda(v.monedaId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v:Moneda){
-        roomRepository.deleteMoneda(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

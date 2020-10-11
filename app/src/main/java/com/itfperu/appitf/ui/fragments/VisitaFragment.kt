@@ -115,7 +115,9 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage("Deseas inactivar este resultado de visita?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(v)
+                v.estado = "INACTIVO"
+                v.estadoId = 0
+                itfViewModel.sendVisita(v)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

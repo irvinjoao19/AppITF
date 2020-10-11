@@ -93,4 +93,69 @@ class DataBaseModule {
     internal fun provideCicloDao(appDataBase: AppDataBase): CicloDao {
         return appDataBase.cicloDao()
     }
+
+    @Provides
+    internal fun provideActividadDao(appDataBase: AppDataBase): ActividadDao {
+        return appDataBase.actividadDao()
+    }
+
+    @Provides
+    internal fun provideEstadoDao(appDataBase: AppDataBase): EstadoDao {
+        return appDataBase.estadoDao()
+    }
+
+    @Provides
+    internal fun provideDuracionDao(appDataBase: AppDataBase): DuracionDao {
+        return appDataBase.duracionDao()
+    }
+
+    @Provides
+    internal fun provideSolMedicoDao(appDataBase: AppDataBase): SolMedicoDao {
+        return appDataBase.solMedicoDao()
+    }
+
+    @Provides
+    internal fun provideMedicoDao(appDataBase: AppDataBase): MedicoDao {
+        return appDataBase.medicoDao()
+    }
+
+    @Provides
+    internal fun provideMedicoDireccionDao(appDataBase: AppDataBase): MedicoDireccionDao {
+        return appDataBase.medicoDireccionDao()
+    }
+
+    @Provides
+    internal fun provideIdentificadorDao(appDataBase: AppDataBase): IdentificadorDao {
+        return appDataBase.identificadorDao()
+    }
+
+    @Provides
+    internal fun provideDepartamentoDao(appDataBase: AppDataBase): DepartamentoDao {
+        return appDataBase.departamentoDao()
+    }
+
+    @Provides
+    internal fun provideProvinciaDao(appDataBase: AppDataBase): ProvinciaDao {
+        return appDataBase.provinciaDao()
+    }
+
+    @Provides
+    internal fun provideDistritoDao(appDataBase: AppDataBase): DistritoDao {
+        return appDataBase.distritoDao()
+    }
+
+    @Provides
+    internal fun provideTargetDao(appDataBase: AppDataBase): TargetDao {
+        return appDataBase.targetDao()
+    }
+
+    @Provides
+    internal fun provideTargetCabDao(appDataBase: AppDataBase): TargetCabDao {
+        return appDataBase.targetCabDao()
+    }
+
+    @Provides
+    internal fun provideTargetDetDao(appDataBase: AppDataBase): TargetDetDao {
+        return appDataBase.targetDetDao()
+    }
 }

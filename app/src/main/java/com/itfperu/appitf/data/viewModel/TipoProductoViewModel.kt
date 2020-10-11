@@ -12,8 +12,6 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_edit_producto.*
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -126,8 +124,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendTipoProducto(c: TipoProducto) {
+    fun sendTipoProducto(c: TipoProducto) {
         roomRepository.sendTipoProducto(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -162,39 +159,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getTipoProductoById(productoId: Int): LiveData<TipoProducto> {
         return roomRepository.getTipoProductoById(productoId)
-    }
-
-    fun delete(v: TipoProducto) {
-        roomRepository.removeTipoProducto(v.tipoProductoId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deletevisita(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deletevisita(v:TipoProducto){
-        roomRepository.deleteTipoProducto(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

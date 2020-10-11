@@ -27,7 +27,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
-import com.itfperu.appitf.R
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -98,6 +97,22 @@ object Util {
         }
 
         return day
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getFirstDay(): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy")
+        val calendar = Calendar.getInstance()
+        calendar[Calendar.DAY_OF_MONTH] = 1
+        return sdf.format(calendar.time)
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getLastaDay(): String {
+        val sdf = SimpleDateFormat("dd/MM/yyyy")
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        return sdf.format(calendar.time)
     }
 
     fun getFormatDate(date: Date): String {
@@ -640,8 +655,7 @@ object Util {
         val mYear = c.get(Calendar.YEAR)
         val mMonth = c.get(Calendar.MONTH)
         val mDay = c.get(Calendar.DAY_OF_MONTH)
-        val datePickerDialog = DatePickerDialog(context, { _, year
-                                                           , monthOfYear, dayOfMonth ->
+        val datePickerDialog = DatePickerDialog(context, { _, year, monthOfYear, dayOfMonth ->
             val month =
                 if (((monthOfYear + 1) / 10) == 0) "0" + (monthOfYear + 1).toString() else (monthOfYear + 1).toString()
             val day = if (((dayOfMonth + 1) / 10) == 0) "0$dayOfMonth" else dayOfMonth.toString()
@@ -859,10 +873,21 @@ object Util {
         return imagePath
     }
 
-    fun getLocationName(context: Context, input: TextInputEditText, location: Location, progressBar: ProgressBar) {
+    fun getLocationName(
+        context: Context,
+        input: TextInputEditText,
+        location: Location,
+        progressBar: ProgressBar
+    ) {
         val nombre = arrayOf("")
         try {
-            val addressObservable = Observable.just(Geocoder(context).getFromLocation(location.latitude, location.longitude, 1)[0])
+            val addressObservable = Observable.just(
+                Geocoder(context).getFromLocation(
+                    location.latitude,
+                    location.longitude,
+                    1
+                )[0]
+            )
             addressObservable.subscribeOn(Schedulers.io())
                 .delay(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())

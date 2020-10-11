@@ -120,7 +120,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun sendVisita(c: Visita) {
+    fun sendVisita(c: Visita) {
         roomRepository.sendVisita(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -155,39 +155,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getVisitaById(visitaId: Int): LiveData<Visita> {
         return roomRepository.getVisitaById(visitaId)
-    }
-
-    fun delete(v: Visita) {
-        roomRepository.removeVisita(v.visitaId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v: Visita) {
-        roomRepository.deleteVisita(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

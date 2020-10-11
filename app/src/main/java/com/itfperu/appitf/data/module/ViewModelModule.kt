@@ -66,5 +66,20 @@ abstract class ViewModelModule {
     internal abstract fun bindCicloViewModel(cicloViewModel: CicloViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(ActividadViewModel::class)
+    internal abstract fun bindActividadViewModel(actividadViewModel: ActividadViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MedicoViewModel::class)
+    internal abstract fun bindMedicoViewModel(medicoViewModel: MedicoViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TargetViewModel::class)
+    internal abstract fun bindTargetViewModel(targetViewModel: TargetViewModel): ViewModel
+
+    @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

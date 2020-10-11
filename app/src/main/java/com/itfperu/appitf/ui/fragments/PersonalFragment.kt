@@ -118,7 +118,9 @@ class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage("Deseas inactivar el usuario ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(p)
+                p.nombreEstado = "INACTIVO"
+                p.estado = 0
+                itfViewModel.sendPersonal(p)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

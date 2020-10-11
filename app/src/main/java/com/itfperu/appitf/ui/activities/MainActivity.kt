@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -24,8 +25,6 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_perfil.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.app_bar_main.toolbar
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import javax.inject.Inject
@@ -39,6 +38,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var logout: String = "off"
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.filtro, menu)
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,6 +137,34 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Ciclos" -> changeFragment(
                 CicloFragment.newInstance(usuarioId), item.title.toString()
             )
+            "Actividades" -> changeFragment(
+                ActividadFragment.newInstance(usuarioId, 1), item.title.toString()
+            )
+            "Aprobación actividades" -> changeFragment(
+                ActividadFragment.newInstance(usuarioId, 2), item.title.toString()
+            )
+            "Nuevos médicos" -> changeFragment(
+                MedicosFragment.newInstance(usuarioId, 1), item.title.toString()
+            )
+            "Aprobación médicas" -> changeFragment(
+                MedicosFragment.newInstance(usuarioId, 2), item.title.toString()
+            )
+            "Target" -> changeFragment(
+                TargetFragment.newInstance(usuarioId, 2), item.title.toString()
+            )
+            "Altas" -> changeFragment(
+                TargetAltasFragment.newInstance(usuarioId, "A", 1), item.title.toString()
+            )
+            "Bajas" -> changeFragment(
+                TargetAltasFragment.newInstance(usuarioId, "B", 1), item.title.toString()
+            )
+            "Aprobación altas" -> changeFragment(
+                TargetAltasFragment.newInstance(usuarioId, "A", 2), item.title.toString()
+            )
+            "Aprobación bajas" -> changeFragment(
+                TargetAltasFragment.newInstance(usuarioId, "B", 2), item.title.toString()
+            )
+            "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -236,10 +269,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             .setMessage(title)
             .setPositiveButton("SI") { dialog, _ ->
                 when (tipo) {
-//                    1 -> {
-//                        load("Sincronizando..")
-//                        usuarioViewModel.getSync(usuarioId, empresaId, personalId)
-//                    }
+                    1 -> {
+                        load("Sincronizando..")
+                        usuarioViewModel.sync(usuarioId)
+                    }
 //                    2 -> {
 //                        load("Enviando..")
 //                        usuarioViewModel.sendData(this)

@@ -18,7 +18,6 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -151,37 +150,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getSync(u: Int, e: Int, p: Int) {
-        roomRepository.deleteSync()
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-                }
 
-                override fun onComplete() {
-                    sync(u, e, p)
-                }
-
-                override fun onError(e: Throwable) {
-                    mensajeError.value = e.toString()
-                }
-            })
-    }
-
-    fun sync(u: Int, e: Int, p: Int) {
-        roomRepository.getSync(u, e, p)
+    fun sync(u:Int) {
+        roomRepository.getSync(u)
+            .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Sync> {
-                override fun onComplete() {
-
-                }
-
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Sync) {
                     insertSync(t)
                 }
@@ -200,16 +176,18 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         mensajeError.postValue(e.toString())
                     }
                 }
+
+                override fun onComplete() {}
             })
     }
 
-    fun insertSync(s: Sync) {
-        roomRepository.saveSync(s)
-            .delay(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.computation())
+    private fun insertSync(p: Sync) {
+        roomRepository.saveSync(p)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {
+
                 }
 
                 override fun onComplete() {
@@ -217,7 +195,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onError(e: Throwable) {
-                    mensajeError.value = e.toString()
+                    mensajeError.value = e.message
                 }
             })
     }

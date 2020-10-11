@@ -6,6 +6,7 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.ui.fragments.edition.*
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_form.*
+
 /**
  * 1 -> categoria
  * 2 -> especialidad
@@ -18,6 +19,10 @@ import kotlinx.android.synthetic.main.activity_form.*
  * 9 -> personal
  * 10 -> usuario
  * 11 -> ciclos
+ * 12 -> actividad
+ * 13 -> aprobacion de actividades
+ * 14 -> medico
+ * 15 -> target alta o baja
  */
 class FormActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +72,29 @@ class FormActivity : DaggerAppCompatActivity() {
                     savedInstanceState,
                     EditUsuarioFragment.newInstance(b.getInt("id"), b.getInt("uId"))
                 )
-                11 ->replaceFragment(
+                11 -> replaceFragment(
                     savedInstanceState,
                     EditCicloFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                12 -> replaceFragment(
+                    savedInstanceState,
+                    EditActividadesFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                13 -> replaceFragment(
+                    savedInstanceState,
+                    EditAprobationAFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                14 -> replaceFragment(
+                    savedInstanceState,
+                    EditSolMedicoFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getInt("tipoMedico"))
+                )
+                15-> replaceFragment(
+                    savedInstanceState,
+                    EditTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!)
+                )
+                16 -> replaceFragment(
+                    savedInstanceState,
+                    EditAprobationTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!)
                 )
             }
         }

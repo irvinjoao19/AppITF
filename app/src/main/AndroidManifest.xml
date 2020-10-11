@@ -29,6 +29,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="q">
+        <activity android:name=".ui.activities.SearchMedicoActivity"></activity>
+        <activity android:name=".ui.activities.TargetActivity" />
+        <activity android:name=".ui.activities.MedicoActivity" />
         <activity android:name=".ui.activities.PreviewCameraActivity" />
         <activity android:name=".ui.activities.CameraActivity" />
         <activity android:name=".ui.activities.PerfilActivity" />
@@ -42,4 +45,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

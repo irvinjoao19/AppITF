@@ -9,16 +9,10 @@ import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
-import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -134,8 +128,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendProducto(c: Producto) {
+    fun sendProducto(c: Producto) {
         roomRepository.sendProducto(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -219,39 +212,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getControls(): LiveData<List<Control>> {
         return roomRepository.getControls()
-    }
-
-    fun delete(v: Producto) {
-        roomRepository.removeProducto(v.productoId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v: Producto) {
-        roomRepository.deleteProducto(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

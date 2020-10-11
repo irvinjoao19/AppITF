@@ -110,13 +110,15 @@ class ProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
     }
 
-    private fun confirmDelete(p:Producto) {
+    private fun confirmDelete(p: Producto) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar este producto ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(p)
+                p.estado = "INACTIVO"
+                p.estadoId = 0
+                itfViewModel.sendProducto(p)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

@@ -115,7 +115,9 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage("Deseas inactivar esta Moneda ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(m)
+                m.estado = "INACTIVO"
+                m.estadoId = 0
+                itfViewModel.sendMoneda(m)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

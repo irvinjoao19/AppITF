@@ -21,4 +21,15 @@ abstract class ActivityBindingModule {
 
     @ContributesAndroidInjector
     internal abstract fun bindPreviewCameraActivity(): PreviewCameraActivity
+
+    @ContributesAndroidInjector(modules = [FragmentBindingModule.Medico::class])
+    internal abstract fun bindMedicoActivity(): MedicoActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun bindTargetActivity(): TargetActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun bindSearchMedicoActivity(): SearchMedicoActivity
+
+
 }

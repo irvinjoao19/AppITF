@@ -118,11 +118,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Debe ingresar el login"
             return
         }
-        if (c.pass.isEmpty()){
+        if (c.pass.isEmpty()) {
             mensajeError.value = "Debe ingresar la contraseña"
             return
         }
-        if (c.perfilId == 0){
+        if (c.perfilId == 0) {
             mensajeError.value = "Debe elegir un Rol"
             return
         }
@@ -145,8 +145,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendPersonal(c: Personal) {
+    fun sendPersonal(c: Personal) {
         roomRepository.sendPersonal(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -185,49 +184,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getSupervisores(): LiveData<List<Personal>> {
         return roomRepository.getSupervisores()
-    }
-
-    fun delete(v: Personal) {
-        roomRepository.removePersonal(v.personalId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(t: Throwable) {
-                    if (t is HttpException) {
-                        val body = t.response().errorBody()
-                        try {
-                            val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
-                        } catch (e1: IOException) {
-                            e1.printStackTrace()
-                        }
-                    } else {
-                        mensajeError.postValue(t.message)
-                    }
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v: Personal) {
-        roomRepository.deletePersonal(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

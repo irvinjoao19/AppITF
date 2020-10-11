@@ -1,6 +1,5 @@
 package com.itfperu.appitf.data.local.repository
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.itfperu.appitf.data.local.model.*
@@ -8,7 +7,6 @@ import com.itfperu.appitf.helper.Mensaje
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.RequestBody
-import retrofit2.Call
 
 interface AppRepository {
 
@@ -24,7 +22,7 @@ interface AppRepository {
     fun insertUsuario(u: Usuario): Completable
     fun deleteSesion(): Completable
     fun deleteSync(): Completable
-    fun getSync(u: Int, e: Int, p: Int): Observable<Sync>
+    fun getSync(u: Int): Observable<Sync>
     fun saveSync(s: Sync): Completable
     fun updateUsuario(u: Usuario): Completable
     fun getUsuarioTask(): Observable<Usuario>
@@ -40,8 +38,7 @@ interface AppRepository {
     fun sendPerfil(c: Perfil): Observable<Mensaje>
     fun insertPerfil(c: Perfil, m: Mensaje): Completable
     fun getPerfilById(id: Int): LiveData<Perfil>
-    fun removePerfil(i:Int): Observable<Mensaje>
-    fun deletePerfil(m:Perfil): Completable
+    fun deletePerfil(m: Perfil): Completable
 
     //Moneda
     fun clearMoneda(): Completable
@@ -52,8 +49,6 @@ interface AppRepository {
     fun sendMoneda(c: Moneda): Observable<Mensaje>
     fun insertMoneda(c: Moneda, m: Mensaje): Completable
     fun getMonedaById(id: Int): LiveData<Moneda>
-    fun removeMoneda(i:Int): Observable<Mensaje>
-    fun deleteMoneda(m:Moneda): Completable
 
     //CATEGORIA
     fun clearCategoria(): Completable
@@ -64,8 +59,7 @@ interface AppRepository {
     fun sendCategoria(c: Categoria): Observable<Mensaje>
     fun insertCategoria(c: Categoria, m: Mensaje): Completable
     fun getCategoriaById(id: Int): LiveData<Categoria>
-    fun removeCategoria(i:Int): Observable<Mensaje>
-    fun deleteCategoria(c:Categoria): Completable
+
 
     // ESPECIALIDAD
     fun clearEspecialidad(): Completable
@@ -76,8 +70,6 @@ interface AppRepository {
     fun sendEspecialidad(c: Especialidad): Observable<Mensaje>
     fun insertEspecialidad(c: Especialidad, m: Mensaje): Completable
     fun getEspecialidadById(id: Int): LiveData<Especialidad>
-    fun removeEspecialidad(i:Int): Observable<Mensaje>
-    fun deleteEspecialidad(e:Especialidad): Completable
 
     // PRODUCTO
     fun clearProducto(): Completable
@@ -88,8 +80,6 @@ interface AppRepository {
     fun sendProducto(c: Producto): Observable<Mensaje>
     fun insertProducto(c: Producto, m: Mensaje): Completable
     fun getProductoById(id: Int): LiveData<Producto>
-    fun removeProducto(i:Int): Observable<Mensaje>
-    fun deleteProducto(p:Producto): Completable
 
     // TIPO PRODUCTO
     fun clearTipoProducto(): Completable
@@ -101,8 +91,6 @@ interface AppRepository {
     fun sendTipoProducto(c: TipoProducto): Observable<Mensaje>
     fun insertTipoProducto(c: TipoProducto, m: Mensaje): Completable
     fun getTipoProductoById(id: Int): LiveData<TipoProducto>
-    fun removeTipoProducto(i:Int): Observable<Mensaje>
-    fun deleteTipoProducto(t:TipoProducto): Completable
 
     // VISITA
     fun clearVisita(): Completable
@@ -113,8 +101,6 @@ interface AppRepository {
     fun sendVisita(c: Visita): Observable<Mensaje>
     fun insertVisita(c: Visita, m: Mensaje): Completable
     fun getVisitaById(id: Int): LiveData<Visita>
-    fun removeVisita(i:Int): Observable<Mensaje>
-    fun deleteVisita(v: Visita): Completable
 
     //FERIADO
     fun clearFeriado(): Completable
@@ -125,8 +111,6 @@ interface AppRepository {
     fun sendFeriado(c: Feriado): Observable<Mensaje>
     fun insertFeriado(c: Feriado, m: Mensaje): Completable
     fun getFeriadoById(id: Int): LiveData<Feriado>
-    fun removeFeriado(i:Int): Observable<Mensaje>
-    fun deleteFeriado(f:Feriado): Completable
 
     //CONTROL
     fun syncControl(): Observable<List<Control>>
@@ -143,16 +127,91 @@ interface AppRepository {
     fun insertPersonal(c: Personal, m: Mensaje): Completable
     fun getPersonalById(id: Int): LiveData<Personal>
     fun getSupervisores(): LiveData<List<Personal>>
-    fun removePersonal(i:Int): Observable<Mensaje>
-    fun deletePersonal(p:Personal): Completable
 
     //CATEGORIA
     fun clearCiclo(): Completable
     fun syncCiclo(): Observable<List<Ciclo>>
     fun insertCiclos(p: List<Ciclo>): Completable
     fun getCiclos(): LiveData<List<Ciclo>>
-    fun verificateCiclo(c:Ciclo) : Completable
+    fun verificateCiclo(c: Ciclo): Completable
     fun sendCiclo(c: Ciclo): Observable<Mensaje>
     fun insertCiclo(c: Ciclo, m: Mensaje): Completable
     fun getCicloById(id: Int): LiveData<Ciclo>
+
+    //Actividad
+    fun clearActividad(): Completable
+    fun syncActividad(u: Int, c: Int, e: Int, t: Int): Observable<List<Actividad>>
+    fun insertActividads(p: List<Actividad>): Completable
+    fun getActividads(tipo:Int): LiveData<List<Actividad>>
+    fun sendActividad(body: RequestBody): Observable<Mensaje>
+    fun insertActividad(c: Actividad): Completable
+    fun getActividadById(id: Int): LiveData<Actividad>
+    fun getEstados(tipo: String): LiveData<List<Estado>>
+    fun getCicloProceso(): LiveData<List<Ciclo>>
+    fun getDuracion(): LiveData<List<Duracion>>
+    fun getActividadTask(tipo:Int): Observable<List<Actividad>>
+    fun updateEnabledActividad(t: Mensaje): Completable
+    fun getNombreUsuario(): LiveData<String>
+
+    //Medico
+    fun clearSolMedico(): Completable
+    fun syncSolMedico(
+        u: Int, fi: String, ff: String, e: Int, t: Int
+    ): Observable<List<SolMedico>>
+
+    fun insertSolMedicos(p: List<SolMedico>): Completable
+    fun getSolMedicos(tipoMedico:Int): LiveData<List<SolMedico>>
+    fun verificateSolMedico(c: SolMedico): Completable
+    fun sendSolMedico(body: RequestBody): Observable<Mensaje>
+    fun insertSolMedico(c: SolMedico, m: Mensaje): Completable
+    fun getSolMedicoById(id: Int): LiveData<SolMedico>
+    fun getSolMedicoTask(): Observable<List<SolMedico>>
+    fun updateEnabledMedico(t: Mensaje): Completable
+
+    fun getMedicoById(id: Int): LiveData<Medico>
+    fun insertMedico(m: Medico): Completable
+    fun getIdentificadores(): LiveData<List<Identificador>>
+
+    fun getDepartamentos(): LiveData<List<Departamento>>
+    fun getProvincias(): LiveData<List<Provincia>>
+    fun getDistritos(): LiveData<List<Distrito>>
+    fun getMedicos(): LiveData<List<Medico>>
+
+    fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
+    fun insertDireccion(m: MedicoDireccion): Completable
+    fun getMedicosById(solMedicoId: Int): LiveData<List<Medico>>
+    fun getMedicoId(): LiveData<Int>
+    fun getSolMedicoId(): LiveData<Int>
+    fun deleteMedico(m: Medico): Completable
+    fun insertSolMedicoCab(c: SolMedico): Completable
+
+    fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>>
+    fun insertTargets(p: List<TargetM>): Completable
+    fun getTargets(): LiveData<List<TargetM>>
+
+    fun sendTarget(body: RequestBody): Observable<Mensaje>
+    fun insertTarget(c: TargetCab, m: Mensaje): Completable
+    fun getTargetById(id: Int): LiveData<TargetM>
+
+    fun getTargetsAltas(t: String): LiveData<List<TargetCab>>
+    fun syncTargetCab(
+        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
+    ): Observable<List<TargetCab>>
+
+    fun insertTargetsCab(p: List<TargetCab>): Completable
+    fun getTargetDetById(targetId: Int): LiveData<List<TargetDet>>
+    fun getTargetDetId(): LiveData<Int>
+    fun getTargetCabId(): LiveData<Int>
+
+    fun insertTargetDet(d: TargetDet): Completable
+    fun insertTargetCab(c: TargetCab): Completable
+    fun getTargetCabTask(tipoTarget: String): Observable<List<TargetCab>>
+    fun updateEnabledTargetCab(t: Mensaje): Completable
+
+    fun getCheckMedicos(): LiveData<PagedList<Medico>>
+    fun getCheckMedicos(s: String): LiveData<PagedList<Medico>>
+    fun saveMedico(cabId: Int, tipoTarget: String): Completable
+    fun updateCheckMedico(s: Medico): Completable
+
+
 }

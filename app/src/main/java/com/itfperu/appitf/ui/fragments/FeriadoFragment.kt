@@ -117,7 +117,9 @@ class FeriadoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage("Deseas inactivar este feriado ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(f)
+                f.estado = "INACTIVO"
+                f.estadoId = 0
+                itfViewModel.sendFeriado(f)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

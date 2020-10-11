@@ -139,8 +139,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendCategoria(c: Categoria) {
+     fun sendCategoria(c: Categoria) {
         roomRepository.sendCategoria(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -184,39 +183,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getCategoriaById(categoriaId: Int): LiveData<Categoria> {
         return roomRepository.getCategoriaById(categoriaId)
-    }
-
-    fun delete(v: Categoria) {
-        roomRepository.removeCategoria(v.categoriaId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v:Categoria){
-        roomRepository.deleteCategoria(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

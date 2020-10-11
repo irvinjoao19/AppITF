@@ -116,7 +116,9 @@ class CategoriaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
             .setMessage("Deseas inactivar esta categoria ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(c)
+                c.estado = "INACTIVO"
+                c.estadoId = 0
+                itfViewModel.sendCategoria(c)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

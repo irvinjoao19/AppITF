@@ -21,8 +21,10 @@ interface ApiService {
     fun getLogout(@Body body: RequestBody): Observable<Mensaje>
 
     @Headers("Cache-Control: no-cache")
-    @POST("Sync")
-    fun getSync(@Body body: RequestBody): Observable<Sync>
+    @GET("Sync")
+    fun getSync(
+        @Query("usuarioId") u: Int, // usuario
+    ): Observable<Sync>
 
     @Headers("Cache-Control: no-cache")
     @GET("Perfiles")
@@ -63,6 +65,46 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @GET("Ciclos")
     fun getCiclos(): Observable<List<Ciclo>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("Actividades")
+    fun getActividad(
+        @Query("u") u: Int, // usuario
+        @Query("c") c: Int, // ciclo
+        @Query("e") e: Int,  // estado
+        @Query("t") t: Int  // tipo
+    ): Observable<List<Actividad>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("Targets")
+//    int u, int c, int e, int n
+    fun getTargets(
+        @Query("u") u: Int, // usuario
+        @Query("c") c: Int, // categoria
+        @Query("e") e: Int, // especialidad
+        @Query("n") n: Int,  // nro contacto
+    ): Observable<List<TargetM>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("TargetsCab")
+    fun getTargetsCab(
+        @Query("u") u: Int, // usuario
+        @Query("fi") fi: String, // fecha inicial
+        @Query("ff") ff: String, // fecha final
+        @Query("e") e: Int, // estado
+        @Query("tt") tt: String,  // tipo target
+        @Query("t") t: Int,  // tipo
+    ): Observable<List<TargetCab>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("Medicos")
+    fun getMedico(
+        @Query("u") u: Int, // usuario
+        @Query("fi") fi: String, // desde
+        @Query("ff") ff: String, // hasta
+        @Query("e") e: Int,  // estado
+        @Query("t") t: Int  // tipo
+    ): Observable<List<SolMedico>>
 
     @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
@@ -108,42 +150,15 @@ interface ApiService {
     @POST("SaveCiclo")
     fun saveCiclo(@Body body: RequestBody): Observable<Mensaje>
 
-    // remove - delete
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveActividad")
+    fun saveActividad(@Body body: RequestBody): Observable<Mensaje>
 
     @Headers("Cache-Control: no-cache")
-    @POST("RemovePerfil")
-    fun removePerfil(@Query("id") i: Int): Observable<Mensaje>
+    @POST("SaveMedico")
+    fun saveMedico(@Body body: RequestBody): Observable<Mensaje>
 
     @Headers("Cache-Control: no-cache")
-    @POST("RemoveMoneda")
-    fun removeMoneda(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveFeriado")
-    fun removeFeriado(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveCategoria")
-    fun removeCategoria(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveEspecialidades")
-    fun removeEspecialidades(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveProductos")
-    fun removeProductos(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveVisita")
-    fun removeVisita(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveTipoProducto")
-    fun removeTipoProducto(@Query("id") i: Int): Observable<Mensaje>
-
-    @Headers("Cache-Control: no-cache")
-    @POST("RemoveUsuario")
-    fun removeUsuario(@Query("id") i: Int): Observable<Mensaje>
-    
+    @POST("SaveTarget")
+    fun saveTarget(@Body body: RequestBody): Observable<Mensaje>
 }

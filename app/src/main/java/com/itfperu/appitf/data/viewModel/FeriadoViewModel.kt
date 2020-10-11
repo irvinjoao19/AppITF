@@ -101,7 +101,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         verificateFeriado(c)
     }
 
-
     private fun verificateFeriado(c: Feriado) {
         roomRepository.verificateFeriado(c)
             .subscribeOn(Schedulers.io())
@@ -118,8 +117,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendFeriado(c: Feriado) {
+    fun sendFeriado(c: Feriado) {
         roomRepository.sendFeriado(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -129,9 +127,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     insertFeriado(c, t)
                 }
 
-                override fun onError(e: Throwable) {
-                }
-
+                override fun onError(e: Throwable) {}
                 override fun onComplete() {}
             })
     }
@@ -154,39 +150,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getFeriadoById(feriadoId: Int): LiveData<Feriado> {
         return roomRepository.getFeriadoById(feriadoId)
-    }
-
-    fun delete(v: Feriado) {
-        roomRepository.removeFeriado(v.feriadoId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v:Feriado){
-        roomRepository.deleteFeriado(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

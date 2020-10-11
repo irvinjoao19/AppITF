@@ -41,6 +41,18 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providCicloFragment(): CicloFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providActividadFragment(): ActividadFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providMedicoFragment(): MedicosFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providTargetFragment(): TargetFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providTargetAltasFragment(): TargetAltasFragment
     }
 
     @Module
@@ -77,5 +89,26 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providEditCicloFragment(): EditCicloFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditActividadesFragment(): EditActividadesFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditAprobationFragment(): EditAprobationAFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditSolMedicoFragment(): EditSolMedicoFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditTargetFragment(): EditTargetFragment
+    }
+
+    @Module
+    abstract class Medico {
+        @ContributesAndroidInjector
+        internal abstract fun providGeneralFragment(): GeneralFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providDireccionFragment(): DireccionFragment
     }
 }

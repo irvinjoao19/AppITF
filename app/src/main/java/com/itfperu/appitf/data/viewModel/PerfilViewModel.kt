@@ -91,7 +91,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getPerfils()
     }
 
-    fun getPerfilsActive():LiveData<List<Perfil>> {
+    fun getPerfilsActive(): LiveData<List<Perfil>> {
         return roomRepository.getPerfilsActive()
     }
 
@@ -100,8 +100,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Ingrese Codigo"
             return
         }
-        
-        if (c.descripcion.isEmpty()){
+
+        if (c.descripcion.isEmpty()) {
             mensajeError.value = "Ingrese Descripción"
             return
         }
@@ -126,8 +126,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    private fun sendPerfil(c: Perfil) {
+    fun sendPerfil(c: Perfil) {
         roomRepository.sendPerfil(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -162,49 +161,5 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getPerfilById(perfilId: Int): LiveData<Perfil> {
         return roomRepository.getPerfilById(perfilId)
-    }
-
-    fun delete(v: Perfil) {
-        roomRepository.removePerfil(v.perfilId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    deleteObject(v)
-                }
-
-                override fun onError(t: Throwable) {
-                    if (t is HttpException) {
-                        val body = t.response().errorBody()
-                        try {
-                            val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
-                        } catch (e1: IOException) {
-                            e1.printStackTrace()
-                        }
-                    } else {
-                        mensajeError.postValue(t.message)
-                    }
-                }
-
-                override fun onComplete() {}
-            })
-    }
-
-    private fun deleteObject(v:Perfil){
-        roomRepository.deletePerfil(v)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeError.value = "Actualizado"
-                }
-
-                override fun onError(e: Throwable) {
-
-                }
-            })
     }
 }

@@ -116,7 +116,9 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
             .setMessage("Deseas inactivar este Tipo Producto ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(v)
+                v.estado = "INACTIVO"
+                v.estadoId = 0
+                itfViewModel.sendTipoProducto(v)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

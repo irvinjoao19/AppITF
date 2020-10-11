@@ -116,7 +116,9 @@ class PerfilFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage("Desea anular el Rol ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(p)
+                p.estado = "INACTIVO"
+                p.estadoId = 0
+                itfViewModel.sendPerfil(p)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->

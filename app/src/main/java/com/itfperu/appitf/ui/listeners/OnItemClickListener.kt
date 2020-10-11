@@ -38,18 +38,75 @@ interface OnItemClickListener {
     }
 
     interface ComboListener {
-        fun onItemClick(c : Combos, view: View, position: Int)
+        fun onItemClick(c: Combos, view: View, position: Int)
     }
 
     interface ControlListener {
-        fun onItemClick(c : Control, view: View, position: Int)
+        fun onItemClick(c: Control, view: View, position: Int)
     }
 
     interface PersonalListener {
-        fun onItemClick(p : Personal, view: View, position: Int)
+        fun onItemClick(p: Personal, view: View, position: Int)
     }
 
     interface CicloListener {
-        fun onItemClick(c : Ciclo, view: View, position: Int)
+        fun onItemClick(c: Ciclo, view: View, position: Int)
+    }
+
+    interface ActividadListener {
+        fun onItemClick(a: Actividad, view: View, position: Int)
+    }
+
+    interface EstadoListener {
+        fun onItemClick(e: Estado, view: View, position: Int)
+    }
+
+    interface DuracionListener {
+        fun onItemClick(d: Duracion, view: View, position: Int)
+    }
+
+    interface SolMedicoListener {
+        fun onItemClick(m: SolMedico, view: View, position: Int)
+    }
+
+    interface MedicoListener {
+        fun onItemClick(m: Medico, view: View, position: Int)
+    }
+
+    interface CheckMedicoListener {
+        fun onCheckedChanged(m: Medico, p: Int, b: Boolean)
+    }
+
+    interface MedicoDireccionListener {
+        fun onItemClick(m: MedicoDireccion, view: View, position: Int)
+    }
+
+    interface IdentificadorListener {
+        fun onItemClick(i: Identificador, view: View, position: Int)
+    }
+
+    interface DepartamentoListener {
+        fun onItemClick(d: Departamento, view: View, position: Int)
+    }
+
+    interface ProvinciaListener {
+        fun onItemClick(p: Provincia, view: View, position: Int)
+    }
+
+    interface DistritoListener {
+        fun onItemClick(d: Distrito, view: View, position: Int)
+    }
+
+    interface TargetListener {
+        fun onItemClick(t: TargetM, view: View, position: Int)
+    }
+
+    interface TargetAltasListener {
+        fun onItemClick(t: TargetCab, view: View, position: Int)
+    }
+
+    interface TargetDetListener {
+        fun onItemClick(t: TargetDet, view: View, position: Int)
     }
 }
+

@@ -120,7 +120,9 @@ class EspecialidadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
             .setMessage("Deseas inactivar esta especialidad ?")
             .setPositiveButton("SI") { dialog, _ ->
                 load()
-                itfViewModel.delete(e)
+                e.estado = "INACTIVO"
+                e.estadoId = 0
+                itfViewModel.sendEspecialidad(e)
                 dialog.dismiss()
             }
             .setNegativeButton("NO") { dialog, _ ->
