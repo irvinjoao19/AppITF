@@ -869,10 +869,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.solMedicoDao().getMedicoById(id)
     }
 
-    override fun getSolMedicoTask(): Observable<List<SolMedico>> {
+    override fun getSolMedicoTask(tipoMedico:Int): Observable<List<SolMedico>> {
         return Observable.create { e ->
             val a: ArrayList<SolMedico> = ArrayList()
-            val data: List<SolMedico> = dataBase.solMedicoDao().getSolMedicoTask()
+            val data: List<SolMedico> = dataBase.solMedicoDao().getSolMedicoTask(tipoMedico)
             if (data.isEmpty()) {
                 e.onError(Throwable("No hay datos por enviar"))
                 e.onComplete()
@@ -965,9 +965,12 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertDireccion(m: MedicoDireccion): Completable {
         return Completable.fromAction {
-            dataBase.medicoDireccionDao().insertMedicoDireccionTask(m)
-
             dataBase.medicoDao().closeMedico(m.medicoId)
+
+            if (m.medicoDireccionId == 0)
+                dataBase.medicoDireccionDao().insertMedicoDireccionTask(m)
+            else
+                dataBase.medicoDireccionDao().updateMedicoDireccionTask(m)
         }
     }
 
@@ -1006,6 +1009,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
+    override fun deleteDireccion(m: MedicoDireccion): Completable {
+        return Completable.fromAction {
+            dataBase.medicoDireccionDao().deleteMedicoDireccionTask(m)
+        }
+    }
+
+    override fun getDireccionById(id: Int): LiveData<MedicoDireccion> {
+        return dataBase.medicoDireccionDao().getDireccionById(id)
+    }
+
     override fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>> {
         return apiService.getTargets(u, c, e, n)
     }
@@ -1040,8 +1053,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.targetDao().getTargetById(id)
     }
 
-    override fun getTargetsAltas(t: String): LiveData<List<TargetCab>> {
-        return dataBase.targetCabDao().getTargetsAltas(t)
+    override fun getTargetsAltas(t: String,tipo:Int): LiveData<List<TargetCab>> {
+        return dataBase.targetCabDao().getTargetsAltas(t,tipo)
     }
 
     override fun syncTargetCab(

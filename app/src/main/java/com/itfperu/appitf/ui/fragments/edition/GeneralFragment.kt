@@ -29,6 +29,7 @@ import javax.inject.Inject
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
+private const val ARG_PARAM4 = "param4"
 
 class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
@@ -51,6 +52,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     private var solMedicoId: Int = 0
     private var medicoId: Int = 0
     private var usuarioId: Int = 0
+    private var estado: Int = 0
     var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             medicoId = it.getInt(ARG_PARAM1)
             solMedicoId = it.getInt(ARG_PARAM2)
             usuarioId = it.getInt(ARG_PARAM3)
+            estado = it.getInt(ARG_PARAM4)
         }
     }
 
@@ -106,6 +109,10 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         editTextFechaN.setOnClickListener(this)
         editTextSexo.setOnClickListener(this)
         fabGenerate.setOnClickListener(this)
+
+        if (estado == 12 || estado == 13 || estado == 100) {
+            fabGenerate.visibility = View.GONE
+        }
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             Util.toastMensaje(context!!, it)
@@ -237,12 +244,13 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: Int) =
+        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int) =
             GeneralFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)
                     putInt(ARG_PARAM3, param3)
+                    putInt(ARG_PARAM4, param4)
                 }
             }
     }

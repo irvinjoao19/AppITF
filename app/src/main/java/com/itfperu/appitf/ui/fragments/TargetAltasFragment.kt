@@ -38,7 +38,10 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         when (v.id) {
             R.id.fabAdd -> startActivity(
                 Intent(context, FormActivity::class.java)
-                    .putExtra("title", "Nueva Target")
+                    .putExtra("title", when (tipoTarget) {
+                        "A" -> "Nueva Alta"
+                        else -> "Nueva Baja"
+                    })
                     .putExtra(
                         "tipo", when (tipo) {
                             1 -> 15
@@ -46,6 +49,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
                         }
                     )
                     .putExtra("tipoTarget", tipoTarget)
+                    .putExtra("tipoAprobacion", tipo)
                     .putExtra("id", targetCabId)
                     .putExtra("uId", usuarioId)
             )
@@ -111,16 +115,23 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
                 startActivity(
                     Intent(context, FormActivity::class.java)
                         .putExtra(
-                            "title", if (tipoTarget == "A") {
-                                "Editar Altas"
-                            } else {
-                                "Editar Bajas"
+                            "title", when (tipo) {
+                                1 -> when (tipoTarget) {
+                                    "A" -> "Editar Altas"
+                                    else -> "Editar Bajas"
+                                }
+                                else -> when (tipoTarget) {
+                                    "A" -> "Aprobación Altas"
+                                    else -> "Aprobación Bajas"
+                                }
                             }
                         )
                         .putExtra("tipo", 15)
                         .putExtra("tipoTarget", t.tipoTarget)
+                        .putExtra("tipoAprobacion", t.tipo)
                         .putExtra("id", t.targetCabId)
                         .putExtra("uId", t.usuarioId)
+                        .putExtra("estado", t.estado)
                 )
             }
         })
@@ -146,7 +157,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             fabAdd.visibility = View.GONE
         }
 
-        itfViewModel.getTargetsAltas(tipoTarget).observe(viewLifecycleOwner, {
+        itfViewModel.getTargetsAltas(tipoTarget,tipo).observe(viewLifecycleOwner, {
 //            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
             adapter.addItems(it)
         })

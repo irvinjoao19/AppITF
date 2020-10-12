@@ -330,8 +330,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun sendMedicos() {
-        val ots: Observable<List<SolMedico>> = roomRepository.getSolMedicoTask()
+    fun sendMedicos(tipoMedico:Int) {
+        val ots: Observable<List<SolMedico>> = roomRepository.getSolMedicoTask(tipoMedico)
         ots.flatMap { observable ->
             Observable.fromIterable(observable).flatMap { a ->
                 val json = Gson().toJson(a)
@@ -384,5 +384,23 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     mensajeError.value = e.message
                 }
             })
+    }
+
+    fun deleteDireccion(m: MedicoDireccion) {
+        roomRepository.deleteDireccion(m)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeError.value = "Dirección eliminada"
+                }
+
+                override fun onError(e: Throwable) {}
+            })
+    }
+
+    fun getDireccionById(id: Int): LiveData<MedicoDireccion> {
+        return roomRepository.getDireccionById(id)
     }
 }

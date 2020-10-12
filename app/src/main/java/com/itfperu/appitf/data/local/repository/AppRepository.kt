@@ -165,7 +165,7 @@ interface AppRepository {
     fun sendSolMedico(body: RequestBody): Observable<Mensaje>
     fun insertSolMedico(c: SolMedico, m: Mensaje): Completable
     fun getSolMedicoById(id: Int): LiveData<SolMedico>
-    fun getSolMedicoTask(): Observable<List<SolMedico>>
+    fun getSolMedicoTask(tipoMedico:Int): Observable<List<SolMedico>>
     fun updateEnabledMedico(t: Mensaje): Completable
 
     fun getMedicoById(id: Int): LiveData<Medico>
@@ -184,6 +184,8 @@ interface AppRepository {
     fun getSolMedicoId(): LiveData<Int>
     fun deleteMedico(m: Medico): Completable
     fun insertSolMedicoCab(c: SolMedico): Completable
+    fun deleteDireccion(m: MedicoDireccion): Completable
+    fun getDireccionById(id: Int): LiveData<MedicoDireccion>
 
     fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>>
     fun insertTargets(p: List<TargetM>): Completable
@@ -193,7 +195,7 @@ interface AppRepository {
     fun insertTarget(c: TargetCab, m: Mensaje): Completable
     fun getTargetById(id: Int): LiveData<TargetM>
 
-    fun getTargetsAltas(t: String): LiveData<List<TargetCab>>
+    fun getTargetsAltas(t: String,tipo:Int): LiveData<List<TargetCab>>
     fun syncTargetCab(
         u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
     ): Observable<List<TargetCab>>
@@ -212,6 +214,5 @@ interface AppRepository {
     fun getCheckMedicos(s: String): LiveData<PagedList<Medico>>
     fun saveMedico(cabId: Int, tipoTarget: String): Completable
     fun updateCheckMedico(s: Medico): Completable
-
 
 }

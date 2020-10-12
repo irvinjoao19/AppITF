@@ -10,14 +10,14 @@ abstract class TabLayoutAdapter {
 
     class TabLayoutForm(
         fm: FragmentManager,
-        var numberOfTabs: Int, var sid: Int, var id: Int, var usuarioId: Int, var t: Int
+        var numberOfTabs: Int, var sid: Int, var id: Int, var usuarioId: Int, var t: Int, var e: Int
     ) :
         FragmentStatePagerAdapter(fm, numberOfTabs) {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> GeneralFragment.newInstance(id, sid, usuarioId)
-                1 -> DireccionFragment.newInstance(id, sid, usuarioId, t)
+                0 -> GeneralFragment.newInstance(id, sid, usuarioId, e)
+                1 -> DireccionFragment.newInstance(id, sid, usuarioId, t, e)
                 else -> Fragment()
             }
         }

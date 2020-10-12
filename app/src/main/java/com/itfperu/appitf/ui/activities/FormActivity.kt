@@ -86,15 +86,11 @@ class FormActivity : DaggerAppCompatActivity() {
                 )
                 14 -> replaceFragment(
                     savedInstanceState,
-                    EditSolMedicoFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getInt("tipoMedico"))
+                    EditSolMedicoFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getInt("tipoMedico"),b.getInt("estado"))
                 )
                 15-> replaceFragment(
                     savedInstanceState,
-                    EditTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!)
-                )
-                16 -> replaceFragment(
-                    savedInstanceState,
-                    EditAprobationTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!)
+                    EditTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!,b.getInt("tipoAprobacion"),b.getInt("estado"))
                 )
             }
         }

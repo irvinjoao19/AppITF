@@ -23,6 +23,7 @@ import com.itfperu.appitf.data.viewModel.MedicoViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.FormActivity
+import com.itfperu.appitf.ui.activities.MedicoActivity
 import com.itfperu.appitf.ui.adapters.SolMedicoAdapter
 import com.itfperu.appitf.ui.adapters.ComboEstadoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
@@ -39,11 +40,11 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     override fun onClick(v: View) {
         when (v.id) {
             R.id.fabAdd -> startActivity(
-                Intent(context, FormActivity::class.java)
+                Intent(context, MedicoActivity::class.java)
+                    .putExtra("usuarioId", usuarioId)
+                    .putExtra("solMedicoId", solMedicoId)
+                    .putExtra("medicoId", medicoId)
                     .putExtra("title", "Nuevo Medico")
-                    .putExtra("tipo", tipo)
-                    .putExtra("id", medicoId)
-                    .putExtra("uId", usuarioId)
                     .putExtra("tipoMedico", tipoMedico)
             )
             R.id.fabSave -> confirmSend()
@@ -76,7 +77,8 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private var finicio: String = Util.getFirstDay()
     private var ffinal: String = Util.getLastaDay()
     private var estado: Int = 0
-    private var medicoId: Int = 0
+    private var medicoId: Int = 0 // medico
+    private var solMedicoId: Int = 0 // medico cab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,8 +116,9 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
                         .putExtra("title", title)
                         .putExtra("tipo", tipo)
                         .putExtra("id", m.solMedicoId)
-                        .putExtra("uId", usuarioId)
-                        .putExtra("tipoMedico", tipoMedico)
+                        .putExtra("uId", m.usuarioId)
+                        .putExtra("tipoMedico", m.tipo)
+                        .putExtra("estado", m.estadoSol)
                 )
             }
         })
@@ -144,6 +147,10 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         itfViewModel.getSolMedicoId().observe(viewLifecycleOwner, {
+            solMedicoId = if (it == null || it == 0) 1 else it + 1
+        })
+
+        itfViewModel.getMedicoId().observe(viewLifecycleOwner, {
             medicoId = if (it == null || it == 0) 1 else it + 1
         })
 
@@ -205,8 +212,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun dialogSearch() {
-        val builder =
-            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val v =
             LayoutInflater.from(context).inflate(R.layout.dialog_filtro_medico, null)
 
@@ -279,7 +285,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->
                 load()
-                itfViewModel.sendMedicos()
+                itfViewModel.sendMedicos(tipoMedico)
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->

@@ -34,8 +34,8 @@ interface TargetCabDao {
     @Query("SELECT targetCabId FROM TargetCab")
     fun getTargetCabIdTask(): Int
 
-    @Query("SELECT * FROM TargetCab WHERE tipoTarget =:t")
-    fun getTargetsAltas(t: String): LiveData<List<TargetCab>>
+    @Query("SELECT * FROM TargetCab WHERE tipoTarget =:t AND tipo =:tt")
+    fun getTargetsAltas(t: String, tt: Int): LiveData<List<TargetCab>>
 
     @Query("SELECT targetCabId FROM TargetCab ORDER BY targetCabId DESC LIMIT 1")
     fun getMaxIdTargetCab(): LiveData<Int>
@@ -44,7 +44,7 @@ interface TargetCabDao {
     fun getTargetCabByIdTask(id: Int): TargetCab
 
     @Query("SELECT * FROM TargetCab WHERE tipoTarget =:tipo AND active = 1")
-    fun getTargetCabTask(tipo:String): List<TargetCab>
+    fun getTargetCabTask(tipo: String): List<TargetCab>
 
     @Query("UPDATE TargetCab SET identity =:codigoRetorno, active = 2 WHERE targetCabId =:codigoBase")
     fun updateEnabledTargetCab(codigoBase: Int, codigoRetorno: Int)

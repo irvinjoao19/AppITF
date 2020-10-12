@@ -41,7 +41,7 @@ class DireccionAdapter(private var listener: OnItemClickListener.MedicoDireccion
         ) =
             with(itemView) {
                 textView1.text = p.direccion
-                imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgEdit.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

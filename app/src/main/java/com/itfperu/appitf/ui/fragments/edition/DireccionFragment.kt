@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
@@ -24,6 +25,7 @@ import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.*
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.cardview_medico_direccion.view.*
 import kotlinx.android.synthetic.main.fragment_direccion.*
 import javax.inject.Inject
 
@@ -31,13 +33,14 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
 private const val ARG_PARAM4 = "param4"
+private const val ARG_PARAM5 = "param5"
 
 class DireccionFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.fabDireccion -> if (validacion == 1) {
-                dialogDireccion(medicoId)
+                dialogDireccion(0)
             } else
                 itfViewModel.setError("Completar el primer formulario.")
             R.id.fabSave -> formValidate()
@@ -52,6 +55,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     private var validacion: Int = 0
     private var solMedicoId: Int = 0
     private var tipoMedico: Int = 0
+    private var estado: Int = 0
 //    var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +65,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             solMedicoId = it.getInt(ARG_PARAM2)
             usuarioId = it.getInt(ARG_PARAM3)
             tipoMedico = it.getInt(ARG_PARAM4)
+            estado = it.getInt(ARG_PARAM5)
         }
     }
 
@@ -89,7 +94,16 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         val direccionAdapter =
             DireccionAdapter(object : OnItemClickListener.MedicoDireccionListener {
                 override fun onItemClick(m: MedicoDireccion, view: View, position: Int) {
+                    if (estado == 100){
+                        itfViewModel.setError("No puedes modificar en Aprobaciones")
+                        return
+                    }
 
+                    if (estado == 12 || estado == 13) {
+                        itfViewModel.setError("No puedes modificar en estado Aprobado o Rechazado")
+                    } else {
+                        dialogDireccion(medicoId)
+                    }
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -108,8 +122,11 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         fabDireccion.setOnClickListener(this)
         fabSave.setOnClickListener(this)
 
+        if (estado == 12 || estado == 13 || estado == 100) {
+            fabMenu.visibility = View.GONE
+        }
+
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-//            viewPager?.currentItem = 0
             Util.toastMensaje(context!!, it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
@@ -122,13 +139,14 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int) =
+        fun newInstance(p1: Int, p2: Int, p3: Int, p4: Int, p5: Int) =
             DireccionFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, param1)
-                    putInt(ARG_PARAM2, param2)
-                    putInt(ARG_PARAM3, param3)
-                    putInt(ARG_PARAM4, param4)
+                    putInt(ARG_PARAM1, p1)
+                    putInt(ARG_PARAM2, p2)
+                    putInt(ARG_PARAM3, p3)
+                    putInt(ARG_PARAM4, p4)
+                    putInt(ARG_PARAM5, p5)
                 }
             }
     }
@@ -149,8 +167,14 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         val dialog = builder.create()
         dialog.show()
 
-        val m = MedicoDireccion()
+        var m = MedicoDireccion()
         layoutTitle.text = String.format("Nueva Dirección")
+
+        itfViewModel.getDireccionById(id).observe(viewLifecycleOwner, {
+            if (it != null) {
+                m = it
+            }
+        })
 
         editTextDepartamento.setOnClickListener {
             spinnerDialog(1, "Departamento", m, editTextDepartamento)
@@ -163,7 +187,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         }
 
         fabDirection.setOnClickListener {
-            m.medicoId = id
+            m.medicoId = medicoId
             m.nombreDepartamento = editTextDepartamento.text.toString()
             m.nombreProvincia = editTextProvincia.text.toString()
             m.nombreDistrito = editTextDistrito.text.toString()
@@ -261,9 +285,24 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         s.solMedicoId = solMedicoId
         s.estadoSol = 11
         s.estado = 1
+        s.descripcionEstado = "Enviada"
         s.usuarioId = usuarioId
         s.fecha = Util.getFecha()
         s.tipo = tipoMedico
         itfViewModel.validateSolMedico(s)
+    }
+
+    private fun confirmDelete(m: MedicoDireccion) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage("Deseas eliminar esta dirección ?")
+            .setPositiveButton("SI") { dialog, _ ->
+                itfViewModel.deleteDireccion(m)
+                dialog.dismiss()
+            }
+            .setNegativeButton("NO") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
     }
 }

@@ -9,7 +9,10 @@ import com.itfperu.appitf.data.local.model.TargetDet
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_target_det.view.*
 
-class TargetDetAdapter(private var listener: OnItemClickListener.TargetDetListener) :
+class TargetDetAdapter(
+    private var tipo: Int,
+    private var listener: OnItemClickListener.TargetDetListener
+) :
     RecyclerView.Adapter<TargetDetAdapter.ViewHolder>() {
 
     private var det = emptyList<TargetDet>()
@@ -28,7 +31,7 @@ class TargetDetAdapter(private var listener: OnItemClickListener.TargetDetListen
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(det[position], position, listener)
+        holder.bind(det[position], tipo, listener)
     }
 
     override fun getItemCount(): Int {
@@ -36,14 +39,14 @@ class TargetDetAdapter(private var listener: OnItemClickListener.TargetDetListen
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TargetDet, position: Int, listener: OnItemClickListener.TargetDetListener) =
+        fun bind(p: TargetDet, tipo: Int, listener: OnItemClickListener.TargetDetListener) =
             with(itemView) {
                 textView1.text = String.format("CMP : %s", p.cmp)
                 textView2.text = p.nombreMedico
                 textView3.text = String.format("Categoria : %s", p.nombreCategoria)
                 textView5.text = p.nombreEspecialidad
 
-                if (p.tipoTarget == "B") {
+                if (p.tipoTarget == "B" || tipo == 2) {
                     textView6.visibility = View.GONE
                     editTextCantidad.visibility = View.GONE
                     imageViewNegative.visibility = View.GONE

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,16 +21,17 @@ import com.itfperu.appitf.data.viewModel.TargetViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.SearchMedicoActivity
-import com.itfperu.appitf.ui.activities.TargetActivity
 import com.itfperu.appitf.ui.adapters.TargetDetAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_sol_medico.*
+import kotlinx.android.synthetic.main.fragment_edit_target.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
+private const val ARG_PARAM4 = "param4"
+private const val ARG_PARAM5 = "param5"
 
 class EditTargetFragment : DaggerFragment(), View.OnClickListener {
 
@@ -43,6 +43,8 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                     .putExtra("tipoTarget", tipoTarget)
             )
             R.id.fabSave -> formValidate()
+            R.id.fabAprobar -> confirmAprobation(17, "Deseas Aprobar ?")
+            R.id.fabRechazar -> confirmAprobation(18, "Deseas Rechazar ?")
         }
     }
 
@@ -52,7 +54,9 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
     lateinit var s: TargetCab
     private var usuarioId: Int = 0
     private var targetId: Int = 0 // cabecera
+    private var tipo: Int = 0
     private var tipoTarget: String = "" // A -> ALTAS	B -> BAJAS
+    private var estado: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +65,8 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             targetId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
             tipoTarget = it.getString(ARG_PARAM3)!!
+            tipo = it.getInt(ARG_PARAM4)
+            estado = it.getInt(ARG_PARAM5)
         }
     }
 
@@ -80,7 +86,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
 
         val targetDetAdapter =
-            TargetDetAdapter(object : OnItemClickListener.TargetDetListener {
+            TargetDetAdapter(tipo, object : OnItemClickListener.TargetDetListener {
                 override fun onItemClick(t: TargetDet, view: View, position: Int) {
                     when (view.id) {
                         R.id.editTextCantidad -> updateCantidadProducto(t)
@@ -113,11 +119,16 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.adapter = targetDetAdapter
 
         itfViewModel.getTargetDetById(targetId).observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                fabSave.visibility = View.VISIBLE
-            } else
-                fabSave.visibility = View.GONE
-
+            if (estado == 17 || estado == 18) {
+                fabMenu.visibility = View.GONE
+            } else {
+                if (tipo != 2) {
+                    if (it.isNotEmpty()) {
+                        fabSave.visibility = View.VISIBLE
+                    } else
+                        fabSave.visibility = View.GONE
+                }
+            }
             targetDetAdapter.addItems(it)
         })
 
@@ -129,28 +140,25 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
         })
 
+        if (tipo == 2) {
+            fabPerson.visibility = View.GONE
+            fabSave.visibility = View.GONE
+            fabAprobar.visibility = View.VISIBLE
+            fabRechazar.visibility = View.VISIBLE
+        }
+
         fabPerson.setOnClickListener(this)
         fabSave.setOnClickListener(this)
-    }
-
-    private fun confirmDelete(m: Target) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
-            .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este medico ?")
-            .setPositiveButton("SI") { dialog, _ ->
-//                itfViewModel.deleteTarget(m)
-                dialog.dismiss()
-            }
-            .setNegativeButton("NO") { dialog, _ ->
-                dialog.cancel()
-            }
-        dialog.show()
+        fabAprobar.setOnClickListener(this)
+        fabRechazar.setOnClickListener(this)
     }
 
     private fun formValidate() {
         s.targetCabId = targetId
         s.usuarioId = usuarioId
         s.tipoTarget = tipoTarget
+        s.tipo = tipo
+        s.nombreEstado = "Enviada"
         s.fechaSolicitud = Util.getFecha()
         s.estado = 16
         s.active = 1
@@ -159,12 +167,14 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: String) =
+        fun newInstance(p1: Int, p2: Int, p3: String, p4: Int, p5: Int) =
             EditTargetFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, param1)
-                    putInt(ARG_PARAM2, param2)
-                    putString(ARG_PARAM3, param3)
+                    putInt(ARG_PARAM1, p1)
+                    putInt(ARG_PARAM2, p2)
+                    putString(ARG_PARAM3, p3)
+                    putInt(ARG_PARAM4, p4)
+                    putInt(ARG_PARAM5, p5)
                 }
             }
     }
@@ -201,5 +211,27 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         buttonCancelar.setOnClickListener {
             dialog.cancel()
         }
+    }
+
+    private fun confirmAprobation(estado: Int, message: String) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage(message)
+            .setPositiveButton("Si") { dialog, _ ->
+                s.targetCabId = targetId
+                s.usuarioId = usuarioId
+                s.tipoTarget = tipoTarget
+                s.tipo = tipo
+                s.nombreEstado = if (estado == 17) "Rechazada" else "Aprobada"
+                s.fechaSolicitud = Util.getFecha()
+                s.estado = estado
+                s.active = 1
+                itfViewModel.validateTarget(s)
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
     }
 }

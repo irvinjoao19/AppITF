@@ -1,16 +1,23 @@
 package com.itfperu.appitf.ui.fragments.edition
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Medico
+import com.itfperu.appitf.data.local.model.MedicoDireccion
 import com.itfperu.appitf.data.local.model.SolMedico
 import com.itfperu.appitf.data.viewModel.MedicoViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
@@ -21,44 +28,42 @@ import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_sol_medico.*
 import kotlinx.android.synthetic.main.fragment_edit_sol_medico.recyclerView
+import kotlinx.android.synthetic.main.fragment_general.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
+private const val ARG_PARAM4 = "param4"
 
 class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.fabPerson -> startActivity(
-                Intent(context, MedicoActivity::class.java)
-                    .putExtra("usuarioId", usuarioId)
-                    .putExtra("solMedicoId", solMedicoId)
-                    .putExtra("medicoId", medicoId)
-                    .putExtra("title", "Nuevo Medico")
-                    .putExtra("tipoMedico", tipoMedico)
-            )
-            R.id.fabSave -> formValidate()
+            R.id.fabAprobar -> confirmAprobation(13, "Aprobada", "Aprobar")
+            R.id.fabRechazar -> confirmAprobation(12, "Rechazada", "Rechazar")
+            R.id.fabObservar -> confirmAprobation(14, "Observado", "Observar")
         }
     }
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: MedicoViewModel
-    lateinit var s: SolMedico
+
     private var usuarioId: Int = 0
     private var solMedicoId: Int = 0
     private var medicoId: Int = 0
     private var tipoMedico: Int = 0 // 1 -> actividades , 2 -> aprobadas
+    private var estado: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        s = SolMedico()
+
         arguments?.let {
             solMedicoId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
             tipoMedico = it.getInt(ARG_PARAM3)
+            estado = it.getInt(ARG_PARAM4)
         }
     }
 
@@ -88,8 +93,8 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
                                 .putExtra("medicoId", m.medicoId)
                                 .putExtra("title", "Editar Medico")
                                 .putExtra("tipoMedico", tipoMedico)
+                                .putExtra("estado", if (tipoMedico == 2) 100 else estado)
                         )
-                        R.id.imgDelete -> confirmDelete(m)
                     }
                 }
             })
@@ -100,11 +105,6 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.adapter = medicoAdapter
 
         itfViewModel.getMedicosById(solMedicoId).observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                fabSave.visibility = View.VISIBLE
-            } else
-                fabSave.visibility = View.GONE
-
             medicoAdapter.addItems(it)
         })
 
@@ -120,43 +120,59 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
         })
 
-        fabPerson.setOnClickListener(this)
-        fabSave.setOnClickListener(this)
-    }
 
-    private fun confirmDelete(m: Medico) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
-            .setTitle("Mensaje")
-            .setMessage("Deseas eliminar este medico ?")
-            .setPositiveButton("SI") { dialog, _ ->
-                itfViewModel.deleteMedico(m)
-                dialog.dismiss()
-            }
-            .setNegativeButton("NO") { dialog, _ ->
-                dialog.cancel()
-            }
-        dialog.show()
-    }
+        if (tipoMedico == 1) {
+            fabMenu.visibility = View.GONE
+        }
 
-    private fun formValidate() {
-        s.solMedicoId = solMedicoId
-        s.estadoSol = 11
-        s.estado = 1
-        s.usuarioId = usuarioId
-        s.fecha = Util.getFecha()
-        s.tipo = tipoMedico
-        itfViewModel.validateSolMedico(s)
+        if (estado == 12 || estado == 13) {
+            fabMenu.visibility = View.GONE
+        }
+
+        fabAprobar.setOnClickListener(this)
+        fabRechazar.setOnClickListener(this)
+        fabObservar.setOnClickListener(this)
+
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: Int) =
+        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int) =
             EditSolMedicoFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)
                     putInt(ARG_PARAM3, param3)
+                    putInt(ARG_PARAM4, param4)
                 }
             }
+    }
+
+    private fun confirmAprobation(id: Int, estado: String, title: String) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val v =
+            LayoutInflater.from(context).inflate(R.layout.dialog_confirmation, null)
+        val layoutTitle: TextView = v.findViewById(R.id.layoutTitle)
+        val editTextComentario: TextInputEditText = v.findViewById(R.id.editTextComentario)
+        val fabAccept: ExtendedFloatingActionButton = v.findViewById(R.id.fabAccept)
+        builder.setView(v)
+        val dialog = builder.create()
+        dialog.show()
+
+        layoutTitle.text = title
+
+        fabAccept.setOnClickListener {
+            val s = SolMedico()
+            s.solMedicoId = solMedicoId
+            s.estadoSol = id
+            s.descripcionEstado = estado
+            s.estado = 1
+            s.mensajeSol = editTextComentario.text.toString()
+            s.usuarioId = usuarioId
+            s.fecha = Util.getFecha()
+            s.tipo = tipoMedico
+            itfViewModel.validateSolMedico(s)
+            dialog.dismiss()
+        }
     }
 }

@@ -171,8 +171,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getEspecialidads()
     }
 
-    fun getTargetsAltas(tipoTarget: String): LiveData<List<TargetCab>> {
-        return roomRepository.getTargetsAltas(tipoTarget)
+    fun getTargetsAltas(tipoTarget: String,tipo:Int): LiveData<List<TargetCab>> {
+        return roomRepository.getTargetsAltas(tipoTarget,tipo)
     }
 
     fun syncTargetCab(u: Int, fi: String, ff: String, e: Int, tt: String, t: Int) {
