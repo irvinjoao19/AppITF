@@ -110,6 +110,7 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
             activity!!.finish()
         })
+
     }
 
     private fun formActividad() {

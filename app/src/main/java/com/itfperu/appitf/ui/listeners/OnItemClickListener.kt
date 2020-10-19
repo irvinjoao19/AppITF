@@ -85,18 +85,6 @@ interface OnItemClickListener {
         fun onItemClick(i: Identificador, view: View, position: Int)
     }
 
-    interface DepartamentoListener {
-        fun onItemClick(d: Departamento, view: View, position: Int)
-    }
-
-    interface ProvinciaListener {
-        fun onItemClick(p: Provincia, view: View, position: Int)
-    }
-
-    interface DistritoListener {
-        fun onItemClick(d: Distrito, view: View, position: Int)
-    }
-
     interface TargetListener {
         fun onItemClick(t: TargetM, view: View, position: Int)
     }
@@ -108,5 +96,8 @@ interface OnItemClickListener {
     interface TargetDetListener {
         fun onItemClick(t: TargetDet, view: View, position: Int)
     }
-}
 
+    interface UbigeoListener {
+        fun onItemClick(u: Ubigeo, view: View, position: Int)
+    }
+}

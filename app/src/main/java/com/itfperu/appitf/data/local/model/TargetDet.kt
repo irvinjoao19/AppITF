@@ -1,6 +1,7 @@
 package com.itfperu.appitf.data.local.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -22,5 +23,13 @@ open class TargetDet {
     var identity: Int = 0
     var estado: Int = 0 // 16 para enviar
     var tipoTarget: String = "" // A -> ALTAS	B -> BAJAS
-    var active : Int = 0 // 1 -> terminado -> 0 -> por completar
+    var active: Int = 0 // 1 -> terminado -> 0 -> por completar
+
+    var estadoTarget: Int = 0 // 16 para enviar
+    var visitado: Int = 0
+    var nrovisita: Int = 0
+    var mensajeNrovisita: String = ""
+
+    @Ignore
+    var infos: List<TargetInfo>? = null
 }

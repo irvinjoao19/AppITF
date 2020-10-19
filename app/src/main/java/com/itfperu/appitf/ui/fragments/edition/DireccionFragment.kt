@@ -56,10 +56,12 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     private var solMedicoId: Int = 0
     private var tipoMedico: Int = 0
     private var estado: Int = 0
+    lateinit var s: SolMedico
 //    var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        s = SolMedico()
         arguments?.let {
             medicoId = it.getInt(ARG_PARAM1)
             solMedicoId = it.getInt(ARG_PARAM2)
@@ -94,16 +96,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         val direccionAdapter =
             DireccionAdapter(object : OnItemClickListener.MedicoDireccionListener {
                 override fun onItemClick(m: MedicoDireccion, view: View, position: Int) {
-                    if (estado == 100){
-                        itfViewModel.setError("No puedes modificar en Aprobaciones")
-                        return
-                    }
-
-                    if (estado == 12 || estado == 13) {
-                        itfViewModel.setError("No puedes modificar en estado Aprobado o Rechazado")
-                    } else {
-                        dialogDireccion(medicoId)
-                    }
+                    dialogDireccion(m.medicoDireccionId)
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -133,6 +126,11 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
             if (it == "Medico Guardado") {
                 activity!!.finish()
+            }
+        })
+        itfViewModel.getSolMedicoCab(solMedicoId).observe(viewLifecycleOwner, {
+            if (it != null) {
+                s = it
             }
         })
     }
@@ -173,8 +171,22 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.getDireccionById(id).observe(viewLifecycleOwner, {
             if (it != null) {
                 m = it
+
+                editTextDepartamento.setText(it.nombreDepartamento)
+                editTextProvincia.setText(it.nombreProvincia)
+                editTextDistrito.setText(it.nombreDistrito)
+                editTextInstitucion.setText(it.institucion)
+                editTextDireccion.setText(it.direccion)
+                editTextReferencia.setText(it.referencia)
             }
         })
+
+        if (estado == 100 || estado == 12 || estado == 13) {
+            editTextDepartamento.isEnabled = false
+            editTextProvincia.isEnabled = false
+            editTextDistrito.isEnabled = false
+            fabDirection.visibility = View.GONE
+        }
 
         editTextDepartamento.setOnClickListener {
             spinnerDialog(1, "Departamento", m, editTextDepartamento)
@@ -228,10 +240,12 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         when (tipo) {
             1 -> {
                 val departamentoAdapter =
-                    DepartamentoAdapter(object : OnItemClickListener.DepartamentoListener {
-                        override fun onItemClick(d: Departamento, view: View, position: Int) {
-                            m.codigoDepartamento = d.codigoDepartamento
-                            input.setText(d.nombre)
+                    UbigeoAdapter(1, object : OnItemClickListener.UbigeoListener {
+                        override fun onItemClick(u: Ubigeo, view: View, position: Int) {
+                            m.codigoDepartamento = u.codDepartamento
+                            input.setText(u.nombreDepartamento)
+                            m.codigoProvincia = ""
+                            m.codigoDistrito = ""
                             dialog.dismiss()
                         }
                     })
@@ -245,15 +259,16 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             }
             2 -> {
                 val provinciaAdapter =
-                    ProvinciaAdapter(object : OnItemClickListener.ProvinciaListener {
-                        override fun onItemClick(p: Provincia, view: View, position: Int) {
-                            m.codigoProvincia = p.codigoProvincia
-                            input.setText(p.nombre)
+                    UbigeoAdapter(2, object : OnItemClickListener.UbigeoListener {
+                        override fun onItemClick(u: Ubigeo, view: View, position: Int) {
+                            m.codigoProvincia = u.codProvincia
+                            input.setText(u.provincia)
+                            m.codigoDistrito = ""
                             dialog.dismiss()
                         }
                     })
                 recyclerView.adapter = provinciaAdapter
-                itfViewModel.getProvincias().observe(this, {
+                itfViewModel.getProvincias(m.codigoDepartamento).observe(this, {
                     if (it.isNullOrEmpty()) {
                         itfViewModel.setError("Datos vacios favor de sincronizar")
                     }
@@ -262,15 +277,15 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             }
             3 -> {
                 val distritoAdapter =
-                    DistritoAdapter(object : OnItemClickListener.DistritoListener {
-                        override fun onItemClick(d: Distrito, view: View, position: Int) {
-                            m.codigoDistrito = d.codigoDistrito
-                            input.setText(d.nombre)
+                    UbigeoAdapter(3, object : OnItemClickListener.UbigeoListener {
+                        override fun onItemClick(u: Ubigeo, view: View, position: Int) {
+                            m.codigoDistrito = u.codDistrito
+                            input.setText(u.nombreDistrito)
                             dialog.dismiss()
                         }
                     })
                 recyclerView.adapter = distritoAdapter
-                itfViewModel.getDistritos().observe(this, {
+                itfViewModel.getDistritos(m.codigoDepartamento, m.codigoProvincia).observe(this, {
                     if (it.isNullOrEmpty()) {
                         itfViewModel.setError("Datos vacios favor de sincronizar")
                     }
@@ -281,7 +296,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formValidate() {
-        val s = SolMedico()
         s.solMedicoId = solMedicoId
         s.estadoSol = 11
         s.estado = 1

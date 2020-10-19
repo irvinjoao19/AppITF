@@ -121,7 +121,7 @@
             <item
                 android:id="@+id/opc22"
                 android:icon="@drawable/ic_points"
-                android:title="Aprobación médicas" />
+                android:title="Aprobación médicos" />
             <item
                 android:id="@+id/opc23"
                 android:icon="@drawable/ic_points"

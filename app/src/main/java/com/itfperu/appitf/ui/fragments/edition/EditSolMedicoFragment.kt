@@ -55,10 +55,11 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
     private var medicoId: Int = 0
     private var tipoMedico: Int = 0 // 1 -> actividades , 2 -> aprobadas
     private var estado: Int = 0
+    lateinit var s: SolMedico
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        s = SolMedico()
         arguments?.let {
             solMedicoId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
@@ -119,7 +120,11 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
             activity!!.finish()
             Util.toastMensaje(context!!, it)
         })
-
+        itfViewModel.getSolMedicoCab(solMedicoId).observe(viewLifecycleOwner, {
+            if (it != null) {
+                s = it
+            }
+        })
 
         if (tipoMedico == 1) {
             fabMenu.visibility = View.GONE
@@ -162,7 +167,6 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
         layoutTitle.text = title
 
         fabAccept.setOnClickListener {
-            val s = SolMedico()
             s.solMedicoId = solMedicoId
             s.estadoSol = id
             s.descripcionEstado = estado

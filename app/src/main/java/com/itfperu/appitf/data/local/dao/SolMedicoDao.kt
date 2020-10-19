@@ -22,8 +22,17 @@ interface SolMedicoDao {
     @Query("SELECT * FROM SolMedico")
     fun getMedico(): LiveData<SolMedico>
 
-    @Query("SELECT * FROM SolMedico WHERE tipo =:t")
-    fun getMedicos(t: Int): LiveData<List<SolMedico>>
+    @Query("SELECT * FROM SolMedico WHERE usuarioId =:u AND fechaInicio=:fi AND fechaFinal=:ff AND estadoSol=:e AND tipo =:t")
+    fun getMedicos(u: Int, fi: String, ff: String, e: Int, t: Int): LiveData<List<SolMedico>>
+
+    @Query("SELECT * FROM SolMedico WHERE usuarioId =:u AND fechaInicio=:fi AND fechaFinal=:ff  AND tipo =:t")
+    fun getMedicos(u: Int, fi: String, ff: String, t: Int): LiveData<List<SolMedico>>
+
+    @Query("SELECT * FROM SolMedico WHERE fechaInicio=:fi AND fechaFinal=:ff AND tipo =:t")
+    fun getMedicos(fi: String, ff: String, t: Int): LiveData<List<SolMedico>>
+
+    @Query("SELECT * FROM SolMedico WHERE fechaInicio=:fi AND fechaFinal=:ff AND estadoSol=:e AND tipo =:t")
+    fun getMedicos(fi: String, ff: String, e: Int, t: Int): LiveData<List<SolMedico>>
 
     @Query("SELECT solMedicoId FROM SolMedico")
     fun getMedicoId(): Int
@@ -48,4 +57,7 @@ interface SolMedicoDao {
 
     @Query("UPDATE SolMedico SET identity =:codigoRetorno, estado = 2 WHERE solMedicoId =:codigoBase")
     fun updateEnabledMedico(codigoBase: Int, codigoRetorno: Int)
+
+    @Query("SELECT * FROM SolMedico WHERE solMedicoId =:id")
+    fun getSolMedicoCab(id: Int): LiveData<SolMedico>
 }

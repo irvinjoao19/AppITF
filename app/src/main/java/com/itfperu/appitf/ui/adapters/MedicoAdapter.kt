@@ -42,7 +42,7 @@ class MedicoAdapter(private val listener: OnItemClickListener.MedicoListener) :
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(m: Medico, listener: OnItemClickListener.MedicoListener) = with(itemView) {
             textView1.text = String.format("CMP : %s", m.cpmMedico)
-            textView2.text = m.nombreMedico
+            textView2.text = String.format("%s %s %s", m.nombreMedico, m.apellidoP, m.apellidoM)
             textView3.text = String.format("Categoria : %s", m.nombreCategoria)
             textView5.text = m.nombreEspecialidad
             imgEdit.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }

@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.Gson
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.viewModel.ActividadViewModel
@@ -37,8 +38,7 @@ import javax.inject.Inject
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
-    View.OnClickListener {
+class ActividadFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
@@ -78,9 +78,13 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var tipoActividad: Int = 0 // 1 -> actividades , 2 -> aprobadas
+    private var estadoId: Int = 0
+    lateinit var f: Filtro
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        f = Filtro()
+
         arguments?.let {
             usuarioId = it.getInt(ARG_PARAM1)
             tipoActividad = it.getInt(ARG_PARAM2)
@@ -105,6 +109,10 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
 
         adapter = ActividadAdapter(object : OnItemClickListener.ActividadListener {
             override fun onItemClick(a: Actividad, view: View, position: Int) {
+                if (tipoActividad == 1) {
+                    if (a.estado == 8 || a.estado == 9)
+                        return
+                }
                 val title = when (tipoActividad) {
                     1 -> "Modificar Actividad"
                     else -> "APRUEBA O RECHAZA ACTIVIDAD"
@@ -128,24 +136,37 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        itfViewModel.setLoading(true)
-        itfViewModel.syncActividad(usuarioId, 0, 0, tipoActividad)
+        f = Filtro(
+            if (tipoActividad == 1) usuarioId else 0, f.cicloId,
+            if (tipoActividad == 1) 0 else 7, tipoActividad
+        )
 
-        refreshLayout.setOnRefreshListener(this)
-        fabAdd.setOnClickListener(this)
-        fabSave.setOnClickListener(this)
+        itfViewModel.setLoading(true)
+        itfViewModel.syncActividad(
+            if (tipoActividad == 1) usuarioId else 0, f.cicloId,
+            if (tipoActividad == 1) 0 else 7, tipoActividad
+        )
+
+        itfViewModel.search.value = Gson().toJson(f)
+
+        itfViewModel.getActividades().observe(viewLifecycleOwner, {
+            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
+//            refreshLayout.isRefreshing = false
+            adapter.addItems(it)
+        })
 
         if (tipoActividad == 2) {
             fabSave.title = "Enviar Aprobaciones"
             fabAdd.visibility = View.GONE
         }
-
-        itfViewModel.getActividads(tipoActividad).observe(viewLifecycleOwner, {
-//            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
-            refreshLayout.isRefreshing = false
-            adapter.addItems(it)
+        itfViewModel.mensajeError.observe(viewLifecycleOwner, {
+            closeLoad()
+            Util.toastMensaje(context!!, it)
         })
-
+        itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
+            closeLoad()
+            Util.toastMensaje(context!!, it)
+        })
         itfViewModel.loading.observe(viewLifecycleOwner, {
             if (it) {
                 adapter.addItems(listOfNotNull())
@@ -155,14 +176,10 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
             }
         })
 
-        itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            closeLoad()
-            Util.toastMensaje(context!!, it)
-        })
-        itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            closeLoad()
-            Util.toastMensaje(context!!, it)
-        })
+
+//        refreshLayout.setOnRefreshListener(this)
+        fabAdd.setOnClickListener(this)
+        fabSave.setOnClickListener(this)
     }
 
     private fun load() {
@@ -197,14 +214,8 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
             }
     }
 
-    override fun onRefresh() {
-        itfViewModel.setLoading(false)
-        itfViewModel.syncActividad(usuarioId, 0, 0, tipoActividad)
-    }
-
     private fun dialogSearch() {
-        val builder =
-            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val v =
             LayoutInflater.from(context).inflate(R.layout.dialog_filtro_actividad, null)
 
@@ -226,14 +237,43 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
         val dialog = builder.create()
         dialog.show()
 
-        val f = Filtro()
+        f = Filtro()
 
         editTextCiclo.setOnClickListener { spinnerDialog(1, "Ciclo", editTextCiclo, f) }
         editTextUsuario.setOnClickListener { spinnerDialog(2, "Usuarios", editTextUsuario, f) }
         editTextEstado.setOnClickListener { spinnerDialog(3, "Estado", editTextEstado, f) }
         fabSearch.setOnClickListener {
+            if (f.cicloId == 0) {
+                itfViewModel.setError("Seleccione Ciclo")
+                return@setOnClickListener
+            }
+            if (f.estadoId == 0) {
+                itfViewModel.setError("Seleccione Estado")
+                return@setOnClickListener
+            }
+
+            if (tipoActividad == 2) {
+                if (f.usuarioId == 0) {
+                    itfViewModel.setError("Seleccione Usuario")
+                    return@setOnClickListener
+                }
+            }
+
             itfViewModel.setLoading(true)
-            itfViewModel.syncActividad(f.usuarioId, f.cicloId, f.estadoId, tipoActividad)
+            itfViewModel.syncActividad(
+                if (f.usuarioId == 0) usuarioId else f.usuarioId,
+                f.cicloId,
+                f.estadoId,
+                tipoActividad
+            )
+            val search = Filtro(
+                if (f.usuarioId == 0) usuarioId else f.usuarioId,
+                f.cicloId,
+                f.estadoId,
+                tipoActividad
+            )
+            itfViewModel.search.value = Gson().toJson(search)
+
             dialog.dismiss()
         }
     }
@@ -281,7 +321,7 @@ class ActividadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
                     ComboPersonalAdapter(object : OnItemClickListener.PersonalListener {
                         override fun onItemClick(p: Personal, view: View, position: Int) {
                             f.usuarioId = p.usuarioId
-                            editTextUsuario.setText(
+                            input.setText(
                                 String.format(
                                     "%s %s %s",
                                     p.nombre, p.apellidoP, p.apellidoM

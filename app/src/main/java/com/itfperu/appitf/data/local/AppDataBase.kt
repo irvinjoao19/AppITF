@@ -29,15 +29,14 @@ import com.itfperu.appitf.data.local.model.*
         Medico::class,
         MedicoDireccion::class,
         Identificador::class,
-        Departamento::class,
-        Provincia::class,
-        Distrito::class,
         TargetM::class,
         TargetCab::class,
-        TargetDet::class
+        TargetDet::class,
+        TargetInfo::class,
+        Ubigeo::class
     ],
     views = [Nombre::class],
-    version = 45, // version 1 en play store
+    version = 50, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -63,12 +62,11 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun medicoDao(): MedicoDao
     abstract fun medicoDireccionDao(): MedicoDireccionDao
     abstract fun identificadorDao(): IdentificadorDao
-    abstract fun departamentoDao(): DepartamentoDao
-    abstract fun provinciaDao(): ProvinciaDao
-    abstract fun distritoDao(): DistritoDao
     abstract fun targetDao(): TargetDao
     abstract fun targetCabDao(): TargetCabDao
     abstract fun targetDetDao(): TargetDetDao
+    abstract fun targetInfoDao(): TargetInfoDao
+    abstract fun ubigeoDao(): UbigeoDao
 
     companion object {
         @Volatile

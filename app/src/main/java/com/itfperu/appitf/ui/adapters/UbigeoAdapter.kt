@@ -5,16 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
-import com.itfperu.appitf.data.local.model.Distrito
+import com.itfperu.appitf.data.local.model.Ubigeo
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_combo.view.*
 
-class DistritoAdapter(private val listener: OnItemClickListener.DistritoListener) :
-    RecyclerView.Adapter<DistritoAdapter.ViewHolder>() {
+class UbigeoAdapter(
+    private var tipo: Int, private val listener: OnItemClickListener.UbigeoListener
+) :
+    RecyclerView.Adapter<UbigeoAdapter.ViewHolder>() {
 
-    private var menu = emptyList<Distrito>()
+    private var menu = emptyList<Ubigeo>()
 
-    fun addItems(list: List<Distrito>) {
+    fun addItems(list: List<Ubigeo>) {
         menu = list
         notifyDataSetChanged()
     }
@@ -27,7 +29,7 @@ class DistritoAdapter(private val listener: OnItemClickListener.DistritoListener
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(menu[position], listener)
+        holder.bind(menu[position], tipo, listener)
     }
 
     override fun getItemCount(): Int {
@@ -35,9 +37,15 @@ class DistritoAdapter(private val listener: OnItemClickListener.DistritoListener
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(m: Distrito, listener: OnItemClickListener.DistritoListener) = with(itemView) {
-            textViewTitulo.text = m.nombre
-            itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
-        }
+        fun bind(m: Ubigeo, tipo: Int, listener: OnItemClickListener.UbigeoListener) =
+            with(itemView) {
+                when(tipo){
+                    1 ->textViewTitulo.text = m.nombreDepartamento
+                    2 ->textViewTitulo.text = m.provincia
+                    else ->textViewTitulo.text = m.nombreDistrito
+                }
+
+                itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
+            }
     }
 }

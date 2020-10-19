@@ -130,21 +130,6 @@ class DataBaseModule {
     }
 
     @Provides
-    internal fun provideDepartamentoDao(appDataBase: AppDataBase): DepartamentoDao {
-        return appDataBase.departamentoDao()
-    }
-
-    @Provides
-    internal fun provideProvinciaDao(appDataBase: AppDataBase): ProvinciaDao {
-        return appDataBase.provinciaDao()
-    }
-
-    @Provides
-    internal fun provideDistritoDao(appDataBase: AppDataBase): DistritoDao {
-        return appDataBase.distritoDao()
-    }
-
-    @Provides
     internal fun provideTargetDao(appDataBase: AppDataBase): TargetDao {
         return appDataBase.targetDao()
     }
@@ -157,5 +142,15 @@ class DataBaseModule {
     @Provides
     internal fun provideTargetDetDao(appDataBase: AppDataBase): TargetDetDao {
         return appDataBase.targetDetDao()
+    }
+
+    @Provides
+    internal fun provideTargetInfoDao(appDataBase: AppDataBase): TargetInfoDao {
+        return appDataBase.targetInfoDao()
+    }
+
+    @Provides
+    internal fun provideUbigeoDao(appDataBase: AppDataBase): UbigeoDao {
+        return appDataBase.ubigeoDao()
     }
 }

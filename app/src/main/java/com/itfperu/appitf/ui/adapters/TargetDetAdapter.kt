@@ -45,24 +45,45 @@ class TargetDetAdapter(
                 textView2.text = p.nombreMedico
                 textView3.text = String.format("Categoria : %s", p.nombreCategoria)
                 textView5.text = p.nombreEspecialidad
+                textView6.text = String.format("Nro Contactos : %s", p.nroContacto)
 
-                if (p.tipoTarget == "B" || tipo == 2) {
-                    textView6.visibility = View.GONE
+                if (tipo == 2) {
                     editTextCantidad.visibility = View.GONE
-                    imageViewNegative.visibility = View.GONE
-                    imageViewPositive.visibility = View.GONE
+                    imgNegative.visibility = View.GONE
+                    imgPositive.visibility = View.GONE
+
+                    if (p.visitado == 0)
+                        imgInfo.visibility = View.GONE
+                    else
+                        imgInfo.visibility = View.VISIBLE
+
+                    if (p.nrovisita == 1) {
+                        imgAprobar.visibility = View.VISIBLE
+                        imgRechazar.visibility = View.VISIBLE
+                    } else {
+                        textView7.visibility = View.VISIBLE
+                        textView7.text = p.mensajeNrovisita
+                        imgRechazar.visibility = View.VISIBLE
+                    }
+                    if (p.estadoTarget == 18 || p.estadoTarget == 17) {
+                        textView8.visibility = View.VISIBLE
+                        textView8.text = if (p.estadoTarget == 18) "Aprobada" else "Rechazada"
+                    }
                 } else {
                     editTextCantidad.setText(p.nroContacto.toString())
-                    editTextCantidad.setOnClickListener { v ->
-                        listener.onItemClick(p, v, adapterPosition)
-                    }
-                    imageViewNegative.setOnClickListener { v ->
-                        listener.onItemClick(p, v, adapterPosition)
-                    }
-                    imageViewPositive.setOnClickListener { v ->
-                        listener.onItemClick(p, v, adapterPosition)
-                    }
                 }
+                editTextCantidad.setOnClickListener { v ->
+                    listener.onItemClick(p, v, adapterPosition)
+                }
+                imgNegative.setOnClickListener { v ->
+                    listener.onItemClick(p, v, adapterPosition)
+                }
+                imgPositive.setOnClickListener { v ->
+                    listener.onItemClick(p, v, adapterPosition)
+                }
+                imgInfo.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgAprobar.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                imgRechazar.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

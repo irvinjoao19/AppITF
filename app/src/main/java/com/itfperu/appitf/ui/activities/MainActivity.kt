@@ -39,7 +39,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private var usuarioId: Int = 0
     private var logout: String = "off"
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.filtro, menu)
         return true
@@ -146,7 +145,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Nuevos médicos" -> changeFragment(
                 MedicosFragment.newInstance(usuarioId, 1), item.title.toString()
             )
-            "Aprobación médicas" -> changeFragment(
+            "Aprobación médicos" -> changeFragment(
                 MedicosFragment.newInstance(usuarioId, 2), item.title.toString()
             )
             "Target" -> changeFragment(

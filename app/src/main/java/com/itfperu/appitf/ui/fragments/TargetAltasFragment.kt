@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.viewModel.TargetViewModel
@@ -38,10 +39,12 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         when (v.id) {
             R.id.fabAdd -> startActivity(
                 Intent(context, FormActivity::class.java)
-                    .putExtra("title", when (tipoTarget) {
-                        "A" -> "Nueva Alta"
-                        else -> "Nueva Baja"
-                    })
+                    .putExtra(
+                        "title", when (tipoTarget) {
+                            "A" -> "Nueva Alta"
+                            else -> "Nueva Baja"
+                        }
+                    )
                     .putExtra(
                         "tipo", when (tipo) {
                             1 -> 15
@@ -84,6 +87,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
     private var ffinal: String = Util.getLastaDay()
     private var estado: Int = 0
     private var targetCabId: Int = 0
+    lateinit var f: Filtro
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +96,13 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             tipoTarget = it.getString(ARG_PARAM2)!!
             tipo = it.getInt(ARG_PARAM3)
         }
+
+        f = Filtro(
+            if (tipo == 1) usuarioId else 0,
+            finicio, ffinal,
+            0,
+            tipo, tipoTarget
+        )
         setHasOptionsMenu(true)
     }
 
@@ -144,8 +155,6 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.setLoading(true)
         itfViewModel.syncTargetCab(usuarioId, finicio, ffinal, 0, tipoTarget, tipo)
 
-        fabAdd.setOnClickListener(this)
-        fabSave.setOnClickListener(this)
 
         if (tipoTarget == "A") {
             fabAdd.title = "Nuevas Altas"
@@ -157,8 +166,8 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             fabAdd.visibility = View.GONE
         }
 
-        itfViewModel.getTargetsAltas(tipoTarget,tipo).observe(viewLifecycleOwner, {
-//            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
+        itfViewModel.getTargetsAltas().observe(viewLifecycleOwner, {
+            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
             adapter.addItems(it)
         })
 
@@ -184,6 +193,9 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
+
+        fabAdd.setOnClickListener(this)
+        fabSave.setOnClickListener(this)
     }
 
     companion object {
@@ -212,18 +224,24 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         val dialog = builder.create()
         dialog.show()
 
-        val f = Filtro()
+        f = Filtro()
+        editTextDesde.setText(finicio)
+        editTextHasta.setText(ffinal)
 
         editTextDesde.setOnClickListener { Util.getDateDialog(context!!, editTextDesde) }
         editTextHasta.setOnClickListener { Util.getDateDialog(context!!, editTextHasta) }
         editTextEstado.setOnClickListener { spinnerDialog(editTextEstado, f) }
         fabSearch.setOnClickListener {
-            finicio = editTextDesde.text.toString()
-            ffinal = editTextHasta.text.toString()
+            f.finicio = editTextDesde.text.toString()
+            f.ffinal = editTextHasta.text.toString()
             itfViewModel.setLoading(true)
             itfViewModel.syncTargetCab(
-                usuarioId, finicio, ffinal, estado, tipoTarget, tipo
+                if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipoTarget, tipo
             )
+            val search = Filtro(
+                if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipo, tipoTarget
+            )
+            itfViewModel.search.value = Gson().toJson(search)
             dialog.dismiss()
         }
     }
@@ -252,7 +270,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
 
         val estadoAdapter = ComboEstadoAdapter(object : OnItemClickListener.EstadoListener {
             override fun onItemClick(e: Estado, view: View, position: Int) {
-                estado = e.estadoId
+                f.estadoId = e.estadoId
                 input.setText(e.descripcion)
                 dialog.dismiss()
             }
@@ -272,7 +290,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->
                 load()
-                itfViewModel.sendTarges(tipoTarget)
+                itfViewModel.sendTarges(tipoTarget, tipo)
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->

@@ -142,16 +142,16 @@ interface AppRepository {
     fun clearActividad(): Completable
     fun syncActividad(u: Int, c: Int, e: Int, t: Int): Observable<List<Actividad>>
     fun insertActividads(p: List<Actividad>): Completable
-    fun getActividads(tipo:Int): LiveData<List<Actividad>>
     fun sendActividad(body: RequestBody): Observable<Mensaje>
     fun insertActividad(c: Actividad): Completable
     fun getActividadById(id: Int): LiveData<Actividad>
     fun getEstados(tipo: String): LiveData<List<Estado>>
     fun getCicloProceso(): LiveData<List<Ciclo>>
     fun getDuracion(): LiveData<List<Duracion>>
-    fun getActividadTask(tipo:Int): Observable<List<Actividad>>
+    fun getActividadTask(tipo: Int): Observable<List<Actividad>>
     fun updateEnabledActividad(t: Mensaje): Completable
     fun getNombreUsuario(): LiveData<String>
+    fun getActividades(u: Int, c: Int, e: Int, t: Int): LiveData<List<Actividad>>
 
     //Medico
     fun clearSolMedico(): Completable
@@ -160,21 +160,21 @@ interface AppRepository {
     ): Observable<List<SolMedico>>
 
     fun insertSolMedicos(p: List<SolMedico>): Completable
-    fun getSolMedicos(tipoMedico:Int): LiveData<List<SolMedico>>
+    fun getSolMedicos(u:Int,fi:String,ff:String,e:Int,t: Int): LiveData<List<SolMedico>>
     fun verificateSolMedico(c: SolMedico): Completable
     fun sendSolMedico(body: RequestBody): Observable<Mensaje>
     fun insertSolMedico(c: SolMedico, m: Mensaje): Completable
     fun getSolMedicoById(id: Int): LiveData<SolMedico>
-    fun getSolMedicoTask(tipoMedico:Int): Observable<List<SolMedico>>
+    fun getSolMedicoTask(tipoMedico: Int): Observable<List<SolMedico>>
     fun updateEnabledMedico(t: Mensaje): Completable
 
     fun getMedicoById(id: Int): LiveData<Medico>
     fun insertMedico(m: Medico): Completable
     fun getIdentificadores(): LiveData<List<Identificador>>
 
-    fun getDepartamentos(): LiveData<List<Departamento>>
-    fun getProvincias(): LiveData<List<Provincia>>
-    fun getDistritos(): LiveData<List<Distrito>>
+    fun getDepartamentos(): LiveData<List<Ubigeo>>
+    fun getProvincias(cod: String): LiveData<List<Ubigeo>>
+    fun getDistritos(cod: String, cod2: String): LiveData<List<Ubigeo>>
     fun getMedicos(): LiveData<List<Medico>>
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
@@ -195,7 +195,8 @@ interface AppRepository {
     fun insertTarget(c: TargetCab, m: Mensaje): Completable
     fun getTargetById(id: Int): LiveData<TargetM>
 
-    fun getTargetsAltas(t: String,tipo:Int): LiveData<List<TargetCab>>
+    fun getTargetsAltas(t: String, tipo: Int): LiveData<List<TargetCab>>
+    fun getTargetsAltas(u:Int,fi:String,ff:String,e:Int, t: Int,tt:String): LiveData<List<TargetCab>>
     fun syncTargetCab(
         u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
     ): Observable<List<TargetCab>>
@@ -204,15 +205,19 @@ interface AppRepository {
     fun getTargetDetById(targetId: Int): LiveData<List<TargetDet>>
     fun getTargetDetId(): LiveData<Int>
     fun getTargetCabId(): LiveData<Int>
+    fun getTarget(targetId: Int): LiveData<TargetCab>
+    fun getTargetInfo(targetDetId: Int): LiveData<List<TargetInfo>>
+    fun updateEstadoTargetDet(t: TargetDet): Completable
 
     fun insertTargetDet(d: TargetDet): Completable
     fun insertTargetCab(c: TargetCab): Completable
-    fun getTargetCabTask(tipoTarget: String): Observable<List<TargetCab>>
+    fun getTargetCabTask(tipoTarget: String, tipo: Int): Observable<List<TargetCab>>
     fun updateEnabledTargetCab(t: Mensaje): Completable
 
     fun getCheckMedicos(): LiveData<PagedList<Medico>>
     fun getCheckMedicos(s: String): LiveData<PagedList<Medico>>
     fun saveMedico(cabId: Int, tipoTarget: String): Completable
     fun updateCheckMedico(s: Medico): Completable
+    fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico>
 
 }

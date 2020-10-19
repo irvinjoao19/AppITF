@@ -32,9 +32,11 @@ class CheckMedicoAdapter(private var listener: OnItemClickListener.CheckMedicoLi
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal fun bind(s: Medico, listener: OnItemClickListener.CheckMedicoListener) =
             with(itemView) {
-                textView1.text = String.format("%s %s", s.nombreMedico, s.apellidoP)
+                textView1.text = String.format("%s %s %s", s.nombreMedico, s.apellidoP, s.apellidoM)
                 textView2.text = s.cpmMedico
                 textView3.text = s.nombreIdentificador
+                textView4.text = s.nombreEspecialidad
+                textView5.text = s.visitadoPor
 
                 checkboxAdd.isChecked = s.isSelected
                 checkboxAdd.setOnCheckedChangeListener { _, isChecked ->

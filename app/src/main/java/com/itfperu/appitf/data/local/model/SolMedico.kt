@@ -20,6 +20,8 @@ open class SolMedico {
     var tipo: Int = 0 // 1 -> actividades , 2 -> aprobadas
 
     var estado : Int = 0 // 1 -> por enviar  , 2 -> enviado
+    var fechaInicio : String = ""
+    var fechaFinal : String = ""
 
     @Ignore
     var medicos: List<Medico>? = null

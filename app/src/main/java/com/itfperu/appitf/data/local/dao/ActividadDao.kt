@@ -22,8 +22,24 @@ interface ActividadDao {
     @Query("SELECT * FROM Actividad")
     fun getActividad(): LiveData<Actividad>
 
-    @Query("SELECT * FROM Actividad WHERE tipo =:t")
+    @Query("SELECT * FROM Actividad WHERE usuarioId=:u AND cicloId=:c AND estado =:e AND tipo=:t ")
+    fun getActividades(u: Int, c: Int, e: Int, t: Int): LiveData<List<Actividad>>
+
+    @Query("SELECT * FROM Actividad WHERE cicloId=:c AND estado =:e AND tipo=:t ")
+    fun getActividades(c: Int, e: Int, t: Int): LiveData<List<Actividad>>
+
+    @Query("SELECT * FROM Actividad WHERE estado=:e AND tipo=:t ")
+    fun getActividades(e: Int, t: Int): LiveData<List<Actividad>>
+
+    @Query("SELECT * FROM Actividad WHERE tipo=:t ")
     fun getActividades(t: Int): LiveData<List<Actividad>>
+
+    @Query("SELECT * FROM Actividad WHERE usuarioId =:u AND tipo=:t ")
+    fun getActividadesU(u: Int, t: Int): LiveData<List<Actividad>>
+
+    @Query("SELECT * FROM Actividad WHERE usuarioId =:u AND estado=:e AND tipo=:t ")
+    fun getActividadesU(u: Int,e:Int, t: Int): LiveData<List<Actividad>>
+
 
     @Query("SELECT actividadId FROM Actividad")
     fun getActividadId(): Int

@@ -19,6 +19,8 @@ open class TargetCab {
 
     var active: Int = 0 // 1 -> por enviar  , 2 -> enviado
     var identity: Int = 0
+    var fechaInicio:String = ""
+    var fechaFinal:String = ""
 
     @Ignore
     var detalle: List<TargetDet>? = null

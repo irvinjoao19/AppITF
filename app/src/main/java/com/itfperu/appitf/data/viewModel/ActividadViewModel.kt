@@ -3,7 +3,9 @@ package com.itfperu.appitf.data.viewModel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.google.gson.Gson
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
@@ -29,6 +31,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     val mensajeError = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
+    val search: MutableLiveData<String> = MutableLiveData()
+
 
     fun setError(s: String) {
         mensajeError.value = s
@@ -37,20 +41,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun setLoading(s: Boolean) {
         loading.value = s
     }
-
-//    fun syncActividad(u: Int, c: Int, e: Int, t: Int) {
-//        roomRepository.clearActividad()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(object : CompletableObserver {
-//                override fun onSubscribe(d: Disposable) {}
-//                override fun onComplete() {
-//                    actividad(u, c, e, t)
-//                }
-//
-//                override fun onError(e: Throwable) {}
-//            })
-//    }
 
     fun syncActividad(u: Int, c: Int, e: Int, t: Int) {
         roomRepository.syncActividad(u, c, e, t)
@@ -107,9 +97,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    fun getActividads(tipo: Int): LiveData<List<Actividad>> {
-        return roomRepository.getActividads(tipo)
+    fun getActividades(): LiveData<List<Actividad>> {
+        return Transformations.switchMap(search) { input ->
+            val f = Gson().fromJson(search.value, Filtro::class.java)
+            roomRepository.getActividades(f.usuarioId, f.cicloId, f.estadoId, f.tipo)
+        }
     }
 
     // t  =  1 -> actividades 2 -> aprobacion
@@ -130,8 +122,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         if (c.tipo == 1) {
             if (c.estado == 8 || c.estado == 9) {
                 mensajeError.value = "No se puede modificar"
+                return
             }
-            return
         }
 
         insertActividad(c)
@@ -241,4 +233,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun getNombreUsuario(): LiveData<String> {
         return roomRepository.getNombreUsuario()
     }
+
+//    fun getActividades(): LiveData<List<Actividad>> {
+//        return actividades
+//    }
 }

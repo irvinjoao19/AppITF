@@ -3,6 +3,7 @@ package com.itfperu.appitf.data.viewModel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.itfperu.appitf.data.local.model.*
@@ -28,6 +29,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     val mensajeError = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
+    val search = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
 
     fun setError(s: String) {
@@ -37,20 +39,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun setLoading(s: Boolean) {
         loading.value = s
     }
-
-//    fun syncMedico(u: Int, c: Int, e: Int, t: Int) {
-//        roomRepository.clearMedico()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(object : CompletableObserver {
-//                override fun onSubscribe(d: Disposable) {}
-//                override fun onComplete() {
-//                    actividad(u, c, e, t)
-//                }
-//
-//                override fun onError(e: Throwable) {}
-//            })
-//    }
 
     fun syncSolMedico(u: Int, fi: String, ff: String, e: Int, t: Int) {
         roomRepository.syncSolMedico(u, fi, ff, e, t)
@@ -107,10 +95,13 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
-    fun getSolMedicos(tipoMedico: Int): LiveData<List<SolMedico>> {
-        return roomRepository.getSolMedicos(tipoMedico)
+    fun getMedicos(): LiveData<List<SolMedico>> {
+        return Transformations.switchMap(search) { input ->
+            val f = Gson().fromJson(search.value, Filtro::class.java)
+            roomRepository.getSolMedicos(f.usuarioId, f.finicio, f.ffinal,f.estadoId, f.tipo)
+        }
     }
+
 
     fun validateSolMedico(c: SolMedico) {
         insertSolMedico(c)
@@ -245,16 +236,16 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getEspecialidads()
     }
 
-    fun getDepartamentos(): LiveData<List<Departamento>> {
+    fun getDepartamentos(): LiveData<List<Ubigeo>> {
         return roomRepository.getDepartamentos()
     }
 
-    fun getProvincias(): LiveData<List<Provincia>> {
-        return roomRepository.getProvincias()
+    fun getProvincias(cod: String): LiveData<List<Ubigeo>> {
+        return roomRepository.getProvincias(cod)
     }
 
-    fun getDistritos(): LiveData<List<Distrito>> {
-        return roomRepository.getDistritos()
+    fun getDistritos(cod: String, cod2: String): LiveData<List<Ubigeo>> {
+        return roomRepository.getDistritos(cod, cod2)
     }
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>> {
@@ -330,7 +321,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun sendMedicos(tipoMedico:Int) {
+    fun sendMedicos(tipoMedico: Int) {
         val ots: Observable<List<SolMedico>> = roomRepository.getSolMedicoTask(tipoMedico)
         ots.flatMap { observable ->
             Observable.fromIterable(observable).flatMap { a ->
@@ -402,5 +393,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getDireccionById(id: Int): LiveData<MedicoDireccion> {
         return roomRepository.getDireccionById(id)
+    }
+
+    fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico> {
+        return roomRepository.getSolMedicoCab(solMedicoId)
     }
 }

@@ -32,6 +32,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     val mensajeSuccess = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val searchMedico: MutableLiveData<String> = MutableLiveData()
+    val search: MutableLiveData<String> = MutableLiveData()
 
     fun setError(s: String) {
         mensajeError.value = s
@@ -171,8 +172,17 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getEspecialidads()
     }
 
-    fun getTargetsAltas(tipoTarget: String,tipo:Int): LiveData<List<TargetCab>> {
-        return roomRepository.getTargetsAltas(tipoTarget,tipo)
+    fun getTargetsAltas(tipoTarget: String, tipo: Int): LiveData<List<TargetCab>> {
+        return roomRepository.getTargetsAltas(tipoTarget, tipo)
+    }
+
+    fun getTargetsAltas(): LiveData<List<TargetCab>> {
+        return Transformations.switchMap(search) { input ->
+            val f = Gson().fromJson(search.value, Filtro::class.java)
+            roomRepository.getTargetsAltas(
+                f.usuarioId, f.finicio, f.ffinal, f.estadoId, f.tipo, f.tipoTarget
+            )
+        }
     }
 
     fun syncTargetCab(u: Int, fi: String, ff: String, e: Int, tt: String, t: Int) {
@@ -261,8 +271,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun sendTarges(tipoTarget: String) {
-        val ots: Observable<List<TargetCab>> = roomRepository.getTargetCabTask(tipoTarget)
+    fun sendTarges(tipoTarget: String, tipo: Int) {
+        val ots: Observable<List<TargetCab>> = roomRepository.getTargetCabTask(tipoTarget, tipo)
         ots.flatMap { observable ->
             Observable.fromIterable(observable).flatMap { a ->
                 val json = Gson().toJson(a)
@@ -347,14 +357,29 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onComplete() {
-
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message.toString()
                 }
+            })
+    }
 
-                override fun onSubscribe(d: Disposable) {
+    fun getTarget(targetId: Int): LiveData<TargetCab> {
+        return roomRepository.getTarget(targetId)
+    }
 
-                }
+    fun getTargetInfo(targetDetId: Int): LiveData<List<TargetInfo>> {
+        return roomRepository.getTargetInfo(targetDetId)
+    }
 
+    fun updateEstadoTargetDet(t: TargetDet) {
+        roomRepository.updateEstadoTargetDet(t)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {}
+                override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message.toString()
                 }

@@ -3,6 +3,7 @@ package com.itfperu.appitf.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.SolMedico
@@ -38,6 +39,12 @@ class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListen
         fun bind(p: SolMedico, position: Int, listener: OnItemClickListener.SolMedicoListener) =
             with(itemView) {
                 textView1.text = p.usuario
+                if (p.identity == 0) {
+                    textView1.setTextColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+                    )
+                }
+
                 textView2.text = p.fecha
                 textView4.text = p.usuarioAprobador
                 textView5.text = p.descripcionEstado

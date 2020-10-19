@@ -9,8 +9,6 @@ open class Sync {
     var categorias: List<Categoria> = ArrayList()
     var identificadors: List<Identificador> = ArrayList()
     var especialidads: List<Especialidad> = ArrayList()
-    var departamentos: List<Departamento> = ArrayList()
-    var provincias: List<Provincia> = ArrayList()
-    var distritos: List<Distrito> = ArrayList()
+    var ubigeos: List<Ubigeo> = ArrayList()
     var medicos: List<Medico> = ArrayList()
 }

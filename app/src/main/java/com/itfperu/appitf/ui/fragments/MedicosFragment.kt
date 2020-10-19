@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.viewModel.MedicoViewModel
@@ -79,13 +80,23 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private var estado: Int = 0
     private var medicoId: Int = 0 // medico
     private var solMedicoId: Int = 0 // medico cab
+    lateinit var f: Filtro
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             usuarioId = it.getInt(ARG_PARAM1)
             tipoMedico = it.getInt(ARG_PARAM2)
         }
+
+        f = Filtro(
+            if (tipoMedico == 1) usuarioId else 0,
+            finicio, ffinal,
+            if (tipoMedico == 1) 0 else 11,
+            tipoMedico
+        )
+
         setHasOptionsMenu(true)
     }
 
@@ -107,10 +118,9 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         adapterSol = SolMedicoAdapter(object : OnItemClickListener.SolMedicoListener {
             override fun onItemClick(m: SolMedico, view: View, position: Int) {
                 val title = when (tipoMedico) {
-                    1 -> "Modificar Medico"
-                    else -> "Aprobar o Rechazar Medico"
+                    1 -> "Modificar Médico"
+                    else -> "Aprobar o Rechazar Médico"
                 }
-
                 startActivity(
                     Intent(context, FormActivity::class.java)
                         .putExtra("title", title)
@@ -129,31 +139,29 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         recyclerView.adapter = adapterSol
 
         itfViewModel.setLoading(true)
-        itfViewModel.syncSolMedico(usuarioId, finicio, ffinal, 0, tipoMedico)
-
-        refreshLayout.setOnRefreshListener(this)
-        fabAdd.setOnClickListener(this)
-        fabSave.setOnClickListener(this)
+        itfViewModel.syncSolMedico(
+            if (tipoMedico == 1) usuarioId else 0,
+            finicio, ffinal,
+            if (tipoMedico == 1) 0 else 11,
+            tipoMedico
+        )
+        itfViewModel.search.value = Gson().toJson(f)
 
         if (tipoMedico == 2) {
             fabAdd.title = "Enviar Aprobaciones"
             fabAdd.visibility = View.GONE
         }
-
-        itfViewModel.getSolMedicos(tipoMedico).observe(viewLifecycleOwner, {
-//            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
-            refreshLayout.isRefreshing = false
+        itfViewModel.getMedicos().observe(viewLifecycleOwner, {
+            textviewMessage.text = String.format("Se encontraron %s registros", it.size)
+            //refreshLayout.isRefreshing = false
             adapterSol.addItems(it)
         })
-
         itfViewModel.getSolMedicoId().observe(viewLifecycleOwner, {
             solMedicoId = if (it == null || it == 0) 1 else it + 1
         })
-
         itfViewModel.getMedicoId().observe(viewLifecycleOwner, {
             medicoId = if (it == null || it == 0) 1 else it + 1
         })
-
         itfViewModel.loading.observe(viewLifecycleOwner, {
             if (it) {
                 adapterSol.addItems(listOfNotNull())
@@ -162,16 +170,17 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
                 progressBar.visibility = View.GONE
             }
         })
-
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
-
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
+        fabAdd.setOnClickListener(this)
+        fabSave.setOnClickListener(this)
+        //refreshLayout.setOnRefreshListener(this)
     }
 
     private fun load() {
@@ -225,18 +234,29 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         val dialog = builder.create()
         dialog.show()
 
-        val f = Filtro()
+        f = Filtro()
+
+        editTextDesde.setText(finicio)
+        editTextHasta.setText(ffinal)
 
         editTextDesde.setOnClickListener { Util.getDateDialog(context!!, editTextDesde) }
         editTextHasta.setOnClickListener { Util.getDateDialog(context!!, editTextHasta) }
         editTextEstado.setOnClickListener { spinnerDialog(editTextEstado, f) }
         fabSearch.setOnClickListener {
-            finicio = editTextDesde.text.toString()
-            ffinal = editTextHasta.text.toString()
+            f.finicio = editTextDesde.text.toString()
+            f.ffinal = editTextHasta.text.toString()
             itfViewModel.setLoading(true)
             itfViewModel.syncSolMedico(
-                usuarioId, finicio, ffinal, estado, tipoMedico
+                if (tipoMedico == 1) usuarioId else 0,
+                f.finicio, f.ffinal,
+                f.estadoId,
+                tipoMedico
             )
+
+            val search = Filtro(
+                if (tipoMedico == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipoMedico
+            )
+            itfViewModel.search.value = Gson().toJson(search)
             dialog.dismiss()
         }
     }
@@ -265,7 +285,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         val estadoAdapter = ComboEstadoAdapter(object : OnItemClickListener.EstadoListener {
             override fun onItemClick(e: Estado, view: View, position: Int) {
-                estado = e.estadoId
+                f.estadoId = e.estadoId
                 input.setText(e.descripcion)
                 dialog.dismiss()
             }

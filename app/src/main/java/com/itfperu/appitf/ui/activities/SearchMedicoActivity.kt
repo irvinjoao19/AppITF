@@ -61,7 +61,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
 
     private fun bindUI() {
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Productos"
+        supportActionBar!!.title = "Médicos"
 
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)

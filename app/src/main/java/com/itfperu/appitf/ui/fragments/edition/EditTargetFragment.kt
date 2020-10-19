@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
@@ -22,6 +26,7 @@ import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.SearchMedicoActivity
 import com.itfperu.appitf.ui.adapters.TargetDetAdapter
+import com.itfperu.appitf.ui.adapters.TargetInfoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_target.*
@@ -43,8 +48,6 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                     .putExtra("tipoTarget", tipoTarget)
             )
             R.id.fabSave -> formValidate()
-            R.id.fabAprobar -> confirmAprobation(17, "Deseas Aprobar ?")
-            R.id.fabRechazar -> confirmAprobation(18, "Deseas Rechazar ?")
         }
     }
 
@@ -54,7 +57,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
     lateinit var s: TargetCab
     private var usuarioId: Int = 0
     private var targetId: Int = 0 // cabecera
-    private var tipo: Int = 0
+    private var tipo: Int = 0 // 1 -> altas , 2 -> aprobacion de altas
     private var tipoTarget: String = "" // A -> ALTAS	B -> BAJAS
     private var estado: Int = 0
 
@@ -90,7 +93,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                 override fun onItemClick(t: TargetDet, view: View, position: Int) {
                     when (view.id) {
                         R.id.editTextCantidad -> updateCantidadProducto(t)
-                        R.id.imageViewNegative -> {
+                        R.id.imgNegative -> {
                             val resta = t.nroContacto
                             if (resta != 0) {
                                 val rTotal = (resta - 1).toString()
@@ -102,13 +105,16 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                                 itfViewModel.insertTargetDet(t, 1)
                             }
                         }
-                        R.id.imageViewPositive -> {
+                        R.id.imgPositive -> {
                             val sTotal = (t.nroContacto + 1).toString()
                             val nPositive = sTotal.toInt()
                             t.active = 1
                             t.nroContacto = nPositive
                             itfViewModel.insertTargetDet(t, 1)
                         }
+                        R.id.imgInfo -> dialogInfo(t)
+                        R.id.imgAprobar -> confirmAprobation(t, 18, "Deseas Aprobar ?")
+                        R.id.imgRechazar -> confirmAprobation(t, 17, "Deseas Rechazar ?")
                     }
                 }
             })
@@ -140,17 +146,20 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
         })
 
+        itfViewModel.getTarget(targetId).observe(viewLifecycleOwner, {
+            if (it != null) {
+                s = it
+            }
+        })
+
         if (tipo == 2) {
             fabPerson.visibility = View.GONE
             fabSave.visibility = View.GONE
-            fabAprobar.visibility = View.VISIBLE
-            fabRechazar.visibility = View.VISIBLE
+            fabMenu.visibility = View.GONE
         }
 
         fabPerson.setOnClickListener(this)
         fabSave.setOnClickListener(this)
-        fabAprobar.setOnClickListener(this)
-        fabRechazar.setOnClickListener(this)
     }
 
     private fun formValidate() {
@@ -213,25 +222,49 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    private fun confirmAprobation(estado: Int, message: String) {
+    private fun confirmAprobation(t: TargetDet, estado: Int, message: String) {
         val dialog = MaterialAlertDialogBuilder(context!!)
             .setTitle("Mensaje")
             .setMessage(message)
             .setPositiveButton("Si") { dialog, _ ->
-                s.targetCabId = targetId
-                s.usuarioId = usuarioId
-                s.tipoTarget = tipoTarget
-                s.tipo = tipo
-                s.nombreEstado = if (estado == 17) "Rechazada" else "Aprobada"
-                s.fechaSolicitud = Util.getFecha()
-                s.estado = estado
-                s.active = 1
-                itfViewModel.validateTarget(s)
+                t.estadoTarget = estado
+                t.active = 1
+                itfViewModel.updateEstadoTargetDet(t)
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->
                 dialog.cancel()
             }
         dialog.show()
+    }
+
+    private fun dialogInfo(t: TargetDet) {
+        val builder =
+            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val v =
+            LayoutInflater.from(context).inflate(R.layout.dialog_combo, null)
+        val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
+        val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
+        val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        progressBar.visibility = View.GONE
+        builder.setView(v)
+        val dialog = builder.create()
+        dialog.show()
+
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                recyclerView.context, DividerItemDecoration.VERTICAL
+            )
+        )
+        textViewTitulo.text = String.format("Información")
+        val targetAdapter = TargetInfoAdapter()
+        recyclerView.adapter = targetAdapter
+
+        itfViewModel.getTargetInfo(t.targetDetId).observe(viewLifecycleOwner, {
+            targetAdapter.addItems(it)
+        })
     }
 }
