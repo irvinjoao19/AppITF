@@ -45,4 +45,7 @@ interface TargetDetDao {
 
     @Query("SELECT * FROM TargetDet WHERE medicoId=:m AND targetCabId =:c")
     fun getMedicoExits(m: Int, c: Int): Boolean
+
+    @Query("DELETE FROM TargetDet WHERE targetCabId=:id")
+    fun deleteTargetDet(id: Int)
 }

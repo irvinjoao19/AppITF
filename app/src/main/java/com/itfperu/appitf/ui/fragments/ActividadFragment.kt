@@ -320,7 +320,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
                 val personalAdapter =
                     ComboPersonalAdapter(object : OnItemClickListener.PersonalListener {
                         override fun onItemClick(p: Personal, view: View, position: Int) {
-                            f.usuarioId = p.usuarioId
+                            f.usuarioId = p.personalId
                             input.setText(
                                 String.format(
                                     "%s %s %s",

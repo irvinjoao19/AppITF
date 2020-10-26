@@ -81,5 +81,10 @@ abstract class ViewModelModule {
     internal abstract fun bindTargetViewModel(targetViewModel: TargetViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(ProgramacionViewModel::class)
+    internal abstract fun bindProgramacionViewModel(programacionViewModel: ProgramacionViewModel): ViewModel
+
+    @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

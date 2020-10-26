@@ -1,6 +1,5 @@
 package com.itfperu.appitf.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -19,6 +18,7 @@ import com.itfperu.appitf.ui.adapters.CheckMedicoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_search_medico.*
+import kotlinx.android.synthetic.main.activity_search_medico.toolbar
 import javax.inject.Inject
 
 class SearchMedicoActivity : DaggerAppCompatActivity() {
@@ -28,6 +28,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
     lateinit var itfViewModel: TargetViewModel
     private var cabId: Int = 0
     private var tipoTarget: String = "" // A -> ALTAS	B -> BAJAS
+    private var usuarioId: Int = 0
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.search, menu)
@@ -42,11 +43,10 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.ok -> itfViewModel.saveMedico(cabId,tipoTarget)
+            R.id.ok -> itfViewModel.saveMedico(cabId, tipoTarget)
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +54,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
         val b = intent.extras
         if (b != null) {
             cabId = b.getInt("targetCab")
+            usuarioId = b.getInt("usuarioId")
             tipoTarget = b.getString("tipoTarget")!!
             bindUI()
         }
@@ -62,6 +63,8 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
     private fun bindUI() {
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Médicos"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
 
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
@@ -86,7 +89,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
         )
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = checkMedicoAdapter
-        itfViewModel.getCheckMedicos()
+        itfViewModel.getCheckMedicos(tipoTarget,usuarioId)
             .observe(this, Observer(checkMedicoAdapter::submitList))
 
         itfViewModel.searchMedico.value = ""
@@ -99,6 +102,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
             finish()
         })
     }
+
     private fun search(searchView: SearchView) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {

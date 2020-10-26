@@ -207,7 +207,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 MainFragment.newInstance("", "")
             )
             .commit()
-        supportActionBar!!.title = "ITF"
+        supportActionBar!!.title = "Menu Principal"
 //        navigationView.menu.getItem(1).isChecked = true
     }
 

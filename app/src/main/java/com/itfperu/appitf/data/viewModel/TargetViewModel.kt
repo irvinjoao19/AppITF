@@ -342,12 +342,12 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getCheckMedicos(): LiveData<PagedList<Medico>> {
+    fun getCheckMedicos(tipoTarget:String,u:Int): LiveData<PagedList<Medico>> {
         return Transformations.switchMap(searchMedico) { input ->
             if (input == null || input.isEmpty()) {
-                roomRepository.getCheckMedicos()
+                roomRepository.getCheckMedicos(tipoTarget,u)
             } else {
-                roomRepository.getCheckMedicos(String.format("%s%s%s", "%", input, "%"))
+                roomRepository.getCheckMedicos(tipoTarget,u,String.format("%s%s%s", "%", input, "%"))
             }
         }
     }
@@ -383,6 +383,20 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message.toString()
                 }
+            })
+    }
+
+    fun deleteTargetDet(targetId: Int) {
+        roomRepository.deleteTargetDet(targetId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onComplete() {
+                    mensajeSuccess.value = "Operación Cancelada"
+                }
+
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) {}
             })
     }
 }

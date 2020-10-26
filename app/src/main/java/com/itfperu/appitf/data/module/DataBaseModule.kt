@@ -153,4 +153,9 @@ class DataBaseModule {
     internal fun provideUbigeoDao(appDataBase: AppDataBase): UbigeoDao {
         return appDataBase.ubigeoDao()
     }
+
+    @Provides
+    internal fun provideProgramacionDao(appDataBase: AppDataBase): ProgramacionDao {
+        return appDataBase.programacionDao()
+    }
 }

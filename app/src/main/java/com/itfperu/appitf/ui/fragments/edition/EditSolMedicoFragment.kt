@@ -174,6 +174,8 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
             s.mensajeSol = editTextComentario.text.toString()
             s.usuarioId = usuarioId
             s.fecha = Util.getFecha()
+            s.fechaInicio = Util.getFirstDay()
+            s.fechaFinal = Util.getLastaDay()
             s.tipo = tipoMedico
             itfViewModel.validateSolMedico(s)
             dialog.dismiss()

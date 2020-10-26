@@ -45,33 +45,46 @@ class TargetDetAdapter(
                 textView2.text = p.nombreMedico
                 textView3.text = String.format("Categoria : %s", p.nombreCategoria)
                 textView5.text = p.nombreEspecialidad
-                textView6.text = String.format("Nro Contactos : %s", p.nroContacto)
+                editTextCantidad.setText(p.nroContacto.toString())
 
                 if (tipo == 2) {
+                    if (p.tipoTarget == "A") {
+                        if (p.visitado == 0)
+                            imgInfo.visibility = View.GONE
+                        else
+                            imgInfo.visibility = View.VISIBLE
+
+                        if (p.nrovisita == 1) {
+                            imgAprobar.visibility = View.VISIBLE
+                            imgRechazar.visibility = View.VISIBLE
+                        } else {
+                            textView7.visibility = View.VISIBLE
+                            textView7.text = p.mensajeNrovisita
+                            imgRechazar.visibility = View.VISIBLE
+                        }
+                    } else {
+                        imgAprobar.visibility = View.VISIBLE
+                        imgRechazar.visibility = View.VISIBLE
+
+                        editTextCantidad.visibility = View.GONE
+                        imgNegative.visibility = View.GONE
+                        imgPositive.visibility = View.GONE
+                    }
+                }
+
+                if (p.estadoTarget == 18 || p.estadoTarget == 17) {
+                    textView8.visibility = View.VISIBLE
+                    textView8.text = if (p.estadoTarget == 18) "Aprobada" else "Rechazada"
+                    imgAprobar.visibility = View.GONE
+                    imgRechazar.visibility = View.GONE
+                    textView6.text = String.format("Nro Contactos : %s", p.nroContacto)
+                    textView6.visibility = View.VISIBLE
                     editTextCantidad.visibility = View.GONE
                     imgNegative.visibility = View.GONE
                     imgPositive.visibility = View.GONE
-
-                    if (p.visitado == 0)
-                        imgInfo.visibility = View.GONE
-                    else
-                        imgInfo.visibility = View.VISIBLE
-
-                    if (p.nrovisita == 1) {
-                        imgAprobar.visibility = View.VISIBLE
-                        imgRechazar.visibility = View.VISIBLE
-                    } else {
-                        textView7.visibility = View.VISIBLE
-                        textView7.text = p.mensajeNrovisita
-                        imgRechazar.visibility = View.VISIBLE
-                    }
-                    if (p.estadoTarget == 18 || p.estadoTarget == 17) {
-                        textView8.visibility = View.VISIBLE
-                        textView8.text = if (p.estadoTarget == 18) "Aprobada" else "Rechazada"
-                    }
-                } else {
-                    editTextCantidad.setText(p.nroContacto.toString())
                 }
+
+
                 editTextCantidad.setOnClickListener { v ->
                     listener.onItemClick(p, v, adapterPosition)
                 }

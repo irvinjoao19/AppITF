@@ -85,7 +85,6 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
     private var tipo: Int = 0 // 1 -> altas , 2 -> aprobacion de altas
     private var finicio: String = Util.getFirstDay()
     private var ffinal: String = Util.getLastaDay()
-    private var estado: Int = 0
     private var targetCabId: Int = 0
     lateinit var f: Filtro
 
@@ -100,7 +99,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         f = Filtro(
             if (tipo == 1) usuarioId else 0,
             finicio, ffinal,
-            0,
+            if (tipo == 2) 16 else 0,
             tipo, tipoTarget
         )
         setHasOptionsMenu(true)
@@ -153,8 +152,13 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.adapter = adapter
 
         itfViewModel.setLoading(true)
-        itfViewModel.syncTargetCab(usuarioId, finicio, ffinal, 0, tipoTarget, tipo)
-
+        itfViewModel.syncTargetCab(
+            if (tipo == 1) usuarioId else 0,
+            finicio, ffinal,
+            if (tipo == 2) 16 else 0,
+            tipoTarget, tipo
+        )
+        itfViewModel.search.value = Gson().toJson(f)
 
         if (tipoTarget == "A") {
             fabAdd.title = "Nuevas Altas"

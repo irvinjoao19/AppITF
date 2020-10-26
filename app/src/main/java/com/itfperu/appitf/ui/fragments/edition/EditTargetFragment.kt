@@ -45,10 +45,26 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             R.id.fabPerson -> startActivity(
                 Intent(context, SearchMedicoActivity::class.java)
                     .putExtra("targetCab", targetId)
+                    .putExtra("usuarioId", usuarioId)
                     .putExtra("tipoTarget", tipoTarget)
             )
             R.id.fabSave -> formValidate()
+            R.id.fabCancelar -> clearDetalle()
         }
+    }
+
+    private fun clearDetalle() {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage("Deseas Cancelar Operación ?")
+            .setPositiveButton("Si") { dialog, _ ->
+                itfViewModel.deleteTargetDet(targetId)
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
     }
 
     @Inject
@@ -130,9 +146,12 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             } else {
                 if (tipo != 2) {
                     if (it.isNotEmpty()) {
+                        fabCancelar.visibility = View.VISIBLE
                         fabSave.visibility = View.VISIBLE
-                    } else
+                    } else{
+                        fabCancelar.visibility = View.GONE
                         fabSave.visibility = View.GONE
+                    }
                 }
             }
             targetDetAdapter.addItems(it)
@@ -160,6 +179,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
 
         fabPerson.setOnClickListener(this)
         fabSave.setOnClickListener(this)
+        fabCancelar.setOnClickListener(this)
     }
 
     private fun formValidate() {
@@ -169,8 +189,11 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         s.tipo = tipo
         s.nombreEstado = "Enviada"
         s.fechaSolicitud = Util.getFecha()
+        s.fechaInicio = Util.getFirstDay()
+        s.fechaFinal = Util.getLastaDay()
         s.estado = 16
         s.active = 1
+        s.usuarioId = usuarioId
         itfViewModel.validateTarget(s)
     }
 

@@ -107,6 +107,10 @@ interface ApiService {
     ): Observable<List<SolMedico>>
 
     @Headers("Cache-Control: no-cache")
+    @GET("Programacion")
+    fun getProgramacion(@Query("u") u: Int, @Query("c") c: Int): Observable<List<Programacion>>
+
+    @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
     fun saveCategoria(@Body body: RequestBody): Observable<Mensaje>
 
@@ -161,4 +165,8 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveTarget")
     fun saveTarget(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveProgramacion")
+    fun sendProgramacion(body: RequestBody): Observable<Mensaje>
 }

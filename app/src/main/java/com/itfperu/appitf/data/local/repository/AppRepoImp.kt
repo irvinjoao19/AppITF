@@ -9,6 +9,7 @@ import com.itfperu.appitf.data.local.AppDataBase
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
+import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
 import com.itfperu.appitf.helper.MensajeDetalle
 import com.itfperu.appitf.helper.MensajeDetalleDet
 import io.reactivex.Completable
@@ -829,19 +830,36 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertSolMedicos(p: List<SolMedico>): Completable {
         return Completable.fromAction {
-            dataBase.solMedicoDao().insertMedicoListTask(p)
             for (a: SolMedico in p) {
-                val b: List<Medico>? = a.medicos
-                if (b != null) {
-                    dataBase.medicoDao().insertMedicoListTask(b)
-                    for (c: Medico in b) {
-                        val d: List<MedicoDireccion>? = c.direcciones
-                        if (d != null) {
-                            dataBase.medicoDireccionDao().insertMedicoDireccionListTask(d)
+                val cab: SolMedico? =
+                    dataBase.solMedicoDao().getSolMedicoOffLineIdTask(a.solMedicoId)
+                if (cab == null) {
+                    dataBase.solMedicoDao().insertMedicoTask(a)
+                    val b: List<Medico>? = a.medicos
+                    if (b != null) {
+                        dataBase.medicoDao().insertMedicoListTask(b)
+                        for (c: Medico in b) {
+                            val d: List<MedicoDireccion>? = c.direcciones
+                            if (d != null) {
+                                dataBase.medicoDireccionDao().insertMedicoDireccionListTask(d)
+                            }
                         }
                     }
                 }
             }
+//            dataBase.solMedicoDao().insertMedicoListTask(p)
+//            for (a: SolMedico in p) {
+//                val b: List<Medico>? = a.medicos
+//                if (b != null) {
+//                    dataBase.medicoDao().insertMedicoListTask(b)
+//                    for (c: Medico in b) {
+//                        val d: List<MedicoDireccion>? = c.direcciones
+//                        if (d != null) {
+//                            dataBase.medicoDireccionDao().insertMedicoDireccionListTask(d)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -1084,19 +1102,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun getTargetsAltas(
-        u: Int, fi: String, ff: String, e: Int, t: Int,tt:String
+        u: Int, fi: String, ff: String, e: Int, t: Int, tt: String
     ): LiveData<List<TargetCab>> {
         return if (t == 1) {
             if (e == 0) {
-                dataBase.targetCabDao().getTargetsAltas(u, fi, ff, t,tt)
+                dataBase.targetCabDao().getTargetsAltas(u, fi, ff, t, tt)
             } else {
-                dataBase.targetCabDao().getTargetsAltas(u, fi, ff, e, t,tt)
+                dataBase.targetCabDao().getTargetsAltas(u, fi, ff, e, t, tt)
             }
         } else {
             if (e == 0) {
-                dataBase.targetCabDao().getTargetsAltas(fi, ff, t,tt)
+                dataBase.targetCabDao().getTargetsAltas(fi, ff, t, tt)
             } else {
-                dataBase.targetCabDao().getTargetsAltas(fi, ff, e, t,tt)
+                dataBase.targetCabDao().getTargetsAltas(fi, ff, e, t, tt)
             }
         }
     }
@@ -1109,19 +1127,36 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertTargetsCab(p: List<TargetCab>): Completable {
         return Completable.fromAction {
-            dataBase.targetCabDao().insertTargetCabListTask(p)
             for (a: TargetCab in p) {
-                val b: List<TargetDet>? = a.detalle
-                if (b != null) {
-                    dataBase.targetDetDao().insertTargetDetListTask(b)
-                    for (d: TargetDet in b) {
-                        val i: List<TargetInfo>? = d.infos
-                        if (i != null) {
-                            dataBase.targetInfoDao().insertTargetListTask(i)
+                val cab: TargetCab? =
+                    dataBase.targetCabDao().getTargetCabOffLineIdTask(a.targetCabId)
+                if (cab == null) {
+                    dataBase.targetCabDao().insertTargetCabTask(a)
+                    val b: List<TargetDet>? = a.detalle
+                    if (b != null) {
+                        dataBase.targetDetDao().insertTargetDetListTask(b)
+                        for (d: TargetDet in b) {
+                            val i: List<TargetInfo>? = d.infos
+                            if (i != null) {
+                                dataBase.targetInfoDao().insertTargetListTask(i)
+                            }
                         }
                     }
                 }
             }
+//            dataBase.targetCabDao().insertTargetCabListTask(p)
+//            for (a: TargetCab in p) {
+//                val b: List<TargetDet>? = a.detalle
+//                if (b != null) {
+//                    dataBase.targetDetDao().insertTargetDetListTask(b)
+//                    for (d: TargetDet in b) {
+//                        val i: List<TargetInfo>? = d.infos
+//                        if (i != null) {
+//                            dataBase.targetInfoDao().insertTargetListTask(i)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -1199,16 +1234,34 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun getCheckMedicos(): LiveData<PagedList<Medico>> {
-        return dataBase.medicoDao().getCheckMedicos().toLiveData(
-            Config(pageSize = 20, enablePlaceholders = true)
-        )
+    override fun deleteTargetDet(targetId: Int): Completable {
+        return Completable.fromAction {
+            dataBase.targetDetDao().deleteTargetDet(targetId)
+        }
     }
 
-    override fun getCheckMedicos(s: String): LiveData<PagedList<Medico>> {
-        return dataBase.medicoDao().getCheckMedicos(s).toLiveData(
-            Config(pageSize = 20, enablePlaceholders = true)
-        )
+    override fun getCheckMedicos(t: String, u: Int): LiveData<PagedList<Medico>> {
+        return if (t == "B") {
+            dataBase.medicoDao().getCheckMedicos(u).toLiveData(
+                Config(pageSize = 20, enablePlaceholders = true)
+            )
+        } else {
+            dataBase.medicoDao().getCheckMedicos().toLiveData(
+                Config(pageSize = 20, enablePlaceholders = true)
+            )
+        }
+    }
+
+    override fun getCheckMedicos(t: String, u: Int, s: String): LiveData<PagedList<Medico>> {
+        return if (t == "B") {
+            dataBase.medicoDao().getCheckMedicos(s, u).toLiveData(
+                Config(pageSize = 20, enablePlaceholders = true)
+            )
+        } else {
+            dataBase.medicoDao().getCheckMedicos(s).toLiveData(
+                Config(pageSize = 20, enablePlaceholders = true)
+            )
+        }
     }
 
     override fun saveMedico(cabId: Int, tipoTarget: String): Completable {
@@ -1221,7 +1274,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 a.cmp = s.cpmMedico
                 a.nombreCategoria = s.nombreCategoria
                 a.nombreEspecialidad = s.nombreEspecialidad
-                a.nombreMedico = s.nombreMedico
+                a.nombreMedico = String.format("%s %s %s", s.nombreMedico, s.apellidoP, s.apellidoM)
                 a.nroContacto = 1
                 a.tipoTarget = tipoTarget
                 a.estadoTarget = 16
@@ -1242,5 +1295,71 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico> {
         return dataBase.solMedicoDao().getSolMedicoCab(solMedicoId)
+    }
+
+    override fun syncProgramacion(u: Int, c: Int): Observable<List<Programacion>> {
+        return apiService.getProgramacion(u, c)
+    }
+
+    override fun insertProgramacions(p: List<Programacion>): Completable {
+        return Completable.fromAction {
+            for (a: Programacion in p) {
+                val cab: Programacion? =
+                    dataBase.programacionDao().getProgramacionOffLineIdTask(a.programacionId)
+                if (cab == null) {
+                    dataBase.programacionDao().insertProgramacionTask(a)
+//                    val b: List<TargetDet>? = a.detalle
+//                    if (b != null) {
+//                        dataBase.targetDetDao().insertTargetDetListTask(b)
+//                        for (d: TargetDet in b) {
+//                            val i: List<TargetInfo>? = d.infos
+//                            if (i != null) {
+//                                dataBase.targetInfoDao().insertTargetListTask(i)
+//                            }
+//                        }
+//                    }
+                }
+            }
+        }
+    }
+
+    override fun getProgramacionTask(): Observable<List<Programacion>> {
+        return Observable.create { e ->
+            val a: ArrayList<Programacion> = ArrayList()
+            val data: List<Programacion> = dataBase.programacionDao().getProgramacionTask()
+            if (data.isEmpty()) {
+                e.onError(Throwable("No hay datos por enviar"))
+                e.onComplete()
+                return@create
+            }
+            for (r: Programacion in data) {
+//                r.detalle = dataBase.targetDetDao().getTargetDetIdTask(r.targetCabId)
+                a.add(r)
+            }
+            e.onNext(a)
+            e.onComplete()
+        }
+    }
+
+    override fun sendProgramacion(body: RequestBody): Observable<Mensaje> {
+        return apiService.sendProgramacion(body)
+    }
+
+    override fun updateEnabledProgramacion(t: Mensaje): Completable {
+        return Completable.fromAction {
+
+        }
+    }
+
+    override fun getProgramaciones(): LiveData<List<Programacion>> {
+        return dataBase.programacionDao().getProgramaciones()
+    }
+
+    override fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>> {
+        return if (s.isEmpty()) {
+            dataBase.programacionDao().getProgramaciones(e)
+        } else {
+            dataBase.programacionDao().getProgramaciones(e, String.format("%s%s%s", "%", s, "%"))
+        }
     }
 }

@@ -213,11 +213,20 @@ interface AppRepository {
     fun insertTargetCab(c: TargetCab): Completable
     fun getTargetCabTask(tipoTarget: String, tipo: Int): Observable<List<TargetCab>>
     fun updateEnabledTargetCab(t: Mensaje): Completable
+    fun deleteTargetDet(targetId: Int): Completable
 
-    fun getCheckMedicos(): LiveData<PagedList<Medico>>
-    fun getCheckMedicos(s: String): LiveData<PagedList<Medico>>
+    fun getCheckMedicos(t:String,u:Int): LiveData<PagedList<Medico>>
+    fun getCheckMedicos(t:String,u:Int,s: String): LiveData<PagedList<Medico>>
     fun saveMedico(cabId: Int, tipoTarget: String): Completable
     fun updateCheckMedico(s: Medico): Completable
     fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico>
+
+    fun syncProgramacion(u: Int, c: Int): Observable<List<Programacion>>
+    fun insertProgramacions(p: List<Programacion>): Completable
+    fun getProgramacionTask(): Observable<List<Programacion>>
+    fun sendProgramacion(body: RequestBody): Observable<Mensaje>
+    fun updateEnabledProgramacion(t: Mensaje): Completable
+    fun getProgramaciones() : LiveData<List<Programacion>>
+    fun getProgramaciones(e:Int,s:String) : LiveData<List<Programacion>>
 
 }

@@ -29,7 +29,7 @@ class TargetAltasAdapter(private var listener: OnItemClickListener.TargetAltasLi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(perfiles[position], position, listener)
+        holder.bind(perfiles[position], listener)
     }
 
     override fun getItemCount(): Int {
@@ -37,8 +37,13 @@ class TargetAltasAdapter(private var listener: OnItemClickListener.TargetAltasLi
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TargetCab, position: Int, listener: OnItemClickListener.TargetAltasListener) =
+        fun bind(p: TargetCab, listener: OnItemClickListener.TargetAltasListener) =
             with(itemView) {
+                if (p.active != 0){
+                    card.setCardBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.divider)
+                    )
+                }
                 textView1.text = String.format("N° : %s", p.targetCabId)
                 if (p.usuarioSolicitante.isNotEmpty()) {
                     textViewUsuario.visibility = View.VISIBLE

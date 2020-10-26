@@ -62,8 +62,14 @@ interface MedicoDao {
     @Query("SELECT * FROM Medico")
     fun getCheckMedicos(): DataSource.Factory<Int, Medico>
 
-    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s ) ")
+    @Query("SELECT * FROM Medico WHERE usuarioId =:u")
+    fun getCheckMedicos(u:Int): DataSource.Factory<Int, Medico>
+
+    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s )")
     fun getCheckMedicos(s: String): DataSource.Factory<Int, Medico>
+
+    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s )  AND usuarioId =:u ")
+    fun getCheckMedicos(s: String,u:Int): DataSource.Factory<Int, Medico>
 
     @Query("UPDATE Medico SET active = 1 WHERE medicoId=:id")
     fun closeMedico(id: Int)

@@ -55,9 +55,12 @@ interface SolMedicoDao {
     @Query("SELECT * FROM SolMedico WHERE estado = 1 AND tipo =:t")
     fun getSolMedicoTask(t: Int): List<SolMedico>
 
-    @Query("UPDATE SolMedico SET identity =:codigoRetorno, estado = 2 WHERE solMedicoId =:codigoBase")
+    @Query("UPDATE SolMedico SET identity =:codigoRetorno, estado = 0 WHERE solMedicoId =:codigoBase")
     fun updateEnabledMedico(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM SolMedico WHERE solMedicoId =:id")
     fun getSolMedicoCab(id: Int): LiveData<SolMedico>
+
+    @Query("SELECT * FROM SolMedico WHERE solMedicoId =:id AND estado = 1")
+    fun getSolMedicoOffLineIdTask(id: Int): SolMedico
 }

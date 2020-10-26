@@ -38,7 +38,7 @@ interface ActividadDao {
     fun getActividadesU(u: Int, t: Int): LiveData<List<Actividad>>
 
     @Query("SELECT * FROM Actividad WHERE usuarioId =:u AND estado=:e AND tipo=:t ")
-    fun getActividadesU(u: Int,e:Int, t: Int): LiveData<List<Actividad>>
+    fun getActividadesU(u: Int, e: Int, t: Int): LiveData<List<Actividad>>
 
 
     @Query("SELECT actividadId FROM Actividad")

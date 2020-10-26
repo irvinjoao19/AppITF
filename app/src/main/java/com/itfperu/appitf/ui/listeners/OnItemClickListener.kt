@@ -100,4 +100,8 @@ interface OnItemClickListener {
     interface UbigeoListener {
         fun onItemClick(u: Ubigeo, view: View, position: Int)
     }
+
+    interface ProgramacionListener {
+        fun onItemClick(p: Programacion, view: View, position: Int)
+    }
 }

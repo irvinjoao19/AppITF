@@ -63,10 +63,13 @@ interface TargetCabDao {
     @Query("SELECT * FROM TargetCab WHERE targetCabId =:id")
     fun getTargetCabByIdTask(id: Int): TargetCab
 
+    @Query("SELECT * FROM TargetCab WHERE targetCabId =:id AND active = 1")
+    fun getTargetCabOffLineIdTask(id: Int): TargetCab
+
     @Query("SELECT * FROM TargetCab WHERE tipoTarget =:tipo AND tipo =:t AND active = 1")
     fun getTargetCabTask(tipo: String, t: Int): List<TargetCab>
 
-    @Query("UPDATE TargetCab SET identity =:codigoRetorno, active = 2 WHERE targetCabId =:codigoBase")
+    @Query("UPDATE TargetCab SET identity =:codigoRetorno, active = 0 WHERE targetCabId =:codigoBase")
     fun updateEnabledTargetCab(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM TargetCab WHERE targetCabId =:id")
