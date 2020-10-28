@@ -1,10 +1,10 @@
 package com.itfperu.appitf.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
@@ -21,19 +22,25 @@ import com.itfperu.appitf.data.local.model.Estado
 import com.itfperu.appitf.data.local.model.Filtro
 import com.itfperu.appitf.data.local.model.Programacion
 import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
-import com.itfperu.appitf.data.viewModel.TargetViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
+import com.itfperu.appitf.ui.activities.VisitaActivity
 import com.itfperu.appitf.ui.adapters.ComboEstadoAdapter
 import com.itfperu.appitf.ui.adapters.ProgramacionAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_target_altas.*
+import kotlinx.android.synthetic.main.fragment_programacion.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 
-class ProgramacionFragment : DaggerFragment() {
+class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.fabSave -> confirmSend()
+        }
+    }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -53,6 +60,7 @@ class ProgramacionFragment : DaggerFragment() {
     lateinit var builder: AlertDialog.Builder
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
+    private var programacionId: Int = 0
     lateinit var f: Filtro
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +88,11 @@ class ProgramacionFragment : DaggerFragment() {
 
         val adapter = ProgramacionAdapter(object : OnItemClickListener.ProgramacionListener {
             override fun onItemClick(p: Programacion, view: View, position: Int) {
-
+                startActivity(
+                    Intent(context, VisitaActivity::class.java)
+                        .putExtra("programacionId", p.programacionId)
+                        .putExtra("u", usuarioId)
+                )
             }
         })
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -115,6 +127,12 @@ class ProgramacionFragment : DaggerFragment() {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
+
+        itfViewModel.getProgramacionId().observe(viewLifecycleOwner, {
+            programacionId = if (it == null || it == 0) 1 else it + 1
+        })
+
+        fabSave.setOnClickListener(this)
     }
 
     companion object {
@@ -169,7 +187,6 @@ class ProgramacionFragment : DaggerFragment() {
                 itfViewModel.setError("Seleccione Estado")
                 return@setOnClickListener
             }
-
             f.search = editTextSearch.text.toString()
             itfViewModel.search.value = Gson().toJson(f)
             dialog.dismiss()
@@ -212,5 +229,20 @@ class ProgramacionFragment : DaggerFragment() {
             }
             estadoAdapter.addItems(it)
         })
+    }
+
+    private fun confirmSend() {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage(String.format("Deseas enviar las solicitudes ?."))
+            .setPositiveButton("Si") { dialog, _ ->
+                load()
+                itfViewModel.sendProgramacion()
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
     }
 }

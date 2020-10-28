@@ -140,7 +140,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
                         .putExtra("tipoTarget", t.tipoTarget)
                         .putExtra("tipoAprobacion", t.tipo)
                         .putExtra("id", t.targetCabId)
-                        .putExtra("uId", t.usuarioId)
+                        .putExtra("uId", usuarioId)
                         .putExtra("estado", t.estado)
                 )
             }

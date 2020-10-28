@@ -63,7 +63,7 @@ interface TargetCabDao {
     @Query("SELECT * FROM TargetCab WHERE targetCabId =:id")
     fun getTargetCabByIdTask(id: Int): TargetCab
 
-    @Query("SELECT * FROM TargetCab WHERE targetCabId =:id AND active = 1")
+    @Query("SELECT * FROM TargetCab WHERE identity =:id AND active = 1")
     fun getTargetCabOffLineIdTask(id: Int): TargetCab
 
     @Query("SELECT * FROM TargetCab WHERE tipoTarget =:tipo AND tipo =:t AND active = 1")
@@ -75,6 +75,6 @@ interface TargetCabDao {
     @Query("SELECT * FROM TargetCab WHERE targetCabId =:id")
     fun getTargetById(id: Int): LiveData<TargetCab>
 
-    @Query("UPDATE TargetCab SET active = 1 WHERE targetCabId =:id")
-    fun updateForSendTarget(id: Int)
+    @Query("UPDATE TargetCab SET active = 1 , usuarioId =:u WHERE targetCabId =:id")
+    fun updateForSendTarget(id: Int,u:Int)
 }

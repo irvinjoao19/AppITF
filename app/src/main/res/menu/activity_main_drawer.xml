@@ -73,7 +73,7 @@
             <item
                 android:id="@+id/opc10"
                 android:icon="@drawable/ic_points"
-                android:title="Programación de reporte" />
+                android:title="Programación y reporte" />
             <item
                 android:id="@+id/opc11"
                 android:icon="@drawable/ic_points"

@@ -48,4 +48,7 @@ interface MedicoDireccionDao {
 
     @Query("UPDATE MedicoDireccion SET identity =:codigoRetorno, active = 0 WHERE medicoDireccionId =:codigoBase")
     fun updateEnabledDireccion(codigoBase: Int, codigoRetorno: Int)
+
+    @Query("SELECT * FROM MedicoDireccion WHERE identity =:i")
+    fun getMedicoDireccionOffLineByIdTask(i: Int): MedicoDireccion
 }

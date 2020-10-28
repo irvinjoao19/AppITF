@@ -228,5 +228,13 @@ interface AppRepository {
     fun updateEnabledProgramacion(t: Mensaje): Completable
     fun getProgramaciones() : LiveData<List<Programacion>>
     fun getProgramaciones(e:Int,s:String) : LiveData<List<Programacion>>
+    fun getProgramacionId(): LiveData<Int>
+    fun getProgramacionById(programacionId: Int): LiveData<Programacion>
+    fun insertProgramacion(p: Programacion): Completable
+
+    fun getProgramacionesDetById(programacionId: Int): LiveData<List<ProgramacionDet>>
+    fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet>
+    fun getStocks(): LiveData<List<Stock>>
+    fun insertProgramacionDet(p: ProgramacionDet): Completable
 
 }

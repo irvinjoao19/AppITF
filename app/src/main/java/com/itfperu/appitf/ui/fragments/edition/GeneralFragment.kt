@@ -53,7 +53,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     private var medicoId: Int = 0
     private var usuarioId: Int = 0
     private var estado: Int = 0
-    var viewPager: ViewPager? = null
+    private var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -48,4 +48,10 @@ interface TargetDetDao {
 
     @Query("DELETE FROM TargetDet WHERE targetCabId=:id")
     fun deleteTargetDet(id: Int)
+
+    @Query("SELECT * FROM TargetDet WHERE identity =:id")
+    fun getTargetDetOffLineByIdTask(id: Int): TargetDet
+
+    @Query("UPDATE TargetDet SET identity =:codigoRetorno WHERE targetDetId=:codigoBase")
+    fun updateEnabledTargetDet(codigoBase: Int, codigoRetorno: Int)
 }

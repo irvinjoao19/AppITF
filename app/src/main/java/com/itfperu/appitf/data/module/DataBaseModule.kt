@@ -158,4 +158,14 @@ class DataBaseModule {
     internal fun provideProgramacionDao(appDataBase: AppDataBase): ProgramacionDao {
         return appDataBase.programacionDao()
     }
+
+    @Provides
+    internal fun provideProgramacionDetDao(appDataBase: AppDataBase): ProgramacionDetDao {
+        return appDataBase.programacionDetDao()
+    }
+
+    @Provides
+    internal fun provideStockDao(appDataBase: AppDataBase): StockDao {
+        return appDataBase.stockDao()
+    }
 }

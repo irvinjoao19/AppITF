@@ -31,5 +31,6 @@ abstract class ActivityBindingModule {
     @ContributesAndroidInjector
     internal abstract fun bindSearchMedicoActivity(): SearchMedicoActivity
 
-
+    @ContributesAndroidInjector(modules = [FragmentBindingModule.Visita::class])
+    internal abstract fun bindVisitaActivity(): VisitaActivity
 }

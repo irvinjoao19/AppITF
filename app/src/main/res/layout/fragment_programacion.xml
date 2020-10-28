@@ -46,15 +46,6 @@
         fab:fab_labelStyle="@style/menu_labels_style">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_icon="@drawable/ic_add_person"
-            fab:fab_title="Nuevo Target" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

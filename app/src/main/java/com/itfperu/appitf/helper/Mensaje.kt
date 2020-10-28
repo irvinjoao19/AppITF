@@ -7,5 +7,5 @@ open class Mensaje {
     var codigoBaseCliente : Int = 0
     var codigoRetornoCliente : Int = 0
     var mensaje: String = ""
-    var detalle: List<MensajeDetalle>? = null
+    var detalle: List<MensajeDetalle> = ArrayList()
 }

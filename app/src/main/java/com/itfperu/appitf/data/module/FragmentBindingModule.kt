@@ -53,6 +53,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providTargetAltasFragment(): TargetAltasFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providProgramacionFragment(): ProgramacionFragment
     }
 
     @Module
@@ -110,5 +113,14 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providDireccionFragment(): DireccionFragment
+    }
+
+    @Module
+    abstract class Visita {
+        @ContributesAndroidInjector
+        internal abstract fun providVisitaGeneralFragment(): VisitaGeneralFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providVisitaProductoFragment(): VisitaProductoFragment
     }
 }

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.edition.VisitaGeneralFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Ciclo"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutCiclo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutCiclo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/layoutVisita"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextCiclo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ciclo"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Visita"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutVisita"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutVisita"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutCiclo"
+            app:layout_constraintTop_toBottomOf="@+id/layout2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextVisita"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Visita"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Visitador"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutVisitador"
+            app:layout_constraintTop_toBottomOf="@+id/layoutCiclo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutVisitador"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout3">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextVisitador"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Visitador"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="CMP"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutCMP"
+            app:layout_constraintTop_toBottomOf="@+id/layoutVisitador" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutCMP"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/layoutMedico"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout4">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextCMP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="CMP"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Medico"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutMedico"
+            app:layout_constraintTop_toBottomOf="@+id/layoutVisitador" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutMedico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutCMP"
+            app:layout_constraintTop_toBottomOf="@+id/layout5">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextMedico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese Nombre"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Categoria"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutCategoria"
+            app:layout_constraintTop_toBottomOf="@+id/layoutMedico" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutCategoria"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/layoutEspecialidad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout6">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextCategoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese Apellido Paterno"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Especialidad"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutEspecialidad"
+            app:layout_constraintTop_toBottomOf="@+id/layoutMedico" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutEspecialidad"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutCategoria"
+            app:layout_constraintTop_toBottomOf="@+id/layout7">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEspecialidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese Apellido Materno"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Dirección"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutDireccion"
+            app:layout_constraintTop_toBottomOf="@+id/layoutEspecialidad" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutDireccion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout8">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_down"
+                android:focusable="false"
+                android:hint="Seleccione Dirección " />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Fecha Programación"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutCMP"
+            app:layout_constraintTop_toBottomOf="@+id/layoutDireccion" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFechaProgramacion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/layoutHoraProgramacion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout9">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFechaProgramacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_date"
+                android:focusable="false"
+                android:hint="dd/MM/yyyy" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Hora Programación"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutHoraProgramacion"
+            app:layout_constraintTop_toBottomOf="@+id/layoutDireccion" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutHoraProgramacion"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutFechaProgramacion"
+            app:layout_constraintTop_toBottomOf="@+id/layout10">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextHoraProgramacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_clock"
+                android:focusable="false"
+                android:hint="hh:mm" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Fecha Reporte"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutFechaReporte"
+            app:layout_constraintTop_toBottomOf="@+id/layoutFechaProgramacion" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFechaReporte"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/layoutEspecialidad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout11">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFechaReporte"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:drawableEnd="@drawable/ic_date"
+                android:focusable="false"
+                android:hint="dd/MM/yyyy" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Hora Reporte"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/layoutHoraReporte"
+            app:layout_constraintTop_toBottomOf="@+id/layoutHoraProgramacion" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutHoraReporte"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layoutFechaReporte"
+            app:layout_constraintTop_toBottomOf="@+id/layout12">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextHoraReporte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_clock"
+                android:focusable="false"
+                android:hint="hh:mm" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Visita Acompañada"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutHoraReporte" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioSI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="SI"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout13" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioNO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="NO"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout13" />
+
+        <TextView
+            android:id="@+id/layout14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Datos del Acompañante"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/layoutAcompanate"
+            app:layout_constraintTop_toBottomOf="@+id/radioNO" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutAcompanate"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout14">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAcompanate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese Nombre"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Resultado"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutResultado"
+            app:layout_constraintTop_toBottomOf="@+id/layoutAcompanate" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutResultado"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout15">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextResultado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_down"
+                android:focusable="false"
+                android:hint="Seleccione Motivo" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabGenerate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_margin="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/next"
+            android:textColor="@color/colorWhite"
+            app:backgroundTint="@color/colorAccent"
+            app:icon="@drawable/ic_right"
+            app:iconGravity="end"
+            app:iconTint="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutResultado" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

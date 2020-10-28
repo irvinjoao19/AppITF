@@ -163,6 +163,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Aprobación bajas" -> changeFragment(
                 TargetAltasFragment.newInstance(usuarioId, "B", 2), item.title.toString()
             )
+            "Programación y reporte" -> changeFragment(
+                ProgramacionFragment.newInstance(usuarioId), item.title.toString()
+            )
             "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }

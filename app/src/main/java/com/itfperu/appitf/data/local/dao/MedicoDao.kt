@@ -78,5 +78,8 @@ interface MedicoDao {
     fun getMedicosInactivos(id: Int): Int
 
     @Query("UPDATE Medico SET identity =:codigoRetorno, active = 0 WHERE medicoId =:codigoBase")
-    fun updateEnabledMedico(codigoBase: Int, codigoRetorno: Int)
+    fun updateEnabledMedico(codigoBase: Int,codigoRetorno: Int)
+
+    @Query("SELECT * FROM Medico WHERE identity =:i")
+    fun getMedicoOffLineByIdTask(i: Int): Medico
 }

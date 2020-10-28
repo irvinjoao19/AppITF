@@ -9,7 +9,6 @@ import com.itfperu.appitf.data.local.AppDataBase
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
-import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
 import com.itfperu.appitf.helper.MensajeDetalle
 import com.itfperu.appitf.helper.MensajeDetalleDet
 import io.reactivex.Completable
@@ -62,25 +61,32 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteSesion(): Completable {
         return Completable.fromAction {
-            dataBase.usuarioDao().deleteAll()
-            dataBase.cicloDao().deleteAll()
-            dataBase.estadoDao().deleteAll()
-            dataBase.duracionDao().deleteAll()
-            dataBase.personalDao().deleteAll()
-            dataBase.categoriaDao().deleteAll()
-            dataBase.identificadorDao().deleteAll()
-            dataBase.especialidadDao().deleteAll()
-            dataBase.ubigeoDao().deleteAll()
-            dataBase.medicoDao().deleteAll()
-
             dataBase.actividadDao().deleteAll()
+            dataBase.categoriaDao().deleteAll()
+            dataBase.cicloDao().deleteAll()
+            dataBase.controlDao().deleteAll()
+            dataBase.duracionDao().deleteAll()
+            dataBase.especialidadDao().deleteAll()
+            dataBase.estadoDao().deleteAll()
+            dataBase.feriadoDao().deleteAll()
+            dataBase.identificadorDao().deleteAll()
+            dataBase.medicoDao().deleteAll()
+            dataBase.medicoDireccionDao().deleteAll()
+            dataBase.monedaDao().deleteAll()
+            dataBase.perfilDao().deleteAll()
+            dataBase.personalDao().deleteAll()
+            dataBase.productoDao().deleteAll()
+            dataBase.programacionDao().deleteAll()
+
+            dataBase.solMedicoDao().deleteAll()
             dataBase.targetDao().deleteAll()
             dataBase.targetCabDao().deleteAll()
             dataBase.targetDetDao().deleteAll()
-
-            dataBase.solMedicoDao().deleteAll()
-            dataBase.medicoDao().deleteAll()
-            dataBase.medicoDireccionDao().deleteAll()
+            dataBase.targetInfoDao().deleteAll()
+            dataBase.tipoProductoDao().deleteAll()
+            dataBase.ubigeoDao().deleteAll()
+            dataBase.usuarioDao().deleteAll()
+            dataBase.visitaDao().deleteAll()
         }
     }
 
@@ -135,6 +141,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             val me: List<Medico>? = s.medicos
             if (me != null) {
                 dataBase.medicoDao().insertMedicoListTask(me)
+            }
+            val v1: List<Visita>? = s.visitas
+            if (v1 != null) {
+                dataBase.visitaDao().insertVisitaListTask(v1)
+            }
+            val v2: List<Stock>? = s.stocks
+            if (v2 != null) {
+                dataBase.stockDao().insertStockListTask(v2)
             }
         }
     }
@@ -837,29 +851,33 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                     dataBase.solMedicoDao().insertMedicoTask(a)
                     val b: List<Medico>? = a.medicos
                     if (b != null) {
-                        dataBase.medicoDao().insertMedicoListTask(b)
                         for (c: Medico in b) {
-                            val d: List<MedicoDireccion>? = c.direcciones
-                            if (d != null) {
-                                dataBase.medicoDireccionDao().insertMedicoDireccionListTask(d)
+                            val det: Medico? =
+                                dataBase.medicoDao().getMedicoOffLineByIdTask(c.identity)
+                            if (det == null) {
+                                dataBase.medicoDao().insertMedicoTask(c)
+                            } else {
+                                dataBase.medicoDao().updateMedicoTask(c)
+                            }
+
+                            val dir: List<MedicoDireccion>? = c.direcciones
+                            if (dir != null) {
+                                for (d: MedicoDireccion in dir) {
+                                    val md: MedicoDireccion? = dataBase.medicoDireccionDao()
+                                        .getMedicoDireccionOffLineByIdTask(d.identity)
+                                    if (md == null) {
+                                        dataBase.medicoDireccionDao().insertMedicoDireccionTask(d)
+                                    } else {
+                                        dataBase.medicoDireccionDao().updateMedicoDireccionTask(d)
+                                    }
+                                }
                             }
                         }
                     }
+                } else {
+                    dataBase.solMedicoDao().updateMedicoTask(a)
                 }
             }
-//            dataBase.solMedicoDao().insertMedicoListTask(p)
-//            for (a: SolMedico in p) {
-//                val b: List<Medico>? = a.medicos
-//                if (b != null) {
-//                    dataBase.medicoDao().insertMedicoListTask(b)
-//                    for (c: Medico in b) {
-//                        val d: List<MedicoDireccion>? = c.direcciones
-//                        if (d != null) {
-//                            dataBase.medicoDireccionDao().insertMedicoDireccionListTask(d)
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 
@@ -942,10 +960,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return Completable.fromAction {
             dataBase.solMedicoDao().updateEnabledMedico(t.codigoBase, t.codigoRetorno)
 
-            val d = t.detalle
+            val d: List<MensajeDetalle>? = t.detalle
             if (d != null) {
                 for (m: MensajeDetalle in d) {
-                    dataBase.medicoDao().updateEnabledMedico(m.detalleId, m.detalleRetornoId)
+                    dataBase.medicoDao().updateEnabledMedico(m.detalleBaseId, m.detalleRetornoId)
                     val e = m.subDetalles
                     if (e != null) {
                         for (dt: MensajeDetalleDet in e) {
@@ -1044,6 +1062,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 error("Cada Medico debe de tener una direccion minimo")
             } else {
                 c.usuario = dataBase.usuarioDao().getUsuarioNombre()
+                c.usuarioId = dataBase.usuarioDao().getUsuarioId()
                 val a: SolMedico? = dataBase.solMedicoDao().getSolMedicoByIdTask(c.solMedicoId)
                 if (a == null)
                     dataBase.solMedicoDao().insertMedicoTask(c)
@@ -1129,34 +1148,30 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return Completable.fromAction {
             for (a: TargetCab in p) {
                 val cab: TargetCab? =
-                    dataBase.targetCabDao().getTargetCabOffLineIdTask(a.targetCabId)
+                    dataBase.targetCabDao().getTargetCabOffLineIdTask(a.identity)
                 if (cab == null) {
                     dataBase.targetCabDao().insertTargetCabTask(a)
                     val b: List<TargetDet>? = a.detalle
                     if (b != null) {
-                        dataBase.targetDetDao().insertTargetDetListTask(b)
                         for (d: TargetDet in b) {
+                            val det: TargetDet? =
+                                dataBase.targetDetDao().getTargetDetOffLineByIdTask(d.identity)
+                            if (det == null) {
+                                dataBase.targetDetDao().insertTargetDetTask(d)
+                            } else {
+                                dataBase.targetDetDao().updateTargetDetTask(d)
+                            }
+
                             val i: List<TargetInfo>? = d.infos
                             if (i != null) {
                                 dataBase.targetInfoDao().insertTargetListTask(i)
                             }
                         }
                     }
+                } else {
+                    dataBase.targetCabDao().updateTargetCabTask(a)
                 }
             }
-//            dataBase.targetCabDao().insertTargetCabListTask(p)
-//            for (a: TargetCab in p) {
-//                val b: List<TargetDet>? = a.detalle
-//                if (b != null) {
-//                    dataBase.targetDetDao().insertTargetDetListTask(b)
-//                    for (d: TargetDet in b) {
-//                        val i: List<TargetInfo>? = d.infos
-//                        if (i != null) {
-//                            dataBase.targetInfoDao().insertTargetListTask(i)
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 
@@ -1183,30 +1198,33 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun updateEstadoTargetDet(t: TargetDet): Completable {
         return Completable.fromAction {
             dataBase.targetDetDao().updateTargetDetTask(t)
-
-            dataBase.targetCabDao().updateForSendTarget(t.targetCabId)
+            val u = dataBase.usuarioDao().getUsuarioId()
+            dataBase.targetCabDao().updateForSendTarget(t.targetCabId, u)
         }
     }
 
     override fun insertTargetDet(d: TargetDet): Completable {
         return Completable.fromAction {
             val a: TargetDet? = dataBase.targetDetDao().getTargetDetByIdTask(d.targetDetId)
-            if (a == null)
+            if (a == null) {
                 dataBase.targetDetDao().insertTargetDetTask(d)
-            else
+            } else {
                 dataBase.targetDetDao().updateTargetDetTask(d)
+            }
         }
     }
 
     override fun insertTargetCab(c: TargetCab): Completable {
         return Completable.fromAction {
             c.usuarioSolicitante = dataBase.usuarioDao().getUsuarioNombre()
+            c.usuarioId = dataBase.usuarioDao().getUsuarioId()
 
             val a: TargetCab? = dataBase.targetCabDao().getTargetCabByIdTask(c.targetCabId)
-            if (a == null)
+            if (a == null) {
                 dataBase.targetCabDao().insertTargetCabTask(c)
-            else
+            } else {
                 dataBase.targetCabDao().updateTargetCabTask(c)
+            }
         }
     }
 
@@ -1231,6 +1249,13 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun updateEnabledTargetCab(t: Mensaje): Completable {
         return Completable.fromAction {
             dataBase.targetCabDao().updateEnabledTargetCab(t.codigoBase, t.codigoRetorno)
+            val det: List<MensajeDetalle>? = t.detalle
+            if (det != null) {
+                for (d: MensajeDetalle in det) {
+                    dataBase.targetDetDao()
+                        .updateEnabledTargetDet(d.detalleBaseId, d.detalleRetornoId)
+                }
+            }
         }
     }
 
@@ -1360,6 +1385,50 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             dataBase.programacionDao().getProgramaciones(e)
         } else {
             dataBase.programacionDao().getProgramaciones(e, String.format("%s%s%s", "%", s, "%"))
+        }
+    }
+
+    override fun getProgramacionId(): LiveData<Int> {
+        return dataBase.programacionDao().getMaxIdProgramacion()
+    }
+
+    override fun getProgramacionById(programacionId: Int): LiveData<Programacion> {
+        return dataBase.programacionDao().getProgramacionById(programacionId)
+    }
+
+    override fun insertProgramacion(p: Programacion): Completable {
+        return Completable.fromAction {
+            val cab: Programacion? =
+                dataBase.programacionDao().getProgramacionByIdTask(p.programacionId)
+            if (cab == null) {
+                dataBase.programacionDao().insertProgramacionTask(p)
+                return@fromAction
+            }
+            dataBase.programacionDao().updateProgramacionTask(p)
+        }
+    }
+
+    override fun getProgramacionesDetById(programacionId: Int): LiveData<List<ProgramacionDet>> {
+        return dataBase.programacionDetDao().getProgramacionesById(programacionId)
+    }
+
+    override fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet> {
+        return dataBase.programacionDetDao().getProgramacionById(id)
+    }
+
+    override fun getStocks(): LiveData<List<Stock>> {
+        return dataBase.stockDao().getStocks()
+    }
+
+    override fun insertProgramacionDet(p: ProgramacionDet): Completable {
+        return Completable.fromAction {
+            val cab: ProgramacionDet? =
+                dataBase.programacionDetDao().getProgramacionByIdTask(p.programacionDetId)
+            if (cab == null) {
+                dataBase.programacionDetDao().insertProgramacionDetTask(p)
+                return@fromAction
+            }
+            dataBase.programacionDetDao().updateProgramacionDetTask(p)
         }
     }
 }

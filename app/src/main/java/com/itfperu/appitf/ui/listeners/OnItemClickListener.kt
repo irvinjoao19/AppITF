@@ -104,4 +104,12 @@ interface OnItemClickListener {
     interface ProgramacionListener {
         fun onItemClick(p: Programacion, view: View, position: Int)
     }
+
+    interface ProgramacionDetListener {
+        fun onItemClick(p: ProgramacionDet, view: View, position: Int)
+    }
+
+    interface StockListener {
+        fun onItemClick(s: Stock, view: View, position: Int)
+    }
 }

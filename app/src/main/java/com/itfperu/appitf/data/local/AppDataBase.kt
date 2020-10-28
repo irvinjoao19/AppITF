@@ -34,10 +34,12 @@ import com.itfperu.appitf.data.local.model.*
         TargetDet::class,
         TargetInfo::class,
         Ubigeo::class,
-        Programacion::class
+        Programacion::class,
+        ProgramacionDet::class,
+        Stock::class
     ],
     views = [Nombre::class],
-    version = 52, // version 1 en play store
+    version = 55, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -69,6 +71,8 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun targetInfoDao(): TargetInfoDao
     abstract fun ubigeoDao(): UbigeoDao
     abstract fun programacionDao(): ProgramacionDao
+    abstract fun programacionDetDao(): ProgramacionDetDao
+    abstract fun stockDao(): StockDao
 
     companion object {
         @Volatile

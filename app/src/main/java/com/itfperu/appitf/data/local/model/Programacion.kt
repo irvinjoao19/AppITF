@@ -1,6 +1,7 @@
 package com.itfperu.appitf.data.local.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -12,13 +13,9 @@ open class Programacion {
     var numeroVisita: String = ""
     var usuarioId: Int = 0
     var nombreUsuario: String = ""
-    var apellidoP: String = ""
-    var apellidoM: String = ""
     var medicoId: Int = 0
     var cmpMedico: String = ""
     var nombreMedico: String = ""
-    var apellidoPMedico: String = ""
-    var apellidoMMedico: String = ""
     var categoria: String = ""
     var especialidad: String = ""
     var fechaProgramacion: String = ""
@@ -33,12 +30,12 @@ open class Programacion {
     var descripcionEstado: String = ""
     var resultadoVisitaId: Int = 0
     var descripcionResultado: String = ""
-    var ordenProgramacion: Int = 0
-    var codigoProducto: String = ""
-    var descripcionProducto: String = ""
-    var loteProgramacion: String = ""
-    var cantidadProgramacion: Double = 0.0
+    var direccionId : Int = 0
+    var direccion:String = ""
 
     var identity : Int = 0
-    var active : Int = 0 // 1 -> para enviar 0 -> enviado o del servidor
+    var active : Int = 0 // 1 -> para enviar 0 -> enviado o del servidor , 2 -> incompleto
+
+    @Ignore
+    var productos : List<ProgramacionDet>? = null
 }

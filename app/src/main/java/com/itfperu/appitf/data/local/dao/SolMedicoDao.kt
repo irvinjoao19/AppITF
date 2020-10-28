@@ -61,6 +61,6 @@ interface SolMedicoDao {
     @Query("SELECT * FROM SolMedico WHERE solMedicoId =:id")
     fun getSolMedicoCab(id: Int): LiveData<SolMedico>
 
-    @Query("SELECT * FROM SolMedico WHERE solMedicoId =:id AND estado = 1")
+    @Query("SELECT * FROM SolMedico WHERE identity =:id")
     fun getSolMedicoOffLineIdTask(id: Int): SolMedico
 }

@@ -25,7 +25,7 @@ interface ProgramacionDao {
     @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e")
     fun getProgramaciones(e: Int): LiveData<List<Programacion>>
 
-    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e AND (cmpMedico LIKE :s OR nombreMedico LIKE :s OR apellidoPMedico LIKE :s OR apellidoMMedico LIKE :s) ")
+    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e AND (cmpMedico LIKE :s OR nombreMedico LIKE :s) ")
     fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
 
     @Query("SELECT * FROM Programacion WHERE usuarioId =:u")
@@ -51,4 +51,7 @@ interface ProgramacionDao {
 
     @Query("SELECT * FROM Programacion WHERE programacionId=:id AND active = 1")
     fun getProgramacionOffLineIdTask(id: Int): Programacion
+
+    @Query("SELECT programacionId FROM Programacion ORDER BY programacionId DESC LIMIT 1")
+    fun getMaxIdProgramacion(): LiveData<Int>
 }

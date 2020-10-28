@@ -105,7 +105,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
 
         val targetDetAdapter =
-            TargetDetAdapter(tipo, object : OnItemClickListener.TargetDetListener {
+            TargetDetAdapter(tipo,tipoTarget, object : OnItemClickListener.TargetDetListener {
                 override fun onItemClick(t: TargetDet, view: View, position: Int) {
                     when (view.id) {
                         R.id.editTextCantidad -> updateCantidadProducto(t)
@@ -193,7 +193,6 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         s.fechaFinal = Util.getLastaDay()
         s.estado = 16
         s.active = 1
-        s.usuarioId = usuarioId
         itfViewModel.validateTarget(s)
     }
 

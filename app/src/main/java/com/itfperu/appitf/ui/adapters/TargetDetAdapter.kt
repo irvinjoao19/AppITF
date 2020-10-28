@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.cardview_target_det.view.*
 
 class TargetDetAdapter(
     private var tipo: Int,
+    private var tipoTarget: String,
     private var listener: OnItemClickListener.TargetDetListener
 ) :
     RecyclerView.Adapter<TargetDetAdapter.ViewHolder>() {
@@ -31,7 +32,7 @@ class TargetDetAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(det[position], tipo, listener)
+        holder.bind(det[position], tipo,tipoTarget, listener)
     }
 
     override fun getItemCount(): Int {
@@ -39,7 +40,7 @@ class TargetDetAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TargetDet, tipo: Int, listener: OnItemClickListener.TargetDetListener) =
+        fun bind(p: TargetDet, tipo: Int,tipoTarget:String, listener: OnItemClickListener.TargetDetListener) =
             with(itemView) {
                 textView1.text = String.format("CMP : %s", p.cmp)
                 textView2.text = p.nombreMedico
@@ -48,7 +49,7 @@ class TargetDetAdapter(
                 editTextCantidad.setText(p.nroContacto.toString())
 
                 if (tipo == 2) {
-                    if (p.tipoTarget == "A") {
+                    if (tipoTarget == "A") {
                         if (p.visitado == 0)
                             imgInfo.visibility = View.GONE
                         else
@@ -57,6 +58,9 @@ class TargetDetAdapter(
                         if (p.nrovisita == 1) {
                             imgAprobar.visibility = View.VISIBLE
                             imgRechazar.visibility = View.VISIBLE
+                            editTextCantidad.visibility = View.VISIBLE
+                            imgNegative.visibility = View.VISIBLE
+                            imgPositive.visibility = View.VISIBLE
                         } else {
                             textView7.visibility = View.VISIBLE
                             textView7.text = p.mensajeNrovisita

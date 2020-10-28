@@ -42,7 +42,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun syncProgramacion(u: Int, c: Int) {
         roomRepository.syncProgramacion(u, c)
-            .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<Programacion>> {
@@ -101,9 +100,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getProgramaciones(): LiveData<List<Programacion>> {
         return Transformations.switchMap(search) { input ->
-            if(input == null || input.isEmpty()){
-               roomRepository.getProgramaciones()
-            }else{
+            if (input == null || input.isEmpty()) {
+                roomRepository.getProgramaciones()
+            } else {
                 val f = Gson().fromJson(search.value, Filtro::class.java)
                 roomRepository.getProgramaciones(
                     f.estadoId, f.search
@@ -163,6 +162,73 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {}
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    fun getProgramacionId(): LiveData<Int> {
+        return roomRepository.getProgramacionId()
+    }
+
+    fun getProgramacionById(programacionId: Int): LiveData<Programacion> {
+        return roomRepository.getProgramacionById(programacionId)
+    }
+
+    fun validateProgramacion(p: Programacion) {
+
+        insertProgramacion(p)
+    }
+
+    private fun insertProgramacion(p: Programacion) {
+        roomRepository.insertProgramacion(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    fun getVisitas(): LiveData<List<Visita>> {
+        return roomRepository.getVisitas()
+    }
+
+    fun getDireccionById(medicoId: Int): LiveData<List<MedicoDireccion>> {
+        return roomRepository.getDireccionesById(medicoId)
+    }
+
+    fun getProgramacionesDetById(programacionId: Int): LiveData<List<ProgramacionDet>> {
+        return roomRepository.getProgramacionesDetById(programacionId)
+    }
+
+    fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet> {
+        return roomRepository.getProgramacionDetById(id)
+    }
+
+    fun getStocks(): LiveData<List<Stock>> {
+        return roomRepository.getStocks()
+    }
+
+    fun validateProgramacionDet(p: ProgramacionDet): Boolean {
+
+        insertProgramacionDet(p)
+        return true
+    }
+
+    private fun insertProgramacionDet(p:ProgramacionDet){
+        roomRepository.insertProgramacionDet(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Guardado"
+                }
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }

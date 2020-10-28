@@ -41,10 +41,10 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
             with(itemView) {
                 textView1.text = String.format("Ciclo : %s", p.nombreCiclo)
                 textView2.text = String.format(
-                    "%s %s %s %s",
-                    p.cmpMedico, p.nombreMedico, p.apellidoPMedico, p.apellidoMMedico
+                    "%s %s",
+                    p.cmpMedico, p.nombreMedico,
                 )
-                textView3.text = String.format("Cat : %s  Esp : %",p.categoria,p.especialidad)
+                textView3.text = String.format("Cat : %s  Esp : %s",p.categoria,p.especialidad)
                 textView4.text = p.fechaProgramacion
                 textView5.text = p.horaProgramacion
                 textView6.text = String.format("Resultado : %s",p.descripcionResultado)
