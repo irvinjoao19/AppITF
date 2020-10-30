@@ -14,26 +14,21 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
-import com.itfperu.appitf.data.local.model.MedicoDireccion
 import com.itfperu.appitf.data.local.model.ProgramacionDet
 import com.itfperu.appitf.data.local.model.Stock
-import com.itfperu.appitf.data.local.model.Ubigeo
 import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboStockAdapter
-import com.itfperu.appitf.ui.adapters.DireccionAdapter
 import com.itfperu.appitf.ui.adapters.ProgramacionDetAdapter
-import com.itfperu.appitf.ui.adapters.UbigeoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_direccion.*
+import kotlinx.android.synthetic.main.cardview_programacion_det.view.*
 import kotlinx.android.synthetic.main.fragment_visita_producto.*
-import kotlinx.android.synthetic.main.fragment_visita_producto.fabSave
-import kotlinx.android.synthetic.main.fragment_visita_producto.recyclerView
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -43,11 +38,11 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.fabProducto -> if (validacion == 1) {
+            R.id.fabProducto -> if (validacion != 0) {
                 dialogProducto(0)
             } else
                 itfViewModel.setError("Completar el primer formulario.")
-//            R.id.fabSave -> formValidate()
+            R.id.fabSave -> itfViewModel.closeProgramacion(programacionId)
         }
     }
 
@@ -57,12 +52,13 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     private var usuarioId: Int = 0
     private var programacionId: Int = 0
     private var validacion: Int = 0
+    private var estado: Int = 0 // si el estado es diferente de 13 no se necesita agregar producto
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            usuarioId = it.getInt(ARG_PARAM1)
-            programacionId = it.getInt(ARG_PARAM2)
+            programacionId = it.getInt(ARG_PARAM1)
+            usuarioId = it.getInt(ARG_PARAM2)
         }
     }
 
@@ -83,14 +79,27 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.getProgramacionById(programacionId).observe(viewLifecycleOwner, {
             if (it != null) {
-                validacion = 1
+                validacion = it.active
+                estado = it.resultadoVisitaId
+                if (it.resultadoVisitaId != 13) {
+                    if (it.active != 0) {
+                        fabSave.visibility = View.VISIBLE
+                    } else {
+                        fabSave.visibility = View.GONE
+                    }
+                } else {
+                    fabSave.visibility = View.GONE
+                }
             }
         })
 
         val productoAdapter =
             ProgramacionDetAdapter(object : OnItemClickListener.ProgramacionDetListener {
                 override fun onItemClick(p: ProgramacionDet, view: View, position: Int) {
-                    dialogProducto(p.programacionDetId)
+                    when (view.id) {
+                        R.id.imgDelete -> confirmDelete(p)
+                        else -> dialogProducto(p.programacionDetId)
+                    }
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -98,11 +107,12 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = productoAdapter
         itfViewModel.getProgramacionesDetById(programacionId).observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                fabSave.visibility = View.VISIBLE
-            } else
-                fabSave.visibility = View.GONE
-
+            if (estado == 13) {
+                if (it.isNotEmpty()) {
+                    fabSave.visibility = View.VISIBLE
+                } else
+                    fabSave.visibility = View.GONE
+            }
             productoAdapter.addItems(it)
         })
 
@@ -135,16 +145,20 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         dialog.show()
 
         var m = ProgramacionDet()
-        layoutTitle.text = String.format("Nueva Dirección")
+        layoutTitle.text = String.format("Visita Producto")
 
+        itfViewModel.setErrorProducto(null)
         itfViewModel.getProgramacionDetById(id).observe(viewLifecycleOwner, {
             if (it != null) {
                 m = it
                 editTextProducto.setText(it.descripcionProducto)
                 editTextLote.setText(it.lote)
-//                editTextStock.setText(it.)
+                editTextStock.setText(it.stock.toString())
                 editTextCantidad.setText(it.cantidad.toString())
                 editTextOrden.setText(it.ordenProgramacion.toString())
+                if (it.active == 0){
+                    fabProducto.visibility = View.INVISIBLE
+                }
             }
         })
 
@@ -153,22 +167,30 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         }
 
         fabProducto.setOnClickListener {
+            m.descripcionProducto = editTextProducto.text.toString()
             m.programacionId = programacionId
             m.lote = editTextLote.text.toString()
-
             when {
-                editTextCantidad.text.toString().isEmpty() -> m.cantidad = 0.0
-                else -> m.cantidad = editTextCantidad.text.toString().toDouble()
+                editTextStock.text.toString().isEmpty() -> m.stock = 0
+                else -> m.stock = editTextStock.text.toString().toInt()
+            }
+            when {
+                editTextCantidad.text.toString().isEmpty() -> m.cantidad = 0
+                else -> m.cantidad = editTextCantidad.text.toString().toInt()
             }
             when {
                 editTextOrden.text.toString().isEmpty() -> m.ordenProgramacion = 0
                 else -> m.ordenProgramacion = editTextOrden.text.toString().toInt()
             }
             m.active = 1
-            if (itfViewModel.validateProgramacionDet(m)) {
+            itfViewModel.validateProgramacionDet(m)
+        }
+
+        itfViewModel.mensajeProducto.observe(viewLifecycleOwner, {
+            if (it != null) {
                 dialog.dismiss()
             }
-        }
+        })
     }
 
     private fun spinnerDialog(
@@ -201,6 +223,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         val stockAdapter =
             ComboStockAdapter(object : OnItemClickListener.StockListener {
                 override fun onItemClick(s: Stock, view: View, position: Int) {
+                    p.productoId = s.productoId
                     p.codigoProducto = s.codigoProducto
                     editTextProducto.setText(s.descripcion)
                     editTextLote.setText(s.lote)
@@ -215,6 +238,20 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             }
             stockAdapter.addItems(it)
         })
+    }
+
+    private fun confirmDelete(p: ProgramacionDet) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage("Deseas eliminar este producto ?")
+            .setPositiveButton("SI") { dialog, _ ->
+                itfViewModel.deleteProgramacionDet(p)
+                dialog.dismiss()
+            }
+            .setNegativeButton("NO") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
     }
 
     companion object {

@@ -29,11 +29,16 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     val mensajeError = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
+    val mensajeProducto = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val search: MutableLiveData<String> = MutableLiveData()
 
     fun setError(s: String) {
         mensajeError.value = s
+    }
+
+    fun setErrorProducto(s: String?) {
+        mensajeProducto.value = s
     }
 
     fun setLoading(s: Boolean) {
@@ -177,7 +182,32 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateProgramacion(p: Programacion) {
-
+        if (p.direccion.isEmpty()) {
+            mensajeError.value = "Seleccione Dirección"
+            return
+        }
+        if (p.fechaProgramacion.isEmpty()) {
+            mensajeError.value = "Seleccione Fecha Programación"
+            return
+        }
+        if (p.horaProgramacion.isEmpty()) {
+            mensajeError.value = "Seleccione Hora Programación"
+            return
+        }
+        p.estadoProgramacion = 23
+        p.descripcionEstado = "Programado"
+        if (p.descripcionResultado.isNotEmpty()) {
+            if (p.fechaReporteProgramacion.isEmpty()) {
+                mensajeError.value = "Seleccione Fecha Reporte"
+                return
+            }
+            if (p.horaReporteProgramacion.isEmpty()) {
+                mensajeError.value = "Seleccione Hora Reporte"
+                return
+            }
+            p.estadoProgramacion = 24
+            p.descripcionEstado = "Ejecutado"
+        }
         insertProgramacion(p)
     }
 
@@ -187,7 +217,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Actualizado"
+                }
+
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }
@@ -214,14 +247,39 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getStocks()
     }
 
-    fun validateProgramacionDet(p: ProgramacionDet): Boolean {
+    fun validateProgramacionDet(p: ProgramacionDet) {
+
+        if (p.cantidad > p.stock) {
+            mensajeError.value = "Cantidad entregada no debe ser mayor a stock"
+            return
+        }
+
+        if (p.ordenProgramacion == 0) {
+            mensajeError.value = "Cantidad entregada no debe ser mayor a stock"
+            return
+        }
 
         insertProgramacionDet(p)
-        return true
     }
 
-    private fun insertProgramacionDet(p:ProgramacionDet){
+    private fun insertProgramacionDet(p: ProgramacionDet) {
         roomRepository.insertProgramacionDet(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeProducto.value = "Guardado"
+                }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    fun closeProgramacion(programacionId: Int) {
+        roomRepository.closeProgramacion(programacionId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -229,6 +287,23 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 override fun onComplete() {
                     mensajeSuccess.value = "Guardado"
                 }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    fun deleteProgramacionDet(p: ProgramacionDet) {
+        roomRepository.deleteProgramacionDet(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Eliminado"
+                }
+
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }

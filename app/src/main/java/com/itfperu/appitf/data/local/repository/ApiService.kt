@@ -168,5 +168,5 @@ interface ApiService {
 
     @Headers("Cache-Control: no-cache")
     @POST("SaveProgramacion")
-    fun sendProgramacion(body: RequestBody): Observable<Mensaje>
+    fun sendProgramacion(@Body body: RequestBody): Observable<Mensaje>
 }

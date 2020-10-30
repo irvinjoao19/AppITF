@@ -43,15 +43,18 @@ interface ProgramacionDao {
     @Query("SELECT * FROM Programacion WHERE active = 1")
     fun getProgramacionTask(): List<Programacion>
 
-    @Query("UPDATE Programacion SET identity =:codigoRetorno ,active = 0 WHERE programacionId =:codigoBase")
+    @Query("UPDATE Programacion SET identity =:codigoRetorno , active = 0 WHERE programacionId =:codigoBase")
     fun updateEnabledProgramacion(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM Programacion WHERE programacionId =:id")
     fun getProgramacionByIdTask(id: Int): Programacion
 
-    @Query("SELECT * FROM Programacion WHERE programacionId=:id AND active = 1")
+    @Query("SELECT * FROM Programacion WHERE programacionId=:id")
     fun getProgramacionOffLineIdTask(id: Int): Programacion
 
     @Query("SELECT programacionId FROM Programacion ORDER BY programacionId DESC LIMIT 1")
     fun getMaxIdProgramacion(): LiveData<Int>
+
+    @Query("UPDATE Programacion SET active = 1 WHERE programacionId =:id")
+    fun closeProgramcion(id: Int)
 }

@@ -87,6 +87,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             dataBase.ubigeoDao().deleteAll()
             dataBase.usuarioDao().deleteAll()
             dataBase.visitaDao().deleteAll()
+            dataBase.programacionDao().deleteAll()
+            dataBase.programacionDetDao().deleteAll()
         }
     }
 
@@ -141,6 +143,13 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             val me: List<Medico>? = s.medicos
             if (me != null) {
                 dataBase.medicoDao().insertMedicoListTask(me)
+                for (m: Medico in me) {
+                    val di: List<MedicoDireccion>? = m.direcciones
+                    if (di != null) {
+                        dataBase.medicoDireccionDao().insertMedicoDireccionListTask(di)
+                    }
+                }
+
             }
             val v1: List<Visita>? = s.visitas
             if (v1 != null) {
@@ -1331,18 +1340,27 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             for (a: Programacion in p) {
                 val cab: Programacion? =
                     dataBase.programacionDao().getProgramacionOffLineIdTask(a.programacionId)
+
                 if (cab == null) {
                     dataBase.programacionDao().insertProgramacionTask(a)
-//                    val b: List<TargetDet>? = a.detalle
-//                    if (b != null) {
-//                        dataBase.targetDetDao().insertTargetDetListTask(b)
-//                        for (d: TargetDet in b) {
-//                            val i: List<TargetInfo>? = d.infos
-//                            if (i != null) {
-//                                dataBase.targetInfoDao().insertTargetListTask(i)
-//                            }
-//                        }
-//                    }
+                } else {
+                    if (cab.active == 0) {
+                        dataBase.programacionDao().updateProgramacionTask(a)
+                    }
+                }
+
+                val b: List<ProgramacionDet>? = a.productos
+                if (b != null) {
+                    for (d: ProgramacionDet in b) {
+                        val det: ProgramacionDet? =
+                            dataBase.programacionDetDao()
+                                .getProgramacionDetOffLineByIdTask(d.identity)
+                        if (det == null) {
+                            dataBase.programacionDetDao().insertProgramacionDetTask(d)
+                        } else {
+                            dataBase.programacionDetDao().updateProgramacionDetTask(d)
+                        }
+                    }
                 }
             }
         }
@@ -1358,7 +1376,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 return@create
             }
             for (r: Programacion in data) {
-//                r.detalle = dataBase.targetDetDao().getTargetDetIdTask(r.targetCabId)
+                r.productos =
+                    dataBase.programacionDetDao().getProgramacionesByIdTask(r.programacionId)
                 a.add(r)
             }
             e.onNext(a)
@@ -1372,7 +1391,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun updateEnabledProgramacion(t: Mensaje): Completable {
         return Completable.fromAction {
-
+            dataBase.programacionDao().updateEnabledProgramacion(t.codigoBase, t.codigoRetorno)
+            val d: List<MensajeDetalle>? = t.detalle
+            if (d != null) {
+                for (m: MensajeDetalle in d) {
+                    dataBase.programacionDetDao()
+                        .updateEnabledProgramacionDet(m.detalleBaseId, m.detalleRetornoId)
+                }
+            }
         }
     }
 
@@ -1402,9 +1428,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 dataBase.programacionDao().getProgramacionByIdTask(p.programacionId)
             if (cab == null) {
                 dataBase.programacionDao().insertProgramacionTask(p)
-                return@fromAction
+            } else {
+                dataBase.programacionDao().updateProgramacionTask(p)
             }
-            dataBase.programacionDao().updateProgramacionTask(p)
         }
     }
 
@@ -1422,6 +1448,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertProgramacionDet(p: ProgramacionDet): Completable {
         return Completable.fromAction {
+            val validate: ProgramacionDet? =
+                dataBase.programacionDetDao()
+                    .getValidateProducto(p.programacionId, p.ordenProgramacion)
+            if (validate != null) {
+                if (validate.programacionDetId != p.programacionDetId) {
+                    error("Ingrese otro numero de orden")
+                }
+            }
             val cab: ProgramacionDet? =
                 dataBase.programacionDetDao().getProgramacionByIdTask(p.programacionDetId)
             if (cab == null) {
@@ -1429,6 +1463,18 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 return@fromAction
             }
             dataBase.programacionDetDao().updateProgramacionDetTask(p)
+        }
+    }
+
+    override fun closeProgramacion(programacionId: Int): Completable {
+        return Completable.fromAction {
+            dataBase.programacionDao().closeProgramcion(programacionId)
+        }
+    }
+
+    override fun deleteProgramacionDet(p: ProgramacionDet): Completable {
+        return Completable.fromAction {
+            dataBase.programacionDetDao().deleteProgramacionDetTask(p)
         }
     }
 }

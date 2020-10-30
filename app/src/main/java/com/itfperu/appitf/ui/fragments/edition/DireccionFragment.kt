@@ -305,18 +305,4 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         s.tipo = tipoMedico
         itfViewModel.validateSolMedico(s)
     }
-
-    private fun confirmDelete(m: MedicoDireccion) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
-            .setTitle("Mensaje")
-            .setMessage("Deseas eliminar esta dirección ?")
-            .setPositiveButton("SI") { dialog, _ ->
-                itfViewModel.deleteDireccion(m)
-                dialog.dismiss()
-            }
-            .setNegativeButton("NO") { dialog, _ ->
-                dialog.cancel()
-            }
-        dialog.show()
-    }
 }

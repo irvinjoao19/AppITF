@@ -35,9 +35,13 @@ class ComboDireccionAdapter(private val listener: OnItemClickListener.MedicoDire
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(m: MedicoDireccion, listener: OnItemClickListener.MedicoDireccionListener) = with(itemView) {
-            textViewTitulo.text = m.direccion
-            itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
-        }
+        fun bind(m: MedicoDireccion, listener: OnItemClickListener.MedicoDireccionListener) =
+            with(itemView) {
+                textViewTitulo.text = String.format(
+                    "%s , %s - %s - %s",
+                    m.direccion, m.nombreDistrito, m.nombreProvincia, m.nombreDepartamento
+                )
+                itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
+            }
     }
 }

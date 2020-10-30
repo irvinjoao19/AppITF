@@ -41,18 +41,28 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.fabGenerate -> formProgramacion()
+            R.id.editTextFechaProgramacion -> Util.getDateDialog(
+                context!!, editTextFechaProgramacion
+            )
+            R.id.editTextHoraProgramacion -> Util.getHourDialog(context!!, editTextHoraProgramacion)
+            R.id.editTextFechaReporte -> Util.getDateDialog(context!!, editTextFechaReporte)
+            R.id.editTextHoraReporte -> Util.getHourDialog(context!!, editTextHoraReporte)
+
+            R.id.editTextDireccion -> spinnerDialog(2, "Direcciones del Medico")
+            R.id.editTextResultado -> spinnerDialog(1, "Resultado de Visitas")
             R.id.radioSI -> {
+                layout14.visibility = View.VISIBLE
                 layoutAcompanate.visibility = View.VISIBLE
                 editTextAcompanate.visibility = View.VISIBLE
                 clearCheck(R.id.radioSI)
             }
             R.id.radioNO -> {
+                layout14.visibility = View.VISIBLE
                 layoutAcompanate.visibility = View.GONE
                 editTextAcompanate.visibility = View.GONE
                 clearCheck(R.id.radioNO)
             }
-            R.id.editTextResultado -> spinnerDialog(1, "Resultado de Visitas")
+            R.id.fabGenerate -> formProgramacion()
         }
     }
 
@@ -103,24 +113,36 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextCategoria.setText(it.categoria)
                 editTextEspecialidad.setText(it.especialidad)
                 editTextDireccion.setText(it.direccion)
-                editTextFechaProgramacion.setText(it.fechaProgramacion)
-                editTextHoraProgramacion.setText(it.horaProgramacion)
-                editTextFechaReporte.setText(it.fechaReporteProgramacion)
-                editTextHoraReporte.setText(it.horaReporteProgramacion)
+
+                if (it.fechaProgramacion != "01/01/1900") {
+                    editTextFechaProgramacion.setText(it.fechaProgramacion)
+                    editTextHoraProgramacion.setText(it.horaProgramacion)
+                }
+
+                if (it.fechaReporteProgramacion != "01/01/1900") {
+                    editTextFechaReporte.setText(it.fechaReporteProgramacion)
+                    editTextHoraReporte.setText(it.horaReporteProgramacion)
+                }
 
                 if (it.visitaAcompanada == "SI") {
                     radioSI.isChecked = true
                     radioNO.isChecked = false
+                    layout14.visibility = View.VISIBLE
                     layoutAcompanate.visibility = View.VISIBLE
                     editTextAcompanate.visibility = View.VISIBLE
                     editTextAcompanate.setText(it.dataAcompaniante)
                 } else {
+                    layout14.visibility = View.GONE
                     layoutAcompanate.visibility = View.GONE
                     editTextAcompanate.visibility = View.GONE
                     radioSI.isChecked = false
                     radioNO.isChecked = true
                 }
                 editTextResultado.setText(it.descripcionResultado)
+
+                if (it.estadoProgramacion == 24) {
+                    fabGenerate.visibility = View.GONE
+                }
             }
         })
 
@@ -132,10 +154,16 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
         })
 
-        fabGenerate.setOnClickListener(this)
+        editTextFechaProgramacion.setOnClickListener(this)
+        editTextFechaReporte.setOnClickListener(this)
+        editTextHoraProgramacion.setOnClickListener(this)
+        editTextHoraReporte.setOnClickListener(this)
+
+        editTextDireccion.setOnClickListener(this)
         radioSI.setOnClickListener(this)
         radioNO.setOnClickListener(this)
         editTextResultado.setOnClickListener(this)
+        fabGenerate.setOnClickListener(this)
 
         childrenInOrder.add(radioSI)
         childrenInOrder.add(radioNO)
@@ -238,7 +266,12 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
                     ComboDireccionAdapter(object : OnItemClickListener.MedicoDireccionListener {
                         override fun onItemClick(m: MedicoDireccion, view: View, position: Int) {
                             p.direccionId = m.identity
-                            editTextDireccion.setText(m.direccion)
+                            editTextDireccion.setText(
+                                String.format(
+                                    "%s , %s - %s - %s", m.direccion, m.nombreDistrito,
+                                    m.nombreProvincia, m.nombreDepartamento
+                                )
+                            )
                             dialog.dismiss()
                         }
                     })

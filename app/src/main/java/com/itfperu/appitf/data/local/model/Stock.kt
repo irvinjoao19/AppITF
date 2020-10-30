@@ -10,5 +10,5 @@ open class Stock {
     var codigoProducto: String = ""
     var descripcion: String = ""
     var lote: String = ""
-    var stock: Double = 0.0
+    var stock: Int = 0
 }

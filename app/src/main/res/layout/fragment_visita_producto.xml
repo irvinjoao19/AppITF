@@ -14,33 +14,33 @@
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fabMenu"
-        fab:fab_addButtonColorNormal="@color/colorAccent"
-        fab:fab_addButtonColorPressed="@color/white_pressed"
-        fab:fab_addButtonPlusIconColor="@color/colorWhite"
-        fab:fab_labelStyle="@style/menu_labels_style"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        fab:fab_addButtonColorNormal="@color/colorPrimary"
+        fab:fab_addButtonColorPressed="@color/white_pressed"
+        fab:fab_addButtonPlusIconColor="@color/colorWhite"
+        fab:fab_labelStyle="@style/menu_labels_style">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabProducto"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/white_pressed"
-            fab:fab_icon="@drawable/ic_check"
-            fab:fab_title="Agregar Producto"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorGrey"
+            fab:fab_icon="@drawable/ic_check"
+            fab:fab_title="Agregar Producto" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabSave"
-            fab:fab_colorNormal="@color/colorBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
+            fab:fab_colorNormal="@color/colorBlack"
             fab:fab_colorPressed="@color/colorGrey"
             fab:fab_icon="@drawable/ic_save"
-            fab:fab_title="Guardar Medico"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            fab:fab_title="Guardar Medico" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </FrameLayout>

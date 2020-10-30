@@ -12,10 +12,11 @@ open class ProgramacionDet {
     var productoId: Int = 0
     var ordenProgramacion: Int = 0
     var codigoProducto: String = ""
-    var descripcionProducto: Int = 0
+    var descripcionProducto: String = ""
     var lote: String = ""
-    var cantidad: Double = 0.0
+    var cantidad: Int = 0
+    var stock: Int = 0
     var identity: Int = 0
 
-    var active : Int = 0 // 1 -> para enviar 0 -> enviado o del servidor
+    var active: Int = 0 // 1 -> para enviar 0 -> enviado o del servidor
 }

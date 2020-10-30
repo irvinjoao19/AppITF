@@ -40,8 +40,13 @@ class ProgramacionDetAdapter(private var listener: OnItemClickListener.Programac
             with(itemView) {
                 textView1.text = String.format("Orden : %s", p.ordenProgramacion)
                 textView2.text = String.format("Codigo : %s", p.codigoProducto)
-                textView3.text = String.format("Lote : %s", p.lote)
-                textView4.text = String.format("Cantidad : %s", p.cantidad)
+                textView3.text = p.descripcionProducto
+                textView4.text = String.format("Lote : %s", p.lote)
+                textView5.text = String.format("Cantidad : %s", p.cantidad)
+
+                if (p.active == 0) {
+                    imgDelete.visibility = View.GONE
+                }
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }

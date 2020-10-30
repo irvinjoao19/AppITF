@@ -27,6 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@+id/layoutVisita"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout">
@@ -35,7 +36,7 @@
                 android:id="@+id/editTextCiclo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ciclo"
+                android:focusable="false"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutCiclo"
             app:layout_constraintTop_toBottomOf="@+id/layout2">
@@ -64,7 +66,7 @@
                 android:id="@+id/editTextVisita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Visita"
+                android:focusable="false"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout3">
@@ -92,8 +95,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextVisitador"
                 android:layout_width="match_parent"
+                android:focusable="false"
                 android:layout_height="wrap_content"
-                android:hint="Visitador"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,15 +117,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/layoutMedico"
+            app:layout_constraintEnd_toStartOf="@+id/layout7"
+            app:hintEnabled="false"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout4">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextCMP"
                 android:layout_width="match_parent"
+                android:focusable="false"
                 android:layout_height="wrap_content"
-                android:hint="CMP"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,7 +139,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutMedico"
-            app:layout_constraintTop_toBottomOf="@+id/layoutVisitador" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutCMP" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutMedico"
@@ -144,14 +148,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/layoutCMP"
+            app:layout_constraintStart_toStartOf="parent"
+            app:hintEnabled="false"
             app:layout_constraintTop_toBottomOf="@+id/layout5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextMedico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Nombre"
+                android:focusable="false"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -172,6 +177,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@+id/layoutEspecialidad"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout6">
@@ -180,7 +186,7 @@
                 android:id="@+id/editTextCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Apellido Paterno"
+                android:focusable="false"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -200,6 +206,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:hintEnabled="false"
             android:layout_margin="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutCategoria"
@@ -208,8 +215,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEspecialidad"
                 android:layout_width="match_parent"
+                android:focusable="false"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Apellido Materno"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -230,6 +237,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout8">
@@ -260,6 +268,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@+id/layoutHoraProgramacion"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout9">
@@ -290,6 +299,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutFechaProgramacion"
             app:layout_constraintTop_toBottomOf="@+id/layout10">
@@ -320,6 +330,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@+id/layoutEspecialidad"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout11">
@@ -350,6 +361,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/layoutFechaReporte"
             app:layout_constraintTop_toBottomOf="@+id/layout12">
@@ -412,6 +424,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:visibility="gone"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout14">
@@ -420,7 +433,7 @@
                 android:id="@+id/editTextAcompanate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Nombre"
+                android:hint="Ingrese nombre del acompañate"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -441,6 +454,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout15">

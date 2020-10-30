@@ -236,5 +236,7 @@ interface AppRepository {
     fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet>
     fun getStocks(): LiveData<List<Stock>>
     fun insertProgramacionDet(p: ProgramacionDet): Completable
+    fun closeProgramacion(programacionId: Int): Completable
+    fun deleteProgramacionDet(p: ProgramacionDet): Completable
 
 }
