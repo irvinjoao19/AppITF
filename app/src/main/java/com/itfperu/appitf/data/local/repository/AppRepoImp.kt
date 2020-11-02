@@ -11,6 +11,7 @@ import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
 import com.itfperu.appitf.helper.MensajeDetalle
 import com.itfperu.appitf.helper.MensajeDetalleDet
+import com.itfperu.appitf.helper.Util
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.MediaType
@@ -1073,10 +1074,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 c.usuario = dataBase.usuarioDao().getUsuarioNombre()
                 c.usuarioId = dataBase.usuarioDao().getUsuarioId()
                 val a: SolMedico? = dataBase.solMedicoDao().getSolMedicoByIdTask(c.solMedicoId)
-                if (a == null)
+                if (a == null) {
+                    c.fechaInicio = Util.getFirstDay()
+                    c.fechaFinal = Util.getLastaDay()
                     dataBase.solMedicoDao().insertMedicoTask(c)
-                else
+                } else {
                     dataBase.solMedicoDao().updateMedicoTask(c)
+                }
+
             }
         }
     }
@@ -1230,6 +1235,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
             val a: TargetCab? = dataBase.targetCabDao().getTargetCabByIdTask(c.targetCabId)
             if (a == null) {
+                c.fechaInicio = Util.getFirstDay()
+                c.fechaFinal = Util.getLastaDay()
                 dataBase.targetCabDao().insertTargetCabTask(c)
             } else {
                 dataBase.targetCabDao().updateTargetCabTask(c)
@@ -1477,4 +1484,86 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             dataBase.programacionDetDao().deleteProgramacionDetTask(p)
         }
     }
+
+    override fun syncDireccion(
+        u: Int, fi: String, ff: String, e: Int, t: Int
+    ): Observable<List<NuevaDireccion>> {
+        return apiService.getNuevaDireccion(u, fi, ff, e, t)
+    }
+
+    override fun insertDireccions(p: List<NuevaDireccion>): Completable {
+        return Completable.fromAction {
+            for (n: NuevaDireccion in p) {
+                val t: NuevaDireccion? =
+                    dataBase.nuevaDireccionDao().getNuevaDireccionOffLine(n.identity)
+                if (t == null) {
+                    dataBase.nuevaDireccionDao().insertNuevaDireccionTask(n)
+                } else {
+                    dataBase.nuevaDireccionDao().updateNuevaDireccionTask(n)
+                }
+            }
+        }
+    }
+
+    override fun getDirecciones(): LiveData<List<NuevaDireccion>> {
+        return dataBase.nuevaDireccionDao().getNuevaDirecciones()
+    }
+
+    override fun getDirecciones(
+        fi: String, ff: String, e: Int, t: Int
+    ): LiveData<List<NuevaDireccion>> {
+        return if (e != 0)
+            dataBase.nuevaDireccionDao().getNuevaDirecciones(fi, ff, e, t)
+        else
+            dataBase.nuevaDireccionDao().getNuevaDirecciones(fi, ff, t)
+    }
+
+    override fun getDireccionTask(tipo: Int): Observable<List<NuevaDireccion>> {
+        return Observable.create { e ->
+            val data: List<NuevaDireccion> =
+                dataBase.nuevaDireccionDao().getNuevaDireccionTask(tipo)
+            if (data.isEmpty()) {
+                e.onError(Throwable("No hay datos por enviar"))
+                e.onComplete()
+                return@create
+            }
+            e.onNext(data)
+            e.onComplete()
+        }
+    }
+
+    override fun sendDireccion(body: RequestBody): Observable<Mensaje> {
+        return apiService.sendNuevaDireccion(body)
+    }
+
+    override fun updateEnabledDireccion(t: Mensaje): Completable {
+        return Completable.fromAction {
+            dataBase.nuevaDireccionDao()
+                .updateEnabledDireccion(t.codigoBase, t.codigoRetorno, t.codigoAlterno)
+        }
+    }
+
+    override fun insertNuevaDireccion(p: NuevaDireccion): Completable {
+        return Completable.fromAction {
+            val n: NuevaDireccion? =
+                dataBase.nuevaDireccionDao().getNuevaDireccionById(p.solDireccionId)
+            if (n == null) {
+                p.aprobador = dataBase.usuarioDao().getUsuarioNombre()
+                p.fechaInicio = Util.getFirstDay()
+                p.fechaFinal = Util.getLastaDay()
+                dataBase.nuevaDireccionDao().insertNuevaDireccionTask(p)
+            } else {
+                dataBase.nuevaDireccionDao().updateNuevaDireccionTask(p)
+            }
+        }
+    }
+
+    override fun getNuevaDireccionMaxId(): LiveData<Int> {
+        return dataBase.nuevaDireccionDao().getNuevaDireccionMaxId()
+    }
+
+    override fun getNuevaDireccionId(id: Int): LiveData<NuevaDireccion> {
+        return dataBase.nuevaDireccionDao().getNuevaDireccionId(id)
+    }
+
 }

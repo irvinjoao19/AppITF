@@ -44,7 +44,12 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
         when (v.id) {
             R.id.fabAdd -> startActivity(
                 Intent(context, FormActivity::class.java)
-                    .putExtra("title", "Nueva Actividad")
+                    .putExtra(
+                        "title", when (tipoActividad) {
+                            1 -> "Nueva Actividad"
+                            else -> "Aprobación Actividad"
+                        }
+                    )
                     .putExtra(
                         "tipo", when (tipoActividad) {
                             1 -> 12

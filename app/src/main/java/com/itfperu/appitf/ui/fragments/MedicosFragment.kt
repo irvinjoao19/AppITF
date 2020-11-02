@@ -223,7 +223,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     private fun dialogSearch() {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val v =
-            LayoutInflater.from(context).inflate(R.layout.dialog_filtro_medico, null)
+            LayoutInflater.from(context).inflate(R.layout.dialog_filtro_fecha, null)
 
         val editTextDesde: TextInputEditText = v.findViewById(R.id.editTextDesde)
         val editTextHasta: TextInputEditText = v.findViewById(R.id.editTextHasta)

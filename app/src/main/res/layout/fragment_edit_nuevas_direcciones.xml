@@ -4,24 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.fragments.edition.DireccionFragment">
+    tools:context=".ui.fragments.edition.EditNuevasDireccionesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/layoutTitle"
+            android:id="@+id/layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Titulo"
-            android:textColor="@color/colorPrimary"
-            android:textSize="19sp"
+            android:text="Medico"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutMedico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextMedico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_down"
+                android:focusable="false"
+                android:hint="Seleccione Medico" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/layout1"
@@ -32,7 +52,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutMedico" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutDepartamento"
@@ -121,7 +141,6 @@
                 android:focusable="false"
                 android:hint="Seleccione Distrito" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <TextView
             android:id="@+id/layout4"
@@ -223,11 +242,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/fabDirection"
+            android:id="@+id/fabSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/save_direction"
+            android:text="@string/save"
             android:textColor="@color/colorWhite"
             app:backgroundTint="@color/colorAccent"
             app:icon="@drawable/ic_save"

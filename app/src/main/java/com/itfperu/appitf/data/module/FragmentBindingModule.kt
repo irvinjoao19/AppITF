@@ -56,6 +56,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providProgramacionFragment(): ProgramacionFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providDireccionesFragment(): DireccionesFragment
     }
 
     @Module
@@ -104,6 +107,12 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providEditTargetFragment(): EditTargetFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditNuevasDireccionesFragment(): EditNuevasDireccionesFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providEditNuevasDireccionesAFragment(): EditNuevasDireccionesAFragment
     }
 
     @Module

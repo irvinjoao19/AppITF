@@ -112,4 +112,8 @@ interface OnItemClickListener {
     interface StockListener {
         fun onItemClick(s: Stock, view: View, position: Int)
     }
+
+    interface NuevaDireccionListener {
+        fun onItemClick(n:NuevaDireccion, view: View, position: Int)
+    }
 }

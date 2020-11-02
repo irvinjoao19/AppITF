@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_form.*
  * 13 -> aprobacion de actividades
  * 14 -> medico
  * 15 -> target alta o baja
+ * 16 , 17 -> nuevas direccion y aprobacion de nuevas direcciones
+ *
  */
 class FormActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +93,14 @@ class FormActivity : DaggerAppCompatActivity() {
                 15-> replaceFragment(
                     savedInstanceState,
                     EditTargetFragment.newInstance(b.getInt("id"), b.getInt("uId"),b.getString("tipoTarget")!!,b.getInt("tipoAprobacion"),b.getInt("estado"))
+                )
+                16-> replaceFragment(
+                    savedInstanceState,
+                    EditNuevasDireccionesFragment.newInstance(b.getInt("id"), b.getInt("uId"))
+                )
+                17-> replaceFragment(
+                    savedInstanceState,
+                    EditNuevasDireccionesAFragment.newInstance(b.getInt("id"), b.getInt("uId"))
                 )
             }
         }

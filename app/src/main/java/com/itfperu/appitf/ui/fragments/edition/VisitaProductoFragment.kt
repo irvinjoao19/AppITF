@@ -42,7 +42,14 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 dialogProducto(0)
             } else
                 itfViewModel.setError("Completar el primer formulario.")
-            R.id.fabSave -> itfViewModel.closeProgramacion(programacionId)
+            R.id.fabSave -> if (estado == 13) {
+                when (cantidad) {
+                    0 -> itfViewModel.setError("Debes de agregar un producto")
+                    else -> itfViewModel.closeProgramacion(programacionId)
+                }
+            } else {
+                itfViewModel.closeProgramacion(programacionId)
+            }
         }
     }
 
@@ -53,6 +60,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     private var programacionId: Int = 0
     private var validacion: Int = 0
     private var estado: Int = 0 // si el estado es diferente de 13 no se necesita agregar producto
+    private var cantidad: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,16 +87,15 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.getProgramacionById(programacionId).observe(viewLifecycleOwner, {
             if (it != null) {
+                if (it.estadoProgramacion == 24 && it.active == 0) {
+                    fabMenu.visibility = View.GONE
+                    return@observe
+                }
                 validacion = it.active
                 estado = it.resultadoVisitaId
-                if (it.resultadoVisitaId != 13) {
-                    if (it.active != 0) {
-                        fabSave.visibility = View.VISIBLE
-                    } else {
-                        fabSave.visibility = View.GONE
-                    }
-                } else {
-                    fabSave.visibility = View.GONE
+
+                if (it.active != 0){
+                    fabSave.visibility = View.VISIBLE
                 }
             }
         })
@@ -107,12 +114,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = productoAdapter
         itfViewModel.getProgramacionesDetById(programacionId).observe(viewLifecycleOwner, {
-            if (estado == 13) {
-                if (it.isNotEmpty()) {
-                    fabSave.visibility = View.VISIBLE
-                } else
-                    fabSave.visibility = View.GONE
-            }
+            cantidad = it.size
             productoAdapter.addItems(it)
         })
 
@@ -156,7 +158,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 editTextStock.setText(it.stock.toString())
                 editTextCantidad.setText(it.cantidad.toString())
                 editTextOrden.setText(it.ordenProgramacion.toString())
-                if (it.active == 0){
+                if (it.active == 0) {
                     fabProducto.visibility = View.INVISIBLE
                 }
             }

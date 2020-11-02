@@ -239,4 +239,17 @@ interface AppRepository {
     fun closeProgramacion(programacionId: Int): Completable
     fun deleteProgramacionDet(p: ProgramacionDet): Completable
 
+
+    fun syncDireccion(u: Int, fi: String, ff: String, e: Int, t: Int): Observable<List<NuevaDireccion>>
+    fun insertDireccions(p: List<NuevaDireccion>): Completable
+
+    fun getDirecciones(): LiveData<List<NuevaDireccion>>
+    fun getDirecciones(fi:String,ff:String,e:Int,t:Int): LiveData<List<NuevaDireccion>>
+    fun getDireccionTask(tipo:Int): Observable<List<NuevaDireccion>>
+    fun sendDireccion(body: RequestBody): Observable<Mensaje>
+    fun updateEnabledDireccion(t: Mensaje): Completable
+    fun insertNuevaDireccion(p: NuevaDireccion): Completable
+    fun getNuevaDireccionMaxId(): LiveData<Int>
+    fun getNuevaDireccionId(id:Int) : LiveData<NuevaDireccion>
+
 }

@@ -189,8 +189,6 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         s.tipo = tipo
         s.nombreEstado = "Enviada"
         s.fechaSolicitud = Util.getFecha()
-        s.fechaInicio = Util.getFirstDay()
-        s.fechaFinal = Util.getLastaDay()
         s.estado = 16
         s.active = 1
         itfViewModel.validateTarget(s)

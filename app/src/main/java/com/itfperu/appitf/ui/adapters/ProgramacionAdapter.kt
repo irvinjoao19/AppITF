@@ -9,13 +9,6 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Programacion
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_programacion.view.*
-import kotlinx.android.synthetic.main.cardview_programacion.view.card
-import kotlinx.android.synthetic.main.cardview_programacion.view.textView1
-import kotlinx.android.synthetic.main.cardview_programacion.view.textView2
-import kotlinx.android.synthetic.main.cardview_programacion.view.textView3
-import kotlinx.android.synthetic.main.cardview_programacion.view.textView4
-import kotlinx.android.synthetic.main.cardview_programacion.view.textView5
-import kotlinx.android.synthetic.main.cardview_target_altas.view.*
 
 class ProgramacionAdapter(private var listener: OnItemClickListener.ProgramacionListener) :
     RecyclerView.Adapter<ProgramacionAdapter.ViewHolder>() {

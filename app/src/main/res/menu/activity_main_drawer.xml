@@ -134,6 +134,14 @@
                 android:id="@+id/opc25"
                 android:icon="@drawable/ic_points"
                 android:title="Reporte Diario" />
+            <item
+                android:id="@+id/opc26"
+                android:icon="@drawable/ic_points"
+                android:title="Nuevas Direcciones" />
+            <item
+                android:id="@+id/opc27"
+                android:icon="@drawable/ic_points"
+                android:title="Aprobación Nuevas Direcciones" />
         </menu>
     </item>
 

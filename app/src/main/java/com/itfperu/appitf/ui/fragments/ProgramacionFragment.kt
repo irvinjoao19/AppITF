@@ -69,6 +69,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
         arguments?.let {
             usuarioId = it.getInt(ARG_PARAM1)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(

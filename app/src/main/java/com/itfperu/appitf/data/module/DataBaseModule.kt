@@ -168,4 +168,9 @@ class DataBaseModule {
     internal fun provideStockDao(appDataBase: AppDataBase): StockDao {
         return appDataBase.stockDao()
     }
+
+    @Provides
+    internal fun provideNuevaDireccionDao(appDataBase: AppDataBase): NuevaDireccionDao {
+        return appDataBase.nuevaDireccionDao()
+    }
 }

@@ -18,47 +18,59 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.itfperu.appitf.R
-import com.itfperu.appitf.data.local.model.*
-import com.itfperu.appitf.data.viewModel.TargetViewModel
+import com.itfperu.appitf.data.local.model.Estado
+import com.itfperu.appitf.data.local.model.Filtro
+import com.itfperu.appitf.data.local.model.NuevaDireccion
+import com.itfperu.appitf.data.viewModel.DireccionViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.FormActivity
-import com.itfperu.appitf.ui.adapters.*
+import com.itfperu.appitf.ui.adapters.ComboEstadoAdapter
+import com.itfperu.appitf.ui.adapters.NuevaDireccionAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_target_altas.*
+import kotlinx.android.synthetic.main.fragment_direcciones.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-private const val ARG_PARAM3 = "param3"
 
-class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
+class DireccionesFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.fabAdd -> startActivity(
                 Intent(context, FormActivity::class.java)
                     .putExtra(
-                        "title", when (tipoTarget) {
-                            "A" -> "Nueva Alta"
-                            else -> "Nueva Baja"
+                        "title", when (tipo) {
+                            1 -> "Nueva Dirección"
+                            else -> "Aprobación Dirección"
                         }
                     )
                     .putExtra(
                         "tipo", when (tipo) {
-                            1 -> 15
-                            else -> 16
+                            1 -> 16
+                            else -> 17
                         }
                     )
-                    .putExtra("tipoTarget", tipoTarget)
-                    .putExtra("tipoAprobacion", tipo)
-                    .putExtra("id", targetCabId)
+                    .putExtra("id", 0)
                     .putExtra("uId", usuarioId)
             )
             R.id.fabSave -> confirmSend()
         }
     }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var itfViewModel: DireccionViewModel
+    lateinit var builder: AlertDialog.Builder
+    private var dialog: AlertDialog? = null
+    private var usuarioId: Int = 0
+    private var solDireccionId: Int = 0
+    private var tipo: Int = 0 // 1 ->nuevo 2 -> aprobaciones
+    private var finicio: String = Util.getFirstDay()
+    private var ffinal: String = Util.getLastaDay()
+    lateinit var f: Filtro
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -72,43 +84,24 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         return super.onOptionsItemSelected(item)
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    lateinit var itfViewModel: TargetViewModel
-    lateinit var adapter: TargetAltasAdapter
-    lateinit var builder: AlertDialog.Builder
-    private var dialog: AlertDialog? = null
-
-    private var usuarioId: Int = 0
-
-    private var tipoTarget: String = "" // A -> ALTAS	B -> BAJAS
-    private var tipo: Int = 0 // 1 -> altas , 2 -> aprobacion de altas
-    private var finicio: String = Util.getFirstDay()
-    private var ffinal: String = Util.getLastaDay()
-    private var targetCabId: Int = 0
-    lateinit var f: Filtro
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuarioId = it.getInt(ARG_PARAM1)
-            tipoTarget = it.getString(ARG_PARAM2)!!
-            tipo = it.getInt(ARG_PARAM3)
+            tipo = it.getInt(ARG_PARAM2)
         }
 
         f = Filtro(
-            if (tipo == 1) usuarioId else 0,
-            finicio, ffinal,
-            if (tipo == 2) 16 else 0,
-            tipo, tipoTarget
+            usuarioId, finicio, ffinal, 0, tipo
         )
+
         setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_target_altas, container, false)
+        return inflater.inflate(R.layout.fragment_direcciones, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,101 +111,95 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
 
     private fun bindUI() {
         itfViewModel =
-            ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
+            ViewModelProvider(this, viewModelFactory).get(DireccionViewModel::class.java)
 
-        adapter = TargetAltasAdapter(object : OnItemClickListener.TargetAltasListener {
-            override fun onItemClick(t: TargetCab, view: View, position: Int) {
-                startActivity(
-                    Intent(context, FormActivity::class.java)
-                        .putExtra(
-                            "title", when (tipo) {
-                                1 -> when (tipoTarget) {
-                                    "A" -> "Editar Altas"
-                                    else -> "Editar Bajas"
-                                }
-                                else -> when (tipoTarget) {
-                                    "A" -> "Aprobación Altas"
-                                    else -> "Aprobación Bajas"
-                                }
-                            }
-                        )
-                        .putExtra("tipo", 15)
-                        .putExtra("tipoTarget", t.tipoTarget)
-                        .putExtra("tipoAprobacion", t.tipo)
-                        .putExtra("id", t.targetCabId)
-                        .putExtra("uId", usuarioId)
-                        .putExtra("estado", t.estado)
-                )
-            }
-        })
+        val direccionAdapter =
+            NuevaDireccionAdapter(object : OnItemClickListener.NuevaDireccionListener {
+                override fun onItemClick(n: NuevaDireccion, view: View, position: Int) {
+//                    if (tipo == 1) {
+//                        if (a.estado == 8 || a.estado == 9)
+//                            return
+//                    }
+                    val title = when (tipo) {
+                        1 -> "Modificar Nueva Dirección"
+                        else -> "Aprobación Nueva Dirección"
+                    }
+                    val tipo = when (tipo) {
+                        1 -> 16
+                        else -> 17
+                    }
+                    startActivity(
+                        Intent(context, FormActivity::class.java)
+                            .putExtra("title", title)
+                            .putExtra("tipo", tipo)
+                            .putExtra("id", n.solDireccionId)
+                            .putExtra("uId", usuarioId)
+                    )
+                }
+            })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = direccionAdapter
 
         itfViewModel.setLoading(true)
-        itfViewModel.syncTargetCab(
-            if (tipo == 1) usuarioId else 0,
-            finicio, ffinal,
-            if (tipo == 2) 16 else 0,
-            tipoTarget, tipo
-        )
+        itfViewModel.syncDireccion(usuarioId, finicio, ffinal, 0, tipo)
         itfViewModel.search.value = Gson().toJson(f)
 
-        if (tipoTarget == "A") {
-            fabAdd.title = "Nuevas Altas"
-        } else {
-            fabAdd.title = "Nuevas Bajas"
-        }
-
-        if (tipo == 2) {
-            fabAdd.visibility = View.GONE
-        }
-
-        itfViewModel.getTargetsAltas().observe(viewLifecycleOwner, {
+        itfViewModel.getDirecciones().observe(viewLifecycleOwner, {
             textviewMessage.text = String.format("Se encontraron %s registros", it.size)
-            adapter.addItems(it)
+            direccionAdapter.addItems(it)
         })
 
         itfViewModel.loading.observe(viewLifecycleOwner, {
             if (it) {
-                adapter.addItems(listOfNotNull())
+                direccionAdapter.addItems(listOfNotNull())
                 progressBar.visibility = View.VISIBLE
             } else {
                 progressBar.visibility = View.GONE
             }
         })
 
-        itfViewModel.getTargetCabId().observe(viewLifecycleOwner, {
-            targetCabId = if (it == null || it == 0) 1 else it + 1
+        itfViewModel.getNuevaDireccionMaxId().observe(viewLifecycleOwner, {
+            solDireccionId = if (it == null || it == 0) 1 else it + 1
         })
-
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
-
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
             Util.toastMensaje(context!!, it)
         })
-
+        if(tipo == 2){
+            fabAdd.visibility = View.GONE
+        }
         fabAdd.setOnClickListener(this)
         fabSave.setOnClickListener(this)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: Int, param2: String, param3: Int) =
-            TargetAltasFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                    putInt(ARG_PARAM3, param3)
-                }
-            }
+    private fun load() {
+        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
+        builder.setView(view)
+        val textViewTitle: TextView = view.findViewById(R.id.textView)
+        textViewTitle.text = String.format("Enviando..")
+        dialog = builder.create()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.setCancelable(false)
+        dialog!!.show()
     }
+
+    private fun closeLoad() {
+        if (dialog != null) {
+            if (dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+        }
+    }
+
 
     private fun dialogSearch() {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
@@ -229,6 +216,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         dialog.show()
 
         f = Filtro()
+
         editTextDesde.setText(finicio)
         editTextHasta.setText(ffinal)
 
@@ -239,11 +227,15 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             f.finicio = editTextDesde.text.toString()
             f.ffinal = editTextHasta.text.toString()
             itfViewModel.setLoading(true)
-            itfViewModel.syncTargetCab(
-                if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipoTarget, tipo
+            itfViewModel.syncDireccion(
+                usuarioId,
+                f.finicio, f.ffinal,
+                f.estadoId,
+                tipo
             )
+
             val search = Filtro(
-                if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipo, tipoTarget
+                usuarioId, f.finicio, f.ffinal, f.estadoId, tipo
             )
             itfViewModel.search.value = Gson().toJson(search)
             dialog.dismiss()
@@ -280,7 +272,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             }
         })
         recyclerView.adapter = estadoAdapter
-        itfViewModel.getEstados("tbl_Target_Cab").observe(viewLifecycleOwner, {
+        itfViewModel.getEstados("tbl_Sol_Medico_Direccion").observe(viewLifecycleOwner, {
             if (it.isNullOrEmpty()) {
                 itfViewModel.setError("Datos vacios favor de sincronizar")
             }
@@ -294,7 +286,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->
                 load()
-                itfViewModel.sendTarges(tipoTarget, tipo)
+                itfViewModel.sendDireccion(tipo)
                 dialog.dismiss()
             }
             .setNegativeButton("No") { dialog, _ ->
@@ -303,24 +295,14 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
         dialog.show()
     }
 
-    private fun load() {
-        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
-        @SuppressLint("InflateParams") val view =
-            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
-        builder.setView(view)
-        val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Enviando..")
-        dialog = builder.create()
-        dialog!!.setCanceledOnTouchOutside(false)
-        dialog!!.setCancelable(false)
-        dialog!!.show()
-    }
-
-    private fun closeLoad() {
-        if (dialog != null) {
-            if (dialog!!.isShowing) {
-                dialog!!.dismiss()
+    companion object {
+        @JvmStatic
+        fun newInstance(param1: Int, param2: Int) =
+            DireccionesFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_PARAM1, param1)
+                    putInt(ARG_PARAM2, param2)
+                }
             }
-        }
     }
 }
