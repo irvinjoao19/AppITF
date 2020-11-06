@@ -169,7 +169,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Nuevas Direcciones" -> changeFragment(
                 DireccionesFragment.newInstance(usuarioId, 1), item.title.toString()
             )
-            "Aprobación Nuevas Direcciones" -> changeFragment(
+            "Aprobación Direcciones" -> changeFragment(
                 DireccionesFragment.newInstance(usuarioId, 2), item.title.toString()
             )
             "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")

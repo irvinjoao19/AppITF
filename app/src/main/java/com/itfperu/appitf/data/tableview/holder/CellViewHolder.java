@@ -31,7 +31,7 @@ public class CellViewHolder extends AbstractViewHolder {
 
         // Change textView align by column
         cell_textview.setGravity(ColumnHeaderViewHolder.COLUMN_TEXT_ALIGNS[pColumnPosition] |
-                Gravity.CENTER_VERTICAL);
+                Gravity.START | Gravity.CENTER_VERTICAL);
 
         // Set text
         cell_textview.setText(String.valueOf(p_jModel.getData()));
@@ -40,7 +40,9 @@ public class CellViewHolder extends AbstractViewHolder {
         cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         cell_textview.requestLayout();
 
-        cell_textview.setOnClickListener(view -> listener.onItemClick(String.valueOf(p_jModel.getData())));
+        if (listener != null) {
+            cell_textview.setOnClickListener(view -> listener.onItemClick(String.valueOf(p_jModel.getData())));
+        }
     }
 
     @Override

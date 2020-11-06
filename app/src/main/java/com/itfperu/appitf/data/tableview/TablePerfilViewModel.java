@@ -54,14 +54,13 @@ class TablePerfilViewModel {
             "Fax"
      */
 
-    private List<ColumnHeaderModel> createColumnHeaderModelList() {
+    private List<ColumnHeaderModel> createColumnHeaderModelList(ProgramacionPerfil p) {
         List<ColumnHeaderModel> list = new ArrayList<>();
-
         // Create Column Headers
-        list.add(new ColumnHeaderModel("MERCADO / PRODUCTO"));
-        list.add(new ColumnHeaderModel("12 ULTIMOS MESES"));
-        list.add(new ColumnHeaderModel("3 ULTIMOS MESES"));
-        list.add(new ColumnHeaderModel("ULTIMO MES"));
+        list.add(new ColumnHeaderModel(p.getMercadoProducto()));
+        list.add(new ColumnHeaderModel(p.getDoceUltimosMeses()));
+        list.add(new ColumnHeaderModel(p.getTresUltimosMeses()));
+        list.add(new ColumnHeaderModel(p.getUltimoMeses()));
 
         return list;
     }
@@ -74,7 +73,7 @@ class TablePerfilViewModel {
         int total3 = 0;
         int total1 = 0;
 
-        for (int i = 0; i < userList.size(); i++) {
+        for (int i = 1; i < userList.size(); i++) {
             ProgramacionPerfil p = userList.get(i);
             List<CellModel> list = new ArrayList<>();
             // The order should be same with column header list;
@@ -83,9 +82,9 @@ class TablePerfilViewModel {
             list.add(new CellModel("3-" + i, p.getTresUltimosMeses()));    // "Email"
             list.add(new CellModel("4-" + i, p.getUltimoMeses()));   // "BirthDay"
 
-            total12 = p.getDoceUltimosMeses() + total12;
-            total3 = p.getTresUltimosMeses() + total3;
-            total1 = p.getUltimoMeses() + total1;
+            total12 = Integer.parseInt(p.getDoceUltimosMeses()) + total12;
+            total3 = Integer.parseInt(p.getTresUltimosMeses()) + total3;
+            total1 = Integer.parseInt(p.getUltimoMeses()) + total1;
             lists.add(list);
         }
 
@@ -123,7 +122,7 @@ class TablePerfilViewModel {
     }
 
     void generateListForTableView(List<ProgramacionPerfil> users) {
-        mColumnHeaderModelList = createColumnHeaderModelList();
+        mColumnHeaderModelList = createColumnHeaderModelList(users.get(0));
         mCellModelList = createCellModelList(users);
         mRowHeaderModelList = createRowHeaderList(users.size());
     }

@@ -7,7 +7,7 @@ open class ProgramacionPerfil {
     var especialidad: String = ""
     var direccion: String = ""
     var mercadoProducto: String = ""
-    var doceUltimosMeses: Int = 0
-    var tresUltimosMeses: Int = 0
-    var ultimoMeses: Int = 0
+    var doceUltimosMeses: String = ""
+    var tresUltimosMeses: String = ""
+    var ultimoMeses: String = ""
 }

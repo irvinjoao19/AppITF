@@ -4,7 +4,7 @@ open class ProgramacionPerfilDetalle {
     var medicoId: Int = 0
     var producto: String = ""
     var mercadoProducto: String = ""
-    var doceUltimosMeses: Int = 0
-    var tresUltimosMeses: Int = 0
-    var ultimoMeses: Int = 0
+    var doceUltimosMeses: String = ""
+    var tresUltimosMeses: String = ""
+    var ultimoMeses: String = ""
 }
