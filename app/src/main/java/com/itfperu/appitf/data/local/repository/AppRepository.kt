@@ -18,6 +18,8 @@ interface AppRepository {
         usuario: String, password: String, imei: String, version: String
     ): Observable<Usuario>
 
+    fun getAccesos(usuarioId: Int): LiveData<List<Accesos>>
+
     fun getLogout(login: String): Observable<Mensaje>
     fun insertUsuario(u: Usuario): Completable
     fun deleteSesion(): Completable
@@ -160,7 +162,7 @@ interface AppRepository {
     ): Observable<List<SolMedico>>
 
     fun insertSolMedicos(p: List<SolMedico>): Completable
-    fun getSolMedicos(u:Int,fi:String,ff:String,e:Int,t: Int): LiveData<List<SolMedico>>
+    fun getSolMedicos(u: Int, fi: String, ff: String, e: Int, t: Int): LiveData<List<SolMedico>>
     fun verificateSolMedico(c: SolMedico): Completable
     fun sendSolMedico(body: RequestBody): Observable<Mensaje>
     fun insertSolMedico(c: SolMedico, m: Mensaje): Completable
@@ -196,7 +198,15 @@ interface AppRepository {
     fun getTargetById(id: Int): LiveData<TargetM>
 
     fun getTargetsAltas(t: String, tipo: Int): LiveData<List<TargetCab>>
-    fun getTargetsAltas(u:Int,fi:String,ff:String,e:Int, t: Int,tt:String): LiveData<List<TargetCab>>
+    fun getTargetsAltas(
+        u: Int,
+        fi: String,
+        ff: String,
+        e: Int,
+        t: Int,
+        tt: String
+    ): LiveData<List<TargetCab>>
+
     fun syncTargetCab(
         u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
     ): Observable<List<TargetCab>>
@@ -215,8 +225,8 @@ interface AppRepository {
     fun updateEnabledTargetCab(t: Mensaje): Completable
     fun deleteTargetDet(targetId: Int): Completable
 
-    fun getCheckMedicos(t:String,u:Int): LiveData<PagedList<Medico>>
-    fun getCheckMedicos(t:String,u:Int,s: String): LiveData<PagedList<Medico>>
+    fun getCheckMedicos(t: String, u: Int): LiveData<PagedList<Medico>>
+    fun getCheckMedicos(t: String, u: Int, s: String): LiveData<PagedList<Medico>>
     fun saveMedico(cabId: Int, tipoTarget: String): Completable
     fun updateCheckMedico(s: Medico): Completable
     fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico>
@@ -224,11 +234,11 @@ interface AppRepository {
     fun syncProgramacion(u: Int, c: Int): Observable<List<Programacion>>
     fun insertProgramacions(p: List<Programacion>): Completable
     fun getProgramacionTask(): Observable<List<Programacion>>
-    fun getProgramacionTaskById(id:Int): Observable<Programacion>
+    fun getProgramacionTaskById(id: Int): Observable<Programacion>
     fun sendProgramacion(body: RequestBody): Observable<Mensaje>
     fun updateEnabledProgramacion(t: Mensaje): Completable
-    fun getProgramaciones() : LiveData<List<Programacion>>
-    fun getProgramaciones(e:Int,s:String) : LiveData<List<Programacion>>
+    fun getProgramaciones(): LiveData<List<Programacion>>
+    fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
     fun getProgramacionId(): LiveData<Int>
     fun getProgramacionById(programacionId: Int): LiveData<Programacion>
     fun insertProgramacion(p: Programacion): Completable
@@ -241,20 +251,29 @@ interface AppRepository {
     fun deleteProgramacionDet(p: ProgramacionDet): Completable
 
 
-    fun syncDireccion(u: Int, fi: String, ff: String, e: Int, t: Int): Observable<List<NuevaDireccion>>
+    fun syncDireccion(
+        u: Int,
+        fi: String,
+        ff: String,
+        e: Int,
+        t: Int
+    ): Observable<List<NuevaDireccion>>
+
     fun insertDireccions(p: List<NuevaDireccion>): Completable
 
     fun getDirecciones(): LiveData<List<NuevaDireccion>>
-    fun getDirecciones(fi:String,ff:String,e:Int,t:Int): LiveData<List<NuevaDireccion>>
-    fun getDireccionTask(tipo:Int): Observable<List<NuevaDireccion>>
+    fun getDirecciones(fi: String, ff: String, e: Int, t: Int): LiveData<List<NuevaDireccion>>
+    fun getDireccionTask(tipo: Int): Observable<List<NuevaDireccion>>
     fun sendDireccion(body: RequestBody): Observable<Mensaje>
     fun updateEnabledDireccion(t: Mensaje): Completable
     fun insertNuevaDireccion(p: NuevaDireccion): Completable
     fun getNuevaDireccionMaxId(): LiveData<Int>
-    fun getNuevaDireccionId(id:Int) : LiveData<NuevaDireccion>
+    fun getNuevaDireccionId(id: Int): LiveData<NuevaDireccion>
 
     fun syncProgramacionPerfil(medicoId: Int): Observable<List<ProgramacionPerfil>>
     fun syncProgramacionReja(especialidadId: Int): Observable<List<ProgramacionReja>>
-    fun syncProgramacionPerfilDetalle(medicoId: Int, s: String): Observable<List<ProgramacionPerfilDetalle>>
-
+    fun syncProgramacionPerfilDetalle(
+        medicoId: Int,
+        s: String
+    ): Observable<List<ProgramacionPerfilDetalle>>
 }

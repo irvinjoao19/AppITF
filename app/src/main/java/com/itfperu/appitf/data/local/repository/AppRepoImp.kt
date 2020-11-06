@@ -42,6 +42,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return apiService.getLogin(body)
     }
 
+    override fun getAccesos(usuarioId: Int): LiveData<List<Accesos>> {
+        return dataBase.accesosDao().getAccesosById(usuarioId)
+    }
+
     override fun getLogout(login: String): Observable<Mensaje> {
         val u = Filtro(login, "", "", "")
         val json = Gson().toJson(u)
@@ -53,10 +57,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun insertUsuario(u: Usuario): Completable {
         return Completable.fromAction {
             dataBase.usuarioDao().insertUsuarioTask(u)
-//            val a: List<Accesos>? = u.accesos
-//            if (a != null) {
-//                dataBase.accesosDao().insertAccesosListTask(a)
-//            }
+            val a: List<Accesos>? = u.accesos
+            if (a != null) {
+                dataBase.accesosDao().insertAccesosListTask(a)
+            }
         }
     }
 

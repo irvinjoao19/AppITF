@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.SubMenu
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.itfperu.appitf.R
+import com.itfperu.appitf.data.local.model.Accesos
 import com.itfperu.appitf.data.local.model.Usuario
 import com.itfperu.appitf.data.viewModel.UsuarioViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
@@ -67,26 +69,27 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 drawerLayout.addDrawerListener(toggle)
                 toggle.syncState()
                 navigationView.setNavigationItemSelectedListener(this@MainActivity)
-                //navigationView.menu.clear()
-                //val menu = navigationView.menu
-                //val submenu = menu.addSubMenu("Menu Principal")
-                //usuarioViewModel.getAccesos(u.usuarioId).observe(this, Observer { accesos ->
-                //    for ((c, a) in accesos.withIndex()) {
-                //        submenu.add(a.nombre)
-                //        submenu.getItem(c).setIcon(R.drawable.ic_sync)
-                //    }
-                //    val s2 = menu.addSubMenu("")
-                //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                //        s2.setGroupDividerEnabled(true)
-                //    }
-                //    s2.add("Mapa")
-                //    s2.getItem(0).setIcon(R.drawable.ic_place)
-                //    s2.add("Enviar Pendientes")
-                //    s2.getItem(1).setIcon(R.drawable.ic_send)
-                //    s2.add("Cerrar Sesión")
-                //    s2.getItem(2).setIcon(R.drawable.ic_exit)
-                //    navigationView.invalidate()
-                //})
+                navigationView.menu.clear()
+
+                val menu = navigationView.menu
+                var subMenu: SubMenu? = null
+                var position = 0
+                usuarioViewModel.getAccesos(u.usuarioId).observe(this, { accesos ->
+                    for (a: Accesos in accesos) {
+                        if (a.tipo == 1) {
+                            subMenu = menu.addSubMenu(a.nombre)
+                            position = 0
+                        } else {
+                            subMenu!!.add(a.nombre)
+                            subMenu!!.getItem(position).setIcon(R.drawable.ic_points)
+                            position++
+                        }
+                    }
+                    subMenu = menu.addSubMenu("")
+                    subMenu!!.add("Cerrar Sesión")
+                    subMenu!!.getItem(0).setIcon(R.drawable.ic_exit)
+                    navigationView.invalidate()
+                })
 
                 fragmentByDefault()
                 message()

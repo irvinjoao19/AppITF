@@ -28,8 +28,6 @@ open class Usuario {
     var nombreEstado : String = ""
     var nombrePerfil : String = ""
 
-
-
-//    @Ignore
-//    var accesos: List<Accesos> = ArrayList()
+    @Ignore
+    var accesos: List<Accesos> = ArrayList()
 }

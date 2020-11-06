@@ -293,4 +293,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
             })
     }
+
+    fun getAccesos(usuarioId: Int): LiveData<List<Accesos>> {
+        return roomRepository.getAccesos(usuarioId)
+    }
 }
