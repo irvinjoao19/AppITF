@@ -72,7 +72,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 navigationView.menu.clear()
 
                 val menu = navigationView.menu
-                var subMenu: SubMenu? = null
+                var subMenu: SubMenu?
+                subMenu = menu.addSubMenu("Menu Principal")
+                subMenu.add("Inicio")
+                subMenu.getItem(0).setIcon(R.drawable.ic_points)
+                subMenu.add("Descargar Información")
+                subMenu.getItem(1).setIcon(R.drawable.ic_points)
                 var position = 0
                 usuarioViewModel.getAccesos(u.usuarioId).observe(this, { accesos ->
                     for (a: Accesos in accesos) {
