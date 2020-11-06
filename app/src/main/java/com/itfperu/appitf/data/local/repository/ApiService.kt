@@ -120,6 +120,26 @@ interface ApiService {
         @Query("t") t: Int  // tipo
     ): Observable<List<NuevaDireccion>>
 
+
+    @Headers("Cache-Control: no-cache")
+    @GET("ProgramacionPerfil")
+    fun getProgramacionPerfil(
+        @Query("m") m: Int, // medicoId
+    ): Observable<List<ProgramacionPerfil>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("ProgramacionPerfilDetalle")
+    fun getProgramacionPerfilDetalle(
+        @Query("m") m: Int, // medicoId
+        @Query("p") p: String, // nombre producto
+    ): Observable<List<ProgramacionPerfilDetalle>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("ProgramacionReja")
+    fun getProgramacionReja(
+        @Query("e") m: Int, // especialidadId
+    ): Observable<List<ProgramacionReja>>
+
     @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
     fun saveCategoria(@Body body: RequestBody): Observable<Mensaje>

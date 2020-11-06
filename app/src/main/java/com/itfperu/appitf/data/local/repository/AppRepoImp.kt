@@ -1347,7 +1347,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             for (a: Programacion in p) {
                 val cab: Programacion? =
                     dataBase.programacionDao().getProgramacionOffLineIdTask(a.programacionId)
-
                 if (cab == null) {
                     dataBase.programacionDao().insertProgramacionTask(a)
                 } else {
@@ -1355,7 +1354,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                         dataBase.programacionDao().updateProgramacionTask(a)
                     }
                 }
-
                 val b: List<ProgramacionDet>? = a.productos
                 if (b != null) {
                     for (d: ProgramacionDet in b) {
@@ -1369,6 +1367,23 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                         }
                     }
                 }
+
+//                val p1: List<ProgramacionPerfil>? = a.perfiles
+//                if (p1 != null) {
+//                    for (d: ProgramacionPerfil in p1) {
+//                        val it: Int? = dataBase.programacionPerfilDao().getMaxIdPerfilTask()
+//                        d.id = if (it == null || it == 0) 1 else it + 1
+//                        dataBase.programacionPerfilDao().insertProgramacionPerfilTask(d)
+//                    }
+//                }
+//                val p2: List<ProgramacionReja>? = a.rejas
+//                if (p2 != null) {
+//                    for (d: ProgramacionReja in p2) {
+//                        val it: Int? = dataBase.programacionRejaDao().getMaxIdRejaTask()
+//                        d.id = if (it == null || it == 0) 1 else it + 1
+//                        dataBase.programacionRejaDao().insertProgramacionRejaTask(d)
+//                    }
+//                }
             }
         }
     }
@@ -1388,6 +1403,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 a.add(r)
             }
             e.onNext(a)
+            e.onComplete()
+        }
+    }
+
+    override fun getProgramacionTaskById(id: Int): Observable<Programacion> {
+        return Observable.create { e ->
+            val data: Programacion = dataBase.programacionDao().getProgramacionTaskById(id)
+            data.productos =
+                dataBase.programacionDetDao().getProgramacionesByIdTask(data.programacionId)
+            e.onNext(data)
             e.onComplete()
         }
     }
@@ -1566,4 +1591,17 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.nuevaDireccionDao().getNuevaDireccionId(id)
     }
 
+    override fun syncProgramacionPerfil(medicoId: Int): Observable<List<ProgramacionPerfil>> {
+        return apiService.getProgramacionPerfil(medicoId)
+    }
+
+    override fun syncProgramacionReja(especialidadId: Int): Observable<List<ProgramacionReja>> {
+        return apiService.getProgramacionReja(especialidadId)
+    }
+
+    override fun syncProgramacionPerfilDetalle(
+        medicoId: Int, s: String
+    ): Observable<List<ProgramacionPerfilDetalle>> {
+        return apiService.getProgramacionPerfilDetalle(medicoId,s)
+    }
 }

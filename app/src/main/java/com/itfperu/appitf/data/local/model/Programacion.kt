@@ -21,7 +21,7 @@ open class Programacion {
     var fechaProgramacion: String = ""
     var horaProgramacion: String = ""
     var fechaReporteProgramacion: String = ""
-    var horaReporteProgramacion: String = ""   
+    var horaReporteProgramacion: String = ""
     var visitaAcompanada: String = ""
     var dataAcompaniante: String = ""
     var latitud: String = ""
@@ -30,12 +30,13 @@ open class Programacion {
     var descripcionEstado: String = ""
     var resultadoVisitaId: Int = 0
     var descripcionResultado: String = ""
-    var direccionId : Int = 0
-    var direccion:String = ""
+    var direccionId: Int = 0
+    var direccion: String = ""
+    var especialidadId:Int = 0
 
-    var identity : Int = 0
-    var active : Int = 0 // 1 -> para enviar 0 -> enviado o del servidor , 2 -> incompleto
+    var identity: Int = 0
+    var active: Int = 0 // 1 -> para enviar 0 -> enviado o del servidor , 2 -> incompleto
 
     @Ignore
-    var productos : List<ProgramacionDet>? = null
+    var productos: List<ProgramacionDet>? = null
 }

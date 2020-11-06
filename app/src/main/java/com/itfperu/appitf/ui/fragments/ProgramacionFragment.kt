@@ -3,16 +3,22 @@ package com.itfperu.appitf.ui.fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.evrencoskun.tableview.TableView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -21,6 +27,11 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Estado
 import com.itfperu.appitf.data.local.model.Filtro
 import com.itfperu.appitf.data.local.model.Programacion
+import com.itfperu.appitf.data.local.model.ProgramacionPerfil
+import com.itfperu.appitf.data.tableview.TablePerfilAdapter
+import com.itfperu.appitf.data.tableview.MyTableViewListener
+import com.itfperu.appitf.data.tableview.TableDetalleAdapter
+import com.itfperu.appitf.data.tableview.TableRejaAdapter
 import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -89,11 +100,15 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
 
         val adapter = ProgramacionAdapter(object : OnItemClickListener.ProgramacionListener {
             override fun onItemClick(p: Programacion, view: View, position: Int) {
-                startActivity(
-                    Intent(context, VisitaActivity::class.java)
-                        .putExtra("programacionId", p.programacionId)
-                        .putExtra("u", usuarioId)
-                )
+                when (view.id) {
+                    R.id.textViewPerfil -> dialogPerfil(p)
+                    R.id.textViewReja -> dialogReja(p)
+                    else -> startActivity(
+                        Intent(context, VisitaActivity::class.java)
+                            .putExtra("programacionId", p.programacionId)
+                            .putExtra("u", usuarioId)
+                    )
+                }
             }
         })
         recyclerView.itemAnimator = DefaultItemAnimator()
@@ -245,5 +260,160 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
                 dialog.cancel()
             }
         dialog.show()
+    }
+
+    private fun dialogPerfil(p: Programacion) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_perfil, null)
+        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
+        val linearLayoutPrincipal: LinearLayout = view.findViewById(R.id.linearLayoutPrincipal)
+        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
+        val textView1: TextView = view.findViewById(R.id.textView1)
+        val textView2: TextView = view.findViewById(R.id.textView2)
+        val textView3: TextView = view.findViewById(R.id.textView3)
+        val textView4: TextView = view.findViewById(R.id.textView4)
+        val tableView: TableView = view.findViewById(R.id.tableView)
+
+        builder.setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        imageViewClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        itfViewModel.setPerfiles()
+        itfViewModel.syncProgramacionPerfil(p.medicoId)
+
+        val mTableAdapter =
+            TablePerfilAdapter(context, object : OnItemClickListener.ProgramacionPerfilListener {
+                override fun onItemClick(s: String) {
+                    if (!Util.isNumeric(s)){
+                        if (s != "Total"){
+                            dialogPerfilDetalle(p.medicoId,s)
+                        }
+                    }
+                }
+            })
+        tableView.adapter = mTableAdapter
+        tableView.tableViewListener = MyTableViewListener(tableView)
+
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                itfViewModel.perfiles.observe(this, { p ->
+                    if (p != null) {
+                        val e: ProgramacionPerfil? = p[0]
+                        if (e != null) {
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Médico</strong> : %s", e.nombreMedico),
+                                textView1
+                            )
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Matricula</strong> : %s", e.matricula),
+                                textView2
+                            )
+                            Util.getTextStyleHtml(
+                                String.format(
+                                    "<strong>Especialidad</strong> : %s", e.especialidad
+                                ), textView3
+                            )
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Dirección</strong> : %s", e.direccion),
+                                textView4
+                            )
+                        }
+                        mTableAdapter.setUserList(p)
+                        tableView.visibility = View.VISIBLE
+                        linearLayoutLoad.visibility = View.GONE
+                        linearLayoutPrincipal.visibility = View.VISIBLE
+//                        dialog.window!!.setLayout(1000, 500)
+                    } else {
+                        dialog.dismiss()
+                    }
+                })
+            }, 800)
+        }
+    }
+
+    private fun dialogPerfilDetalle(medicoId: Int, s: String) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_perfil_detalle, null)
+        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
+        val linearLayoutPrincipal: ConstraintLayout = view.findViewById(R.id.linearLayoutPrincipal)
+        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
+        val tableView: TableView = view.findViewById(R.id.tableView)
+
+        builder.setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        imageViewClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        itfViewModel.setRejas()
+        itfViewModel.syncProgramacionPerfilDetalle(medicoId,s)
+
+        val mTableAdapter =
+            TableDetalleAdapter(context)
+        tableView.adapter = mTableAdapter
+
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                itfViewModel.detalles.observe(this, { p ->
+                    if (p != null) {
+                        mTableAdapter.setUserList(p)
+                        tableView.visibility = View.VISIBLE
+                        linearLayoutLoad.visibility = View.GONE
+                        linearLayoutPrincipal.visibility = View.VISIBLE
+                    } else {
+                        dialog.dismiss()
+                    }
+                })
+            }, 800)
+        }
+    }
+
+
+    private fun dialogReja(p: Programacion) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_reja, null)
+        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
+        val linearLayoutPrincipal: LinearLayout = view.findViewById(R.id.linearLayoutPrincipal)
+        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
+        val tableView: TableView = view.findViewById(R.id.tableView)
+
+        builder.setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        imageViewClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        itfViewModel.setRejas()
+        itfViewModel.syncProgramacionReja(p.especialidadId)
+
+        val mTableAdapter =
+            TableRejaAdapter(context)
+        tableView.adapter = mTableAdapter
+//        tableView.tableViewListener = MyTableViewListener(tableView)
+
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                itfViewModel.rejas.observe(this, { p ->
+                    if (p != null) {
+                        mTableAdapter.setUserList(p)
+                        tableView.visibility = View.VISIBLE
+                        linearLayoutLoad.visibility = View.GONE
+                        linearLayoutPrincipal.visibility = View.VISIBLE
+                    } else {
+                        dialog.dismiss()
+                    }
+                })
+            }, 800)
+        }
     }
 }

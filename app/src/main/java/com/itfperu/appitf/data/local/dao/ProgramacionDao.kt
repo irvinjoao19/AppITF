@@ -57,4 +57,7 @@ interface ProgramacionDao {
 
     @Query("UPDATE Programacion SET active = 1 WHERE programacionId =:id")
     fun closeProgramcion(id: Int)
+
+    @Query("SELECT * FROM Programacion WHERE programacionId=:id")
+    fun getProgramacionTaskById(id: Int): Programacion
 }

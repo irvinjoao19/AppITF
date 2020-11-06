@@ -44,6 +44,25 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
+
+                when (p.estadoProgramacion) {
+                    24 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorGreen
+                        )
+                    )
+                    23 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorWhiteBlue
+                        )
+                    )
+                    22 ->  view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorOrange
+                        )
+                    )
+                }
+
                 textView1.text = String.format("Ciclo : %s", p.nombreCiclo)
                 textView2.text = String.format(
                     "%s %s",
@@ -51,16 +70,18 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                 )
                 textView3.text = String.format("Cat : %s  Esp : %s", p.categoria, p.especialidad)
                 if (p.fechaProgramacion != "01/01/1900") {
-                    textView4.text = String.format("F.P. : %s",p.fechaProgramacion)
-                    textView8.text = String.format("H.P. : %s",p.horaProgramacion)
+                    textView4.text = String.format("F.P. : %s", p.fechaProgramacion)
+                    textView8.text = String.format("H.P. : %s", p.horaProgramacion)
                 }
                 if (p.fechaReporteProgramacion != "01/01/1900") {
-                    textView5.text = String.format("F.R. : %s",p.fechaReporteProgramacion)
-                    textView9.text = String.format("H.R. : %s",p.horaReporteProgramacion)
+                    textView5.text = String.format("F.R. : %s", p.fechaReporteProgramacion)
+                    textView9.text = String.format("H.R. : %s", p.horaReporteProgramacion)
                 }
                 textView6.text = String.format("Resultado : %s", p.descripcionResultado)
                 textView7.text = p.descripcionEstado
-                imgInfo.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+//                imgInfo.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textViewReja.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textViewPerfil.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }

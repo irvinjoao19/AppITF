@@ -173,4 +173,5 @@ class DataBaseModule {
     internal fun provideNuevaDireccionDao(appDataBase: AppDataBase): NuevaDireccionDao {
         return appDataBase.nuevaDireccionDao()
     }
+
 }

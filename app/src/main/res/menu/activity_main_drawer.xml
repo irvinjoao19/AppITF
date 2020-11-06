@@ -141,7 +141,7 @@
             <item
                 android:id="@+id/opc27"
                 android:icon="@drawable/ic_points"
-                android:title="Aprobación Nuevas Direcciones" />
+                android:title="Aprobación Direcciones" />
         </menu>
     </item>
 

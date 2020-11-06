@@ -224,6 +224,7 @@ interface AppRepository {
     fun syncProgramacion(u: Int, c: Int): Observable<List<Programacion>>
     fun insertProgramacions(p: List<Programacion>): Completable
     fun getProgramacionTask(): Observable<List<Programacion>>
+    fun getProgramacionTaskById(id:Int): Observable<Programacion>
     fun sendProgramacion(body: RequestBody): Observable<Mensaje>
     fun updateEnabledProgramacion(t: Mensaje): Completable
     fun getProgramaciones() : LiveData<List<Programacion>>
@@ -251,5 +252,9 @@ interface AppRepository {
     fun insertNuevaDireccion(p: NuevaDireccion): Completable
     fun getNuevaDireccionMaxId(): LiveData<Int>
     fun getNuevaDireccionId(id:Int) : LiveData<NuevaDireccion>
+
+    fun syncProgramacionPerfil(medicoId: Int): Observable<List<ProgramacionPerfil>>
+    fun syncProgramacionReja(especialidadId: Int): Observable<List<ProgramacionReja>>
+    fun syncProgramacionPerfilDetalle(medicoId: Int, s: String): Observable<List<ProgramacionPerfilDetalle>>
 
 }

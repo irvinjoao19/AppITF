@@ -28,10 +28,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     ViewModel() {
 
     val mensajeError = MutableLiveData<String>()
+    val mensajeSinConexion = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
     val mensajeProducto = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val search: MutableLiveData<String> = MutableLiveData()
+    val perfiles: MutableLiveData<List<ProgramacionPerfil>> = MutableLiveData()
+    val rejas: MutableLiveData<List<ProgramacionReja>> = MutableLiveData()
+    val detalles: MutableLiveData<List<ProgramacionPerfilDetalle>> = MutableLiveData()
 
     fun setError(s: String) {
         mensajeError.value = s
@@ -43,6 +47,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun setLoading(s: Boolean) {
         loading.value = s
+    }
+
+    fun setPerfiles() {
+        perfiles.value = null
+    }
+
+    fun setRejas() {
+        rejas.value = null
     }
 
     fun syncProgramacion(u: Int, c: Int) {
@@ -116,7 +128,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         }
     }
 
-
     fun sendProgramacion() {
         val ots: Observable<List<Programacion>> =
             roomRepository.getProgramacionTask()
@@ -173,6 +184,39 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
+    fun sendProgramacionById(id: Int) {
+        val ots: Observable<Programacion> =
+            roomRepository.getProgramacionTaskById(id)
+        ots.flatMap { a ->
+            val json = Gson().toJson(a)
+            Log.i("TAG", json)
+            val body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+            Observable.zip(
+                Observable.just(a), roomRepository.sendProgramacion(body), { _, mensaje ->
+                    mensaje
+                })
+
+        }.subscribeOn(Schedulers.io())
+            .delay(1000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onComplete() {
+                    mensajeSuccess.value = "Guardado"
+                }
+
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    updateEnabledProgramacion(t)
+                }
+
+                override fun onError(t: Throwable) {
+                    mensajeSinConexion.value =
+                        "No cuentas con buena señal de internet registro se guardara en pendientes."
+                }
+            })
+    }
+
     fun getProgramacionId(): LiveData<Int> {
         return roomRepository.getProgramacionId()
     }
@@ -197,7 +241,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         p.estadoProgramacion = 23
         p.descripcionEstado = "Programado"
 
-        if (p.fechaReporteProgramacion.isNotEmpty()){
+        if (p.fechaReporteProgramacion.isNotEmpty()) {
             if (p.descripcionResultado.isEmpty()) {
                 mensajeError.value = "Seleccione Resultado"
                 return
@@ -293,7 +337,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeSuccess.value = "Guardado"
+                    sendProgramacionById(programacionId)
                 }
 
                 override fun onError(e: Throwable) {
@@ -315,6 +359,102 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }
+            })
+    }
+
+    fun syncProgramacionPerfil(medicoId: Int) {
+        roomRepository.syncProgramacionPerfil(medicoId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<ProgramacionPerfil>> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: List<ProgramacionPerfil>) {
+                    perfiles.value = t
+                }
+
+                override fun onError(t: Throwable) {
+                    perfiles.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    fun syncProgramacionReja(especialidadId: Int) {
+        roomRepository.syncProgramacionReja(especialidadId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<ProgramacionReja>> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: List<ProgramacionReja>) {
+                    rejas.value = t
+                }
+
+                override fun onError(t: Throwable) {
+                    rejas.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    fun syncProgramacionPerfilDetalle(medicoId: Int, s: String) {
+        roomRepository.syncProgramacionPerfilDetalle(medicoId,s)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<ProgramacionPerfilDetalle>> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: List<ProgramacionPerfilDetalle>) {
+                    detalles.value = t
+                }
+
+                override fun onError(t: Throwable) {
+                    detalles.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
             })
     }
 }

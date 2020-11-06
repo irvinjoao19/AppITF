@@ -114,6 +114,10 @@ interface OnItemClickListener {
     }
 
     interface NuevaDireccionListener {
-        fun onItemClick(n:NuevaDireccion, view: View, position: Int)
+        fun onItemClick(n: NuevaDireccion, view: View, position: Int)
+    }
+
+    interface ProgramacionPerfilListener {
+        fun onItemClick(s: String)
     }
 }

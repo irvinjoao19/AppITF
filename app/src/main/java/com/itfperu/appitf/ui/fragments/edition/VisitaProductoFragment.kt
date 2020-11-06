@@ -45,9 +45,13 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             R.id.fabSave -> if (estado == 13) {
                 when (cantidad) {
                     0 -> itfViewModel.setError("Debes de agregar un producto")
-                    else -> itfViewModel.closeProgramacion(programacionId)
+                    else -> {
+                        load()
+                        itfViewModel.closeProgramacion(programacionId)
+                    }
                 }
             } else {
+                load()
                 itfViewModel.closeProgramacion(programacionId)
             }
         }
@@ -56,6 +60,8 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: ProgramacionViewModel
+    lateinit var builder: AlertDialog.Builder
+    private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var programacionId: Int = 0
     private var validacion: Int = 0
@@ -117,11 +123,17 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             cantidad = it.size
             productoAdapter.addItems(it)
         })
-
+        itfViewModel.mensajeSinConexion.observe(viewLifecycleOwner,{
+            closeLoad()
+            Util.toastMensaje(context!!, it)
+            activity!!.finish()
+        })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
+            closeLoad()
             Util.toastMensaje(context!!, it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
+            closeLoad()
             Util.toastMensaje(context!!, it)
             if (it == "Guardado") {
                 activity!!.finish()
@@ -254,6 +266,27 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 dialog.cancel()
             }
         dialog.show()
+    }
+
+    private fun load() {
+        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
+        builder.setView(view)
+        val textViewTitle: TextView = view.findViewById(R.id.textView)
+        textViewTitle.text = String.format("Enviando..")
+        dialog = builder.create()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.setCancelable(false)
+        dialog!!.show()
+    }
+
+    private fun closeLoad() {
+        if (dialog != null) {
+            if (dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+        }
     }
 
     companion object {

@@ -683,6 +683,14 @@ object Util {
         //                BufferType.SPANNABLE
     }
 
+    fun getTextStyleHtml(html: String, input: TextView) {
+        input.setText(
+            getTextHTML(html),
+            TextView.BufferType.SPANNABLE
+        )
+    }
+
+
     fun isNumeric(strNum: String): Boolean {
         try {
             val d = Integer.parseInt(strNum)

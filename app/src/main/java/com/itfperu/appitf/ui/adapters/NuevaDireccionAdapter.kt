@@ -46,7 +46,10 @@ class NuevaDireccionAdapter(private var listener: OnItemClickListener.NuevaDirec
                 }
                 textView1.text = p.nombreMedico
                 textView2.text = p.fechaSolicitud
-                textView3.text = p.nombreDireccion
+                textView3.text = String.format(
+                    "%s , %s - %s - %s",
+                    p.nombreDireccion, p.nombreDistrito, p.nombreProvincia, p.nombreDepartamento
+                )
                 textView5.text = p.aprobador
                 textView6.text = p.descripcionEstado
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
