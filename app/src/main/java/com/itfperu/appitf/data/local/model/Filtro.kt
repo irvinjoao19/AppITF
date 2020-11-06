@@ -21,6 +21,7 @@ open class Filtro {
 
     var finicio: String = ""
     var ffinal: String = ""
+    var newPass:String = ""
 
     constructor()
 
@@ -60,4 +61,11 @@ open class Filtro {
         this.tipo = tipo
         this.tipoTarget = tipoTarget
     }
+
+    constructor(pass: String, newPass: String) {
+        this.pass = pass
+        this.newPass = newPass
+    }
+
+
 }

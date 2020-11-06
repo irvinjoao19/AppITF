@@ -151,7 +151,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
 
-    fun sync(u:Int) {
+    fun sync(u: Int) {
         roomRepository.getSync(u)
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
