@@ -7,6 +7,7 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -51,9 +52,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     categoria()
                 }
 
-                override fun onError(e: Throwable) {
-
-                }
+                override fun onError(t: Throwable) {}
             })
     }
 
@@ -71,8 +70,19 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     insertCategorias(t)
                 }
 
-                override fun onError(e: Throwable) {
-
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                    loading.value = false
                 }
 
                 override fun onComplete() {
@@ -107,11 +117,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateCategoria(c: Categoria) {
-        if (c.codigo.isEmpty()){
+        if (c.codigo.isEmpty()) {
             mensajeError.value = "Ingrese Codigo de Categoría"
             return
         }
-        if (c.descripcion.isEmpty()){
+        if (c.descripcion.isEmpty()) {
             mensajeError.value = "Ingrese Descripción de Categoría"
             return
         }
@@ -139,7 +149,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-     fun sendCategoria(c: Categoria) {
+    fun sendCategoria(c: Categoria) {
         roomRepository.sendCategoria(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

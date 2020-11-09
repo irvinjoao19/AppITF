@@ -375,7 +375,6 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-
     private fun dialogReja(p: Programacion) {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val view =

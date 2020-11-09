@@ -70,6 +70,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     } else {
                         mensajeError.postValue(t.message)
                     }
+                    loading.value = false
                 }
 
                 override fun onComplete() {}

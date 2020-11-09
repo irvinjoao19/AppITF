@@ -8,6 +8,7 @@ import com.itfperu.appitf.data.local.repository.ApiError
 import com.itfperu.appitf.data.local.repository.AppRepository
 import com.itfperu.appitf.helper.Mensaje
 import com.itfperu.appitf.helper.Util
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -52,9 +53,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     ciclo()
                 }
 
-                override fun onError(e: Throwable) {
-
-                }
+                override fun onError(t: Throwable) {}
             })
     }
 
@@ -72,8 +71,19 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     insertCiclos(t)
                 }
 
-                override fun onError(e: Throwable) {
-
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                    loading.value = false
                 }
 
                 override fun onComplete() {

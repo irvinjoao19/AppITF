@@ -58,8 +58,19 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     insertPerfils(t)
                 }
 
-                override fun onError(e: Throwable) {
-
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                    loading.value = false
                 }
 
                 override fun onComplete() {}
