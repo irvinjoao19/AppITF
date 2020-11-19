@@ -62,7 +62,6 @@ interface AppRepository {
     fun insertCategoria(c: Categoria, m: Mensaje): Completable
     fun getCategoriaById(id: Int): LiveData<Categoria>
 
-
     // ESPECIALIDAD
     fun clearEspecialidad(): Completable
     fun syncEspecialidad(): Observable<List<Especialidad>>
@@ -149,11 +148,13 @@ interface AppRepository {
     fun getActividadById(id: Int): LiveData<Actividad>
     fun getEstados(tipo: String): LiveData<List<Estado>>
     fun getCicloProceso(): LiveData<List<Ciclo>>
+    fun getFirstCicloProceso(): LiveData<Ciclo>
     fun getDuracion(): LiveData<List<Duracion>>
     fun getActividadTask(tipo: Int): Observable<List<Actividad>>
     fun updateEnabledActividad(t: Mensaje): Completable
     fun getNombreUsuario(): LiveData<String>
     fun getActividades(u: Int, c: Int, e: Int, t: Int): LiveData<List<Actividad>>
+    fun getAlertaActividad(cicloId: Int, medicoId: Int, usuarioId: Int) :Observable<Mensaje>
 
     //Medico
     fun clearSolMedico(): Completable
@@ -178,6 +179,7 @@ interface AppRepository {
     fun getProvincias(cod: String): LiveData<List<Ubigeo>>
     fun getDistritos(cod: String, cod2: String): LiveData<List<Ubigeo>>
     fun getMedicos(): LiveData<List<Medico>>
+    fun getMedicosByEstado(e:Int): LiveData<List<Medico>>
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
     fun insertDireccion(m: MedicoDireccion): Completable
@@ -276,4 +278,12 @@ interface AppRepository {
         medicoId: Int,
         s: String
     ): Observable<List<ProgramacionPerfilDetalle>>
+
+    fun syncPuntoContacto(u: Int, fi: String, ff: String): Observable<List<PuntoContacto>>
+    fun insertPuntoContactos(p: List<PuntoContacto>): Completable
+    fun getPuntoContactos(f:String): LiveData<List<PuntoContacto>>
+    fun getPuntoContactoTask(): Observable<List<PuntoContacto>>
+    fun sendPuntoContacto(body: RequestBody): Observable<Mensaje>
+    fun updateEnabledPuntoContacto(t: Mensaje): Completable
+    fun insertPuntoContacto(p: PuntoContacto): Completable
 }

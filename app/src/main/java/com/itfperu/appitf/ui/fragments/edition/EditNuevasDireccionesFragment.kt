@@ -2,6 +2,8 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Medico
 import com.itfperu.appitf.data.local.model.NuevaDireccion
@@ -115,6 +119,8 @@ class EditNuevasDireccionesFragment : DaggerFragment(), View.OnClickListener {
         val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
         val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
         val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
+        val layoutSearch: TextInputLayout = v.findViewById(R.id.layoutSearch)
+        val editTextSearch: TextInputEditText = v.findViewById(R.id.editTextSearch)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
         progressBar.visibility = View.GONE
         builder.setView(v)
@@ -185,6 +191,7 @@ class EditNuevasDireccionesFragment : DaggerFragment(), View.OnClickListener {
                 })
             }
             4 -> {
+                layoutSearch.visibility = View.VISIBLE
                 val medicoAdapter = ComboMedicoAdapter(object : OnItemClickListener.MedicoListener {
                     override fun onItemClick(m: Medico, view: View, position: Int) {
                         d.medicoId = m.medicoId
@@ -197,11 +204,18 @@ class EditNuevasDireccionesFragment : DaggerFragment(), View.OnClickListener {
                     }
                 })
                 recyclerView.adapter = medicoAdapter
-                itfViewModel.getMedicos().observe(this, {
+                itfViewModel.getMedicosByEstado(1).observe(this, {
                     if (it.isNullOrEmpty()) {
                         itfViewModel.setError("Datos vacios favor de sincronizar")
                     }
                     medicoAdapter.addItems(it)
+                })
+                editTextSearch.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun onTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun afterTextChanged(editable: Editable) {
+                        medicoAdapter.getFilter().filter(editable)
+                    }
                 })
             }
         }

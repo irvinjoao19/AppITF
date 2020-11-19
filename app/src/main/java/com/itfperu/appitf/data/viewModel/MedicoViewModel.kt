@@ -98,7 +98,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun getMedicos(): LiveData<List<SolMedico>> {
         return Transformations.switchMap(search) { input ->
             val f = Gson().fromJson(search.value, Filtro::class.java)
-            roomRepository.getSolMedicos(f.usuarioId, f.finicio, f.ffinal,f.estadoId, f.tipo)
+            roomRepository.getSolMedicos(f.usuarioId, f.finicio, f.ffinal, f.estadoId, f.tipo)
         }
     }
 
@@ -201,10 +201,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Seleccione Sexo"
             return
         }
-        if (m.fechaNacimiento.isEmpty()) {
-            mensajeError.value = "Ingrese Fecha de Nacimiento"
-            return
-        }
         insertMedico(m)
     }
 
@@ -263,6 +259,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         }
         if (m.codigoDistrito.isEmpty()) {
             mensajeError.value = "Seleccione Distrito"
+            return false
+        }
+        if (m.direccion.isEmpty()) {
+            mensajeError.value = "Ingrese Dirección"
             return false
         }
         if (m.institucion.isEmpty()) {

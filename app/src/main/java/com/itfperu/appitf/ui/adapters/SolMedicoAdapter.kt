@@ -8,7 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.SolMedico
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
+import kotlinx.android.synthetic.main.cardview_actividad.view.*
 import kotlinx.android.synthetic.main.cardview_sol_medico.view.*
+import kotlinx.android.synthetic.main.cardview_sol_medico.view.card
+import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView1
+import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView2
+import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView4
+import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView5
 
 class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListener) :
     RecyclerView.Adapter<SolMedicoAdapter.ViewHolder>() {
@@ -28,7 +34,7 @@ class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListen
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(perfiles[position], position, listener)
+        holder.bind(perfiles[position], listener)
     }
 
     override fun getItemCount(): Int {
@@ -36,14 +42,19 @@ class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListen
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: SolMedico, position: Int, listener: OnItemClickListener.SolMedicoListener) =
+        fun bind(p: SolMedico, listener: OnItemClickListener.SolMedicoListener) =
             with(itemView) {
-                textView1.text = p.usuario
-                if (p.identity == 0) {
-                    textView1.setTextColor(
-                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+                if (p.estado != 0) {
+                    card.setCardBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
+                textView1.text = p.usuario
+//                if (p.identity == 0) {
+//                    textView1.setTextColor(
+//                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+//                    )
+//                }
 
                 textView2.text = p.fecha
                 textView4.text = p.usuarioAprobador

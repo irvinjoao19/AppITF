@@ -63,6 +63,7 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                     )
                 }
 
+                textView.text = p.numeroVisita
                 textView1.text = String.format("Ciclo : %s", p.nombreCiclo)
                 textView2.text = String.format(
                     "%s %s",

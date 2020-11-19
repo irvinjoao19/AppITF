@@ -47,10 +47,13 @@ interface MedicoDao {
     @Query("SELECT * FROM Medico")
     fun getMedicos(): LiveData<List<Medico>>
 
+    @Query("SELECT * FROM Medico WHERE estado =:e")
+    fun getMedicosByEstado(e: Int): LiveData<List<Medico>>
+
     @Query("SELECT * FROM Medico WHERE cpmMedico=:c AND  identificadorId=:id")
     fun getMedicoCmpIdentificador(c: String, id: Int): Medico
 
-    @Query("SELECT * FROM Medico WHERE medicoSolId =:id AND active = 1")
+    @Query("SELECT * FROM Medico WHERE medicoSolId =:id")
     fun getMedicoBySolIdTask(id: Int): List<Medico>
 
     @Query("SELECT * FROM Medico WHERE isSelected=:b")
@@ -59,17 +62,17 @@ interface MedicoDao {
     @Query("UPDATE Medico SET isSelected=:b")
     fun enabledMedicoSelected(b: Boolean)
 
-    @Query("SELECT * FROM Medico")
+    @Query("SELECT * FROM Medico WHERE estado = 1")
     fun getCheckMedicos(): DataSource.Factory<Int, Medico>
 
     @Query("SELECT * FROM Medico WHERE usuarioId =:u")
-    fun getCheckMedicos(u:Int): DataSource.Factory<Int, Medico>
+    fun getCheckMedicos(u: Int): DataSource.Factory<Int, Medico>
 
-    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s )")
+    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s ) AND estado = 1")
     fun getCheckMedicos(s: String): DataSource.Factory<Int, Medico>
 
     @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s )  AND usuarioId =:u ")
-    fun getCheckMedicos(s: String,u:Int): DataSource.Factory<Int, Medico>
+    fun getCheckMedicos(s: String, u: Int): DataSource.Factory<Int, Medico>
 
     @Query("UPDATE Medico SET active = 1 WHERE medicoId=:id")
     fun closeMedico(id: Int)
@@ -78,7 +81,7 @@ interface MedicoDao {
     fun getMedicosInactivos(id: Int): Int
 
     @Query("UPDATE Medico SET identity =:codigoRetorno, active = 0 WHERE medicoId =:codigoBase")
-    fun updateEnabledMedico(codigoBase: Int,codigoRetorno: Int)
+    fun updateEnabledMedico(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM Medico WHERE identity =:i")
     fun getMedicoOffLineByIdTask(i: Int): Medico

@@ -36,7 +36,8 @@ class CheckMedicoAdapter(private var listener: OnItemClickListener.CheckMedicoLi
                 textView2.text = s.cpmMedico
                 textView3.text = s.nombreIdentificador
                 textView4.text = s.nombreEspecialidad
-                textView5.text = s.visitadoPor
+                textView5.text = s.direccion
+                textView6.text = s.visitadoPor
 
                 checkboxAdd.isChecked = s.isSelected
                 checkboxAdd.setOnCheckedChangeListener { _, isChecked ->

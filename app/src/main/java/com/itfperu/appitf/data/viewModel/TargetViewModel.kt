@@ -33,6 +33,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     val loading = MutableLiveData<Boolean>()
     val searchMedico: MutableLiveData<String> = MutableLiveData()
     val search: MutableLiveData<String> = MutableLiveData()
+    val perfiles: MutableLiveData<List<ProgramacionPerfil>> = MutableLiveData()
+    val rejas: MutableLiveData<List<ProgramacionReja>> = MutableLiveData()
+    val detalles: MutableLiveData<List<ProgramacionPerfilDetalle>> = MutableLiveData()
 
     fun setError(s: String) {
         mensajeError.value = s
@@ -40,6 +43,14 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun setLoading(s: Boolean) {
         loading.value = s
+    }
+
+    fun setPerfiles() {
+        perfiles.value = null
+    }
+
+    fun setRejas() {
+        rejas.value = null
     }
 
     fun syncTarget(u: Int, c: Int, e: Int, n: Int) {
@@ -397,6 +408,70 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {}
+            })
+    }
+
+    fun syncProgramacionPerfil(medicoId: Int) {
+        roomRepository.syncProgramacionPerfil(medicoId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<ProgramacionPerfil>> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: List<ProgramacionPerfil>) {
+                    perfiles.value = t
+                }
+
+                override fun onError(t: Throwable) {
+                    perfiles.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    fun syncProgramacionPerfilDetalle(medicoId: Int, s: String) {
+        roomRepository.syncProgramacionPerfilDetalle(medicoId,s)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<ProgramacionPerfilDetalle>> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: List<ProgramacionPerfilDetalle>) {
+                    detalles.value = t
+                }
+
+                override fun onError(t: Throwable) {
+                    detalles.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
             })
     }
 }

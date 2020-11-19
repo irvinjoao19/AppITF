@@ -19,13 +19,13 @@ interface ProgramacionDao {
     @Delete
     fun deleteProgramacionTask(c: Programacion)
 
-    @Query("SELECT * FROM Programacion")
+    @Query("SELECT * FROM Programacion ORDER BY nombreMedico,numeroVisita ASC")
     fun getProgramaciones(): LiveData<List<Programacion>>
 
-    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e")
+    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e ORDER BY nombreMedico,numeroVisita ASC")
     fun getProgramaciones(e: Int): LiveData<List<Programacion>>
 
-    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e AND (cmpMedico LIKE :s OR nombreMedico LIKE :s) ")
+    @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e AND (cmpMedico LIKE :s OR nombreMedico LIKE :s) ORDER BY nombreMedico,numeroVisita ASC")
     fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
 
     @Query("SELECT * FROM Programacion WHERE usuarioId =:u")
@@ -49,7 +49,7 @@ interface ProgramacionDao {
     @Query("SELECT * FROM Programacion WHERE programacionId =:id")
     fun getProgramacionByIdTask(id: Int): Programacion
 
-    @Query("SELECT * FROM Programacion WHERE programacionId=:id")
+    @Query("SELECT * FROM Programacion WHERE identity=:id")
     fun getProgramacionOffLineIdTask(id: Int): Programacion
 
     @Query("SELECT programacionId FROM Programacion ORDER BY programacionId DESC LIMIT 1")

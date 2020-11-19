@@ -59,6 +59,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providDireccionesFragment(): DireccionesFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providPuntoContactoFragment(): PuntoContactoFragment
     }
 
     @Module

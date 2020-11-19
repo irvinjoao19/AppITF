@@ -101,6 +101,8 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(ProgramacionViewModel::class.java)
 
+
+
         itfViewModel.getProgramacionById(programacionId).observe(viewLifecycleOwner, {
             if (it != null) {
                 p = it
@@ -138,7 +140,12 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
                     radioSI.isChecked = false
                     radioNO.isChecked = true
                 }
-                editTextResultado.setText(it.descripcionResultado)
+                if (it.descripcionResultado.isEmpty()) {
+                    editTextResultado.setText(String.format("Visitado"))
+                    p.resultadoVisitaId = 13
+                } else {
+                    editTextResultado.setText(it.descripcionResultado)
+                }
 
                 if (it.estadoProgramacion == 24) {
                     fabGenerate.visibility = View.GONE

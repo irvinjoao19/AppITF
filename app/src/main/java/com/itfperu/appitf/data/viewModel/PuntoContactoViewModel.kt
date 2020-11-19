@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
 import com.google.gson.Gson
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
@@ -24,36 +23,39 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ActividadViewModel @Inject
+class PuntoContactoViewModel @Inject
 internal constructor(private val roomRepository: AppRepository, private val retrofit: ApiError) :
     ViewModel() {
 
     val mensajeError = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
+    val mensajeProducto = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val search: MutableLiveData<String> = MutableLiveData()
 
-
     fun setError(s: String) {
         mensajeError.value = s
+    }
+
+    fun setErrorProducto(s: String?) {
+        mensajeProducto.value = s
     }
 
     fun setLoading(s: Boolean) {
         loading.value = s
     }
 
-    fun syncActividad(u: Int, c: Int, e: Int, t: Int) {
-        roomRepository.syncActividad(u, c, e, t)
-            .delay(1000, TimeUnit.MILLISECONDS)
+    fun syncPuntoContacto(u: Int, fi: String, ff: String) {
+        roomRepository.syncPuntoContacto(u, fi, ff)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<Actividad>> {
+            .subscribe(object : Observer<List<PuntoContacto>> {
                 override fun onSubscribe(d: Disposable) {
 
                 }
 
-                override fun onNext(t: List<Actividad>) {
-                    insertActividads(t)
+                override fun onNext(t: List<PuntoContacto>) {
+                    insertPuntoContactos(t)
                 }
 
                 override fun onError(t: Throwable) {
@@ -77,8 +79,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun insertActividads(p: List<Actividad>) {
-        roomRepository.insertActividads(p)
+    private fun insertPuntoContactos(p: List<PuntoContacto>) {
+        roomRepository.insertPuntoContactos(p)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -97,60 +99,20 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getActividades(): LiveData<List<Actividad>> {
+    fun getEstados(tipo: String): LiveData<List<Estado>> {
+        return roomRepository.getEstados(tipo)
+    }
+
+    fun getPuntoContactos(): LiveData<List<PuntoContacto>> {
         return Transformations.switchMap(search) { input ->
-            val f = Gson().fromJson(search.value, Filtro::class.java)
-            roomRepository.getActividades(f.usuarioId, f.cicloId, f.estadoId, f.tipo)
+            val f = Gson().fromJson(input, Filtro::class.java)
+            roomRepository.getPuntoContactos(f.finicio)
         }
     }
 
-    // t  =  1 -> actividades 2 -> aprobacion
-    fun validateActividad(c: Actividad) {
-        if (c.cicloId == 0) {
-            mensajeError.value = "Seleccione Ciclo"
-            return
-        }
-        if (c.fechaActividad.isEmpty()) {
-            mensajeError.value = "Seleccione Fecha de Actividad"
-            return
-        }
-        if (c.duracionId == 0) {
-            mensajeError.value = "Seleccione Duración"
-            return
-        }
-
-        if (c.tipo == 1) {
-            if (c.estado == 8 || c.estado == 9) {
-                mensajeError.value = "No se puede modificar"
-                return
-            }
-        }
-
-        insertActividad(c)
-    }
-
-    private fun insertActividad(c: Actividad) {
-        roomRepository.insertActividad(c)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onComplete() {
-                    mensajeSuccess.value = "Guardado"
-                }
-
-                override fun onError(e: Throwable) {
-                    mensajeError.value = e.message
-                }
-            })
-    }
-
-
-    fun sendActividad(tipo: Int) {
-        val ots: Observable<List<Actividad>> = roomRepository.getActividadTask(tipo)
+    fun sendPuntoContacto() {
+        val ots: Observable<List<PuntoContacto>> =
+            roomRepository.getPuntoContactoTask()
         ots.flatMap { observable ->
             Observable.fromIterable(observable).flatMap { a ->
                 val json = Gson().toJson(a)
@@ -158,7 +120,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 val body =
                     RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
                 Observable.zip(
-                    Observable.just(a), roomRepository.sendActividad(body), { _, mensaje ->
+                    Observable.just(a), roomRepository.sendPuntoContacto(body), { _, mensaje ->
                         mensaje
                     })
             }
@@ -172,7 +134,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Mensaje) {
-                    updateEnabledActividad(t)
+                    updateEnabledPuntoContacto(t)
                 }
 
                 override fun onError(t: Throwable) {
@@ -191,87 +153,32 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun updateEnabledActividad(t: Mensaje) {
-        roomRepository.updateEnabledActividad(t)
+    private fun updateEnabledPuntoContacto(t: Mensaje) {
+        roomRepository.updateEnabledPuntoContacto(t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {}
-
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }
             })
     }
 
-
-    fun getActividadById(categoriaId: Int): LiveData<Actividad> {
-        return roomRepository.getActividadById(categoriaId)
-    }
-
-    fun getCiclos(): LiveData<List<Ciclo>> {
-        return roomRepository.getCiclos()
-    }
-
-    fun getCicloProceso(): LiveData<List<Ciclo>> {
-        return roomRepository.getCicloProceso()
-    }
-
-    fun getFirstCicloProceso(): LiveData<Ciclo> {
-        return roomRepository.getFirstCicloProceso()
-    }
-
-    fun getEstados(tipo: String): LiveData<List<Estado>> {
-        return roomRepository.getEstados(tipo)
-    }
-
-    fun getDuracion(): LiveData<List<Duracion>> {
-        return roomRepository.getDuracion()
-    }
-
-    fun getUsuarios(): LiveData<List<Personal>> {
-        return roomRepository.getPersonals()
-    }
-
-    fun getNombreUsuario(): LiveData<String> {
-        return roomRepository.getNombreUsuario()
-    }
-
-    fun getMedicosByEstado(e:Int): LiveData<List<Medico>> {
-        return roomRepository.getMedicosByEstado(e)
-    }
-
-    fun getAlertaActividad(cicloId: Int, medicoId: Int, usuarioId: Int) {
-        roomRepository.getAlertaActividad(cicloId, medicoId, usuarioId)
+    fun insertPuntoContacto(p: PuntoContacto) {
+        roomRepository.insertPuntoContacto(p)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Mensaje> {
+            .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Mensaje) {
-                    mensajeError.value = t.mensaje
+                override fun onComplete() {
+                    mensajeSuccess.value = "Actualizado"
                 }
 
-                override fun onError(t: Throwable) {
-                    if (t is HttpException) {
-                        val body = t.response().errorBody()
-                        try {
-                            val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
-                        } catch (e1: IOException) {
-                            e1.printStackTrace()
-                        }
-                    } else {
-                        mensajeError.postValue(t.message)
-                    }
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
                 }
-                override fun onComplete() {}
-
             })
-
     }
-
-//    fun getActividades(): LiveData<List<Actividad>> {
-//        return actividades
-//    }
 }

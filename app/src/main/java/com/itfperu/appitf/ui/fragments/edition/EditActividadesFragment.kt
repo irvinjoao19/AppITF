@@ -2,6 +2,8 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +16,18 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Actividad
 import com.itfperu.appitf.data.local.model.Ciclo
 import com.itfperu.appitf.data.local.model.Duracion
+import com.itfperu.appitf.data.local.model.Medico
 import com.itfperu.appitf.data.viewModel.ActividadViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboCicloAdapter
+import com.itfperu.appitf.ui.adapters.ComboMedicoAdapter
 import com.itfperu.appitf.ui.adapters.DuracionAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
@@ -38,6 +44,7 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
             R.id.editTextCiclo -> spinnerDialog(1, "Ciclo")
             R.id.editTextFechaAc -> Util.getDateDialog(context!!, editTextFechaAc)
             R.id.editTextDuracion -> spinnerDialog(2, "Duración")
+            R.id.editTextMedico -> spinnerDialog(3, "Médico")
             R.id.fabGenerate -> formActividad()
         }
     }
@@ -86,14 +93,21 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
                 editTextDetalle.setText(it.detalle)
                 editTextEstado.setText(it.descripcionEstado)
                 editTextEstado.isEnabled = false
+                editTextMedico.setText(it.nombreMedico)
 
                 if (it.estado == 8 || it.estado == 9) {
-                    layout5.visibility = View.VISIBLE
                     layout6.visibility = View.VISIBLE
+                    layout7.visibility = View.VISIBLE
                     layoutAprobador.visibility = View.VISIBLE
                     layoutObservacion.visibility = View.VISIBLE
                 }
-
+            } else {
+                itfViewModel.getFirstCicloProceso().observe(viewLifecycleOwner, { c ->
+                    if (c != null) {
+                        p.cicloId = c.cicloId
+                        editTextCiclo.setText(c.nombre)
+                    }
+                })
             }
         })
 
@@ -101,6 +115,7 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
         editTextCiclo.setOnClickListener(this)
         editTextFechaAc.setOnClickListener(this)
         editTextDuracion.setOnClickListener(this)
+        editTextMedico.setOnClickListener(this)
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             Util.toastMensaje(context!!, it)
@@ -110,7 +125,6 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
             activity!!.finish()
         })
-
     }
 
     private fun formActividad() {
@@ -119,6 +133,7 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
         p.descripcionDuracion = editTextDuracion.text.toString()
         p.detalle = editTextDetalle.text.toString()
         p.descripcionEstado = editTextEstado.text.toString()
+        p.nombreMedico = editTextMedico.text.toString()
         p.usuarioId = usuarioId
         p.tipoInterfaz = "M"
         p.active = 1
@@ -133,6 +148,8 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
         val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
         val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
         val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
+        val layoutSearch: TextInputLayout = v.findViewById(R.id.layoutSearch)
+        val editTextSearch: TextInputEditText = v.findViewById(R.id.editTextSearch)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
         progressBar.visibility = View.GONE
         builder.setView(v)
@@ -179,6 +196,35 @@ class EditActividadesFragment : DaggerFragment(), View.OnClickListener {
                         itfViewModel.setError("Datos vacios favor de sincronizar Visita Medica")
                     }
                     duracionAdapter.addItems(it)
+                })
+            }
+            3 -> {
+                layoutSearch.visibility = View.VISIBLE
+                val medicoAdapter = ComboMedicoAdapter(object : OnItemClickListener.MedicoListener {
+                    override fun onItemClick(m: Medico, view: View, position: Int) {
+                        itfViewModel.getAlertaActividad(p.cicloId, m.medicoId, usuarioId)
+                        p.medicoId = m.medicoId
+                        editTextMedico.setText(
+                            String.format(
+                                "%s %s %s", m.nombreMedico, m.apellidoP, m.apellidoM
+                            )
+                        )
+                        dialog.dismiss()
+                    }
+                })
+                recyclerView.adapter = medicoAdapter
+                itfViewModel.getMedicosByEstado(1).observe(this, {
+                    if (it.isNullOrEmpty()) {
+                        itfViewModel.setError("Datos vacios favor de sincronizar Visita Medica")
+                    }
+                    medicoAdapter.addItems(it)
+                })
+                editTextSearch.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun onTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun afterTextChanged(editable: Editable) {
+                        medicoAdapter.getFilter().filter(editable)
+                    }
                 })
             }
         }

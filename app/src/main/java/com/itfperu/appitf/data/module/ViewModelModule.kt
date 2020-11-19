@@ -91,5 +91,10 @@ abstract class ViewModelModule {
     internal abstract fun bindDireccionViewModel(direccionViewModel: DireccionViewModel): ViewModel
 
     @Binds
+    @IntoMap
+    @ViewModelKey(PuntoContactoViewModel::class)
+    internal abstract fun bindPuntoContactoViewModel(puntoContactoViewModel: PuntoContactoViewModel): ViewModel
+
+    @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

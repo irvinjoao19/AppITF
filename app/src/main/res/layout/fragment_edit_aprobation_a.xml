@@ -143,6 +143,39 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/layoutM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Médico"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutDuracion" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutMedico"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutM">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextMedico"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_down"
+                    android:focusable="false"
+                    android:hint="Seleccione Medico" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
                 android:id="@+id/layout4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -151,7 +184,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutDuracion" />
+                app:layout_constraintTop_toBottomOf="@+id/layoutMedico" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutDetalle"

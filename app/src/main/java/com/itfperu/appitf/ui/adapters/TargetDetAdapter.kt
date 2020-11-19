@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.TargetDet
+import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_target_det.view.*
 
@@ -32,7 +33,7 @@ class TargetDetAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(det[position], tipo,tipoTarget, listener)
+        holder.bind(det[position], tipo, tipoTarget, listener)
     }
 
     override fun getItemCount(): Int {
@@ -40,7 +41,12 @@ class TargetDetAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TargetDet, tipo: Int,tipoTarget:String, listener: OnItemClickListener.TargetDetListener) =
+        fun bind(
+            p: TargetDet,
+            tipo: Int,
+            tipoTarget: String,
+            listener: OnItemClickListener.TargetDetListener
+        ) =
             with(itemView) {
                 textView1.text = String.format("CMP : %s", p.cmp)
                 textView2.text = p.nombreMedico
@@ -49,11 +55,13 @@ class TargetDetAdapter(
                 editTextCantidad.setText(p.nroContacto.toString())
 
                 if (tipo == 2) {
+                    textView9.text = String.format("Visitado por : %s", p.visitadoPor)
+                    textView9.visibility = View.VISIBLE
                     if (tipoTarget == "A") {
-                        if (p.visitado == 0)
-                            imgInfo.visibility = View.GONE
-                        else
-                            imgInfo.visibility = View.VISIBLE
+//                        if (p.visitado == 0)
+//                            imgInfo.visibility = View.GONE
+//                        else
+//                            imgInfo.visibility = View.VISIBLE
 
                         if (p.nrovisita == 1) {
                             imgAprobar.visibility = View.VISIBLE
@@ -61,6 +69,7 @@ class TargetDetAdapter(
                             editTextCantidad.visibility = View.VISIBLE
                             imgNegative.visibility = View.VISIBLE
                             imgPositive.visibility = View.VISIBLE
+                            textViewC.visibility = View.VISIBLE
                         } else {
                             textView7.visibility = View.VISIBLE
                             textView7.text = p.mensajeNrovisita
@@ -73,6 +82,7 @@ class TargetDetAdapter(
                         editTextCantidad.visibility = View.GONE
                         imgNegative.visibility = View.GONE
                         imgPositive.visibility = View.GONE
+                        textViewC.visibility = View.GONE
                     }
                 }
 
@@ -81,11 +91,16 @@ class TargetDetAdapter(
                     textView8.text = if (p.estadoTarget == 18) "Aprobada" else "Rechazada"
                     imgAprobar.visibility = View.GONE
                     imgRechazar.visibility = View.GONE
-                    textView6.text = String.format("Nro Contactos : %s", p.nroContacto)
+                    Util.getTextStyleHtml(
+                        String.format(
+                            "<p style='color:red';>Nro Contactos : %s</p>", p.nroContacto
+                        ), textView6
+                    )
                     textView6.visibility = View.VISIBLE
                     editTextCantidad.visibility = View.GONE
                     imgNegative.visibility = View.GONE
                     imgPositive.visibility = View.GONE
+                    textViewC.visibility = View.GONE
                 }
 
 

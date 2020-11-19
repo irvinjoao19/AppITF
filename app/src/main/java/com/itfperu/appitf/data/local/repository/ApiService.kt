@@ -141,6 +141,22 @@ interface ApiService {
     ): Observable<List<ProgramacionReja>>
 
     @Headers("Cache-Control: no-cache")
+    @GET("PuntoContacto")
+    fun getPuntoContacto(
+        @Query("u") u: Int,
+        @Query("fi") fi: String,
+        @Query("ff") ff: String
+    ): Observable<List<PuntoContacto>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("AlertaActividad")
+    fun getAlertaActividad(
+        @Query("c") c: Int,
+        @Query("m") m: Int,
+        @Query("u") u: Int
+    ): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
     fun saveCategoria(@Body body: RequestBody): Observable<Mensaje>
 
@@ -203,4 +219,8 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveNuevaDireccion")
     fun sendNuevaDireccion(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SavePuntoContacto")
+    fun sendPuntoContacto(@Body body: RequestBody): Observable<Mensaje>
 }

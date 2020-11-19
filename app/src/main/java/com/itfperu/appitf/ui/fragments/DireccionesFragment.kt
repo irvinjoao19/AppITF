@@ -200,7 +200,6 @@ class DireccionesFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-
     private fun dialogSearch() {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val v =

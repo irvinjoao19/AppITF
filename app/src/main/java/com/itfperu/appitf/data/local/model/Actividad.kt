@@ -23,8 +23,10 @@ open class Actividad {
     var identity: Int = 0
     var fechaRespuesta: String = ""
     var tipoInterfaz: String = ""
+    var medicoId : Int = 0
 
     var nombreCiclo: String = ""
+    var nombreMedico : String = ""
     var active: Int = 0 // 1 -> para enviar , 2 -> enviado
     var tipo: Int = 0 // 1 -> actividades, 2 -> aprobaciones
 }

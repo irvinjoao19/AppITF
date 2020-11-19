@@ -173,5 +173,8 @@ class DataBaseModule {
     internal fun provideNuevaDireccionDao(appDataBase: AppDataBase): NuevaDireccionDao {
         return appDataBase.nuevaDireccionDao()
     }
-
+    @Provides
+    internal fun providePuntoContactoDao(appDataBase: AppDataBase): PuntoContactoDao {
+        return appDataBase.puntoContactoDao()
+    }
 }

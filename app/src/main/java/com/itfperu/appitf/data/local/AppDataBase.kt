@@ -37,10 +37,11 @@ import com.itfperu.appitf.data.local.model.*
         Programacion::class,
         ProgramacionDet::class,
         Stock::class,
-        NuevaDireccion::class
+        NuevaDireccion::class,
+        PuntoContacto::class
     ],
     views = [Nombre::class],
-    version = 63, // version 1 en play store
+    version = 69, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -75,6 +76,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun programacionDetDao(): ProgramacionDetDao
     abstract fun stockDao(): StockDao
     abstract fun nuevaDireccionDao(): NuevaDireccionDao
+    abstract fun puntoContactoDao(): PuntoContactoDao
 
     companion object {
         @Volatile

@@ -18,12 +18,10 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Actividad
 import com.itfperu.appitf.data.local.model.Ciclo
 import com.itfperu.appitf.data.local.model.Duracion
-import com.itfperu.appitf.data.local.model.Personal
 import com.itfperu.appitf.data.viewModel.ActividadViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.CicloAdapter
-import com.itfperu.appitf.ui.adapters.ComboPersonalAdapter
 import com.itfperu.appitf.ui.adapters.DuracionAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
@@ -86,6 +84,7 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
                 editTextDuracion.setText(it.descripcionDuracion)
                 editTextDetalle.setText(it.detalle)
                 editTextAprobador.setText(it.aprobador)
+                editTextMedico.setText(it.nombreMedico)
 
                 if (it.aprobador.isEmpty()) {
                     itfViewModel.getNombreUsuario().observe(viewLifecycleOwner, { s ->

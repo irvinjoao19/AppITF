@@ -5,17 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
+import android.widget.Filter
 import com.itfperu.appitf.data.local.model.Medico
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_combo.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ComboMedicoAdapter(private val listener: OnItemClickListener.MedicoListener) :
     RecyclerView.Adapter<ComboMedicoAdapter.ViewHolder>() {
 
-    private var menu = emptyList<Medico>()
+    private var count = emptyList<Medico>()
+    private var countList: ArrayList<Medico> = ArrayList()
 
     fun addItems(list: List<Medico>) {
-        menu = list
+        count = list
+        countList = ArrayList(list)
         notifyDataSetChanged()
     }
 
@@ -27,11 +32,11 @@ class ComboMedicoAdapter(private val listener: OnItemClickListener.MedicoListene
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(menu[position], listener)
+        holder.bind(countList[position], listener)
     }
 
     override fun getItemCount(): Int {
-        return menu.size
+        return countList.size
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,6 +44,35 @@ class ComboMedicoAdapter(private val listener: OnItemClickListener.MedicoListene
             textViewTitulo.text =
                 String.format("%s %s %s", m.nombreMedico, m.apellidoP, m.apellidoM)
             itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
+        }
+    }
+
+    fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                return FilterResults()
+            }
+
+            override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                countList.clear()
+                val keyword = charSequence.toString()
+                if (keyword.isEmpty()) {
+                    countList.addAll(count)
+                } else {
+                    val filteredList = ArrayList<Medico>()
+                    for (m: Medico in count) {
+                        if (m.cpmMedico.toLowerCase(Locale.getDefault()).contains(keyword) ||
+                            m.nombreMedico.toLowerCase(Locale.getDefault()).contains(keyword) ||
+                            m.apellidoP.toLowerCase(Locale.getDefault()).contains(keyword) ||
+                            m.apellidoM.toLowerCase(Locale.getDefault()).contains(keyword)
+                        ) {
+                            filteredList.add(m)
+                        }
+                    }
+                    countList = filteredList
+                }
+                notifyDataSetChanged()
+            }
         }
     }
 }

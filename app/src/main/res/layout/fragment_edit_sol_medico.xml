@@ -28,7 +28,7 @@
             android:id="@+id/fabAprobar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorRed"
+            fab:fab_colorNormal="@color/colorBlue"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/ic_check"
             fab:fab_title="Aprobar" />
@@ -37,7 +37,7 @@
             android:id="@+id/fabRechazar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorBlue"
+            fab:fab_colorNormal="@color/colorRed"
             fab:fab_colorPressed="@color/white_pressed"
             fab:fab_icon="@drawable/ic_check"
             fab:fab_title="Rechazar" />

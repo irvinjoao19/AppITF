@@ -26,6 +26,7 @@ open class TargetDet {
     var active: Int = 0 // 1 -> terminado -> 0 -> por completar
 
     var estadoTarget: Int = 0 // 16 para enviar
+    var visitadoPor : String = ""
     var visitado: Int = 0
     var nrovisita: Int = 0
     var mensajeNrovisita: String = ""

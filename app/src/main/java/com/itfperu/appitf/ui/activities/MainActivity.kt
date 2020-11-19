@@ -180,6 +180,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Aprobación Direcciones" -> changeFragment(
                 DireccionesFragment.newInstance(usuarioId, 2), item.title.toString()
             )
+            "Punto Contacto" ->changeFragment(
+                PuntoContactoFragment.newInstance(usuarioId), item.title.toString()
+            )
             "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }

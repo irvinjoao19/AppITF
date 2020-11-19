@@ -1,7 +1,6 @@
 package com.itfperu.appitf.ui.fragments.edition
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +69,12 @@ class EditNuevasDireccionesAFragment : DaggerFragment(), View.OnClickListener {
                 editTextInstitucion.setText(it.nombreInstitucion)
                 editTextReferencia.setText(it.referencia)
                 editTextObservacion.setText(it.observacion)
+
+                if (it.estadoId == 28 || it.estadoId == 27 || it.estadoId == 29) {
+                    fabAprobar.visibility = View.GONE
+                    fabRechazar.visibility = View.GONE
+                    fabObservar.visibility = View.GONE
+                }
             }
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {

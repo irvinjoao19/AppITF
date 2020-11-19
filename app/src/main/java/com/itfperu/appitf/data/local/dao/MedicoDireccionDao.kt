@@ -40,7 +40,7 @@ interface MedicoDireccionDao {
     @Query("DELETE FROM MedicoDireccion WHERE medicoId =:id")
     fun deleteDireccionesById(id: Int)
 
-    @Query("SELECT * FROM MedicoDireccion WHERE medicoId =:id AND active = 1")
+    @Query("SELECT * FROM MedicoDireccion WHERE medicoId =:id")
     fun getDireccionIdTask(id: Int): List<MedicoDireccion>
 
     @Query("SELECT COUNT(*) FROM MedicoDireccion WHERE medicoId =:id")

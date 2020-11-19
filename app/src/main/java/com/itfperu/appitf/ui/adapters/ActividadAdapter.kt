@@ -9,6 +9,11 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Actividad
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_actividad.view.*
+import kotlinx.android.synthetic.main.cardview_actividad.view.card
+import kotlinx.android.synthetic.main.cardview_actividad.view.textView1
+import kotlinx.android.synthetic.main.cardview_actividad.view.textView2
+import kotlinx.android.synthetic.main.cardview_actividad.view.textView4
+import kotlinx.android.synthetic.main.cardview_actividad.view.textView6
 
 class ActividadAdapter(private var listener: OnItemClickListener.ActividadListener) :
     RecyclerView.Adapter<ActividadAdapter.ViewHolder>() {
@@ -28,7 +33,7 @@ class ActividadAdapter(private var listener: OnItemClickListener.ActividadListen
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(perfiles[position], position, listener)
+        holder.bind(perfiles[position], listener)
     }
 
     override fun getItemCount(): Int {
@@ -36,17 +41,13 @@ class ActividadAdapter(private var listener: OnItemClickListener.ActividadListen
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: Actividad, position: Int, listener: OnItemClickListener.ActividadListener) =
+        fun bind(p: Actividad, listener: OnItemClickListener.ActividadListener) =
             with(itemView) {
-//                if (position % 2 == 1) {
-//                    card.setCardBackgroundColor(
-//                        ContextCompat.getColor(itemView.context, R.color.colorGrey)
-//                    )
-//                } else {
-//                    card.setCardBackgroundColor(
-//                        ContextCompat.getColor(itemView.context, R.color.colorWhite)
-//                    )
-//                }
+                if (p.active != 0) {
+                    card.setCardBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.divider)
+                    )
+                }
                 textView1.text = p.usuario
                 textView2.text = p.fechaActividad
                 textView4.text = p.detalle

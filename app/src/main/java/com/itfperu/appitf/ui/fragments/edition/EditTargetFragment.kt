@@ -3,30 +3,33 @@ package com.itfperu.appitf.ui.fragments.edition
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.evrencoskun.tableview.TableView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
+import com.itfperu.appitf.data.local.model.ProgramacionPerfil
 import com.itfperu.appitf.data.local.model.TargetCab
 import com.itfperu.appitf.data.local.model.TargetDet
+import com.itfperu.appitf.data.tableview.MyTableViewListener
+import com.itfperu.appitf.data.tableview.TableDetalleAdapter
+import com.itfperu.appitf.data.tableview.TablePerfilAdapter
 import com.itfperu.appitf.data.viewModel.TargetViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.activities.SearchMedicoActivity
 import com.itfperu.appitf.ui.adapters.TargetDetAdapter
-import com.itfperu.appitf.ui.adapters.TargetInfoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_target.*
@@ -128,7 +131,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                             t.nroContacto = nPositive
                             itfViewModel.insertTargetDet(t, 1)
                         }
-                        R.id.imgInfo -> dialogInfo(t)
+                        R.id.imgInfo -> dialogPerfil(t.medicoId)
                         R.id.imgAprobar -> confirmAprobation(t, 18, "Deseas Aprobar ?")
                         R.id.imgRechazar -> confirmAprobation(t, 17, "Deseas Rechazar ?")
                     }
@@ -258,33 +261,147 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         dialog.show()
     }
 
-    private fun dialogInfo(t: TargetDet) {
-        val builder =
-            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
-        @SuppressLint("InflateParams") val v =
-            LayoutInflater.from(context).inflate(R.layout.dialog_combo, null)
-        val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
-        val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
-        val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        progressBar.visibility = View.GONE
-        builder.setView(v)
+
+    private fun dialogPerfil(id:Int) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_perfil, null)
+        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
+        val linearLayoutPrincipal: LinearLayout = view.findViewById(R.id.linearLayoutPrincipal)
+        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
+        val textView1: TextView = view.findViewById(R.id.textView1)
+        val textView2: TextView = view.findViewById(R.id.textView2)
+        val textView3: TextView = view.findViewById(R.id.textView3)
+        val textView4: TextView = view.findViewById(R.id.textView4)
+        val tableView: TableView = view.findViewById(R.id.tableView)
+
+        builder.setView(view)
         val dialog = builder.create()
         dialog.show()
 
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = layoutManager
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                recyclerView.context, DividerItemDecoration.VERTICAL
-            )
-        )
-        textViewTitulo.text = String.format("Información")
-        val targetAdapter = TargetInfoAdapter()
-        recyclerView.adapter = targetAdapter
+        imageViewClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        itfViewModel.setPerfiles()
+        itfViewModel.syncProgramacionPerfil(id)
 
-        itfViewModel.getTargetInfo(t.targetDetId).observe(viewLifecycleOwner, {
-            targetAdapter.addItems(it)
-        })
+        val mTableAdapter =
+            TablePerfilAdapter(context, object : OnItemClickListener.ProgramacionPerfilListener {
+                override fun onItemClick(s: String) {
+                    if (!Util.isNumeric(s)){
+                        if (s != "Total"){
+                            dialogPerfilDetalle(id,s)
+                        }
+                    }
+                }
+            })
+        tableView.adapter = mTableAdapter
+        tableView.tableViewListener = MyTableViewListener(tableView)
+
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                itfViewModel.perfiles.observe(this, { p ->
+                    if (p != null) {
+                        val e: ProgramacionPerfil? = p[0]
+                        if (e != null) {
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Médico</strong> : %s", e.nombreMedico),
+                                textView1
+                            )
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Matricula</strong> : %s", e.matricula),
+                                textView2
+                            )
+                            Util.getTextStyleHtml(
+                                String.format(
+                                    "<strong>Especialidad</strong> : %s", e.especialidad
+                                ), textView3
+                            )
+                            Util.getTextStyleHtml(
+                                String.format("<strong>Dirección</strong> : %s", e.direccion),
+                                textView4
+                            )
+                        }
+                        mTableAdapter.setUserList(p)
+                        tableView.visibility = View.VISIBLE
+                        linearLayoutLoad.visibility = View.GONE
+                        linearLayoutPrincipal.visibility = View.VISIBLE
+//                        dialog.window!!.setLayout(1000, 500)
+                    } else {
+                        dialog.dismiss()
+                    }
+                })
+            }, 800)
+        }
     }
+
+    private fun dialogPerfilDetalle(medicoId: Int, s: String) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_perfil_detalle, null)
+        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
+        val linearLayoutPrincipal: ConstraintLayout = view.findViewById(R.id.linearLayoutPrincipal)
+        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
+        val tableView: TableView = view.findViewById(R.id.tableView)
+
+        builder.setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        imageViewClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        itfViewModel.setRejas()
+        itfViewModel.syncProgramacionPerfilDetalle(medicoId,s)
+
+        val mTableAdapter =
+            TableDetalleAdapter(context)
+        tableView.adapter = mTableAdapter
+
+        Looper.myLooper()?.let {
+            Handler(it).postDelayed({
+                itfViewModel.detalles.observe(this, { p ->
+                    if (p != null) {
+                        mTableAdapter.setUserList(p)
+                        tableView.visibility = View.VISIBLE
+                        linearLayoutLoad.visibility = View.GONE
+                        linearLayoutPrincipal.visibility = View.VISIBLE
+                    } else {
+                        dialog.dismiss()
+                    }
+                })
+            }, 800)
+        }
+    }
+
+//    private fun dialogInfo(t: TargetDet) {
+//        val builder =
+//            android.app.AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+//        @SuppressLint("InflateParams") val v =
+//            LayoutInflater.from(context).inflate(R.layout.dialog_combo, null)
+//        val progressBar: ProgressBar = v.findViewById(R.id.progressBar)
+//        val textViewTitulo: TextView = v.findViewById(R.id.textViewTitulo)
+//        val recyclerView: RecyclerView = v.findViewById(R.id.recyclerView)
+//        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+//        progressBar.visibility = View.GONE
+//        builder.setView(v)
+//        val dialog = builder.create()
+//        dialog.show()
+//
+//        recyclerView.itemAnimator = DefaultItemAnimator()
+//        recyclerView.layoutManager = layoutManager
+//        recyclerView.addItemDecoration(
+//            DividerItemDecoration(
+//                recyclerView.context, DividerItemDecoration.VERTICAL
+//            )
+//        )
+//        textViewTitulo.text = String.format("Información")
+//        val targetAdapter = TargetInfoAdapter()
+//        recyclerView.adapter = targetAdapter
+//
+//        itfViewModel.getTargetInfo(t.targetDetId).observe(viewLifecycleOwner, {
+//            targetAdapter.addItems(it)
+//        })
+//    }
 }

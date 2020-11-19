@@ -83,12 +83,15 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun bindUI() {
-//        viewPager = activity!!.findViewById(R.id.viewPager)
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(MedicoViewModel::class.java)
 
         itfViewModel.getMedicoById(medicoId).observe(viewLifecycleOwner, {
             if (it != null) {
+                s.usuario = String.format(
+                    "%s - %s %s %s",
+                    it.cpmMedico, it.nombreMedico, it.apellidoP, it.apellidoM
+                )
                 validacion = 1
             }
         })
@@ -171,7 +174,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.getDireccionById(id).observe(viewLifecycleOwner, {
             if (it != null) {
                 m = it
-
                 editTextDepartamento.setText(it.nombreDepartamento)
                 editTextProvincia.setText(it.nombreProvincia)
                 editTextDistrito.setText(it.nombreDistrito)
@@ -251,9 +253,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = departamentoAdapter
                 itfViewModel.getDepartamentos().observe(this, {
-                    if (it.isNullOrEmpty()) {
-                        itfViewModel.setError("Datos vacios favor de sincronizar")
-                    }
                     departamentoAdapter.addItems(it)
                 })
             }
@@ -269,9 +268,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = provinciaAdapter
                 itfViewModel.getProvincias(m.codigoDepartamento).observe(this, {
-                    if (it.isNullOrEmpty()) {
-                        itfViewModel.setError("Datos vacios favor de sincronizar")
-                    }
                     provinciaAdapter.addItems(it)
                 })
             }
@@ -286,9 +282,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                     })
                 recyclerView.adapter = distritoAdapter
                 itfViewModel.getDistritos(m.codigoDepartamento, m.codigoProvincia).observe(this, {
-                    if (it.isNullOrEmpty()) {
-                        itfViewModel.setError("Datos vacios favor de sincronizar")
-                    }
                     distritoAdapter.addItems(it)
                 })
             }

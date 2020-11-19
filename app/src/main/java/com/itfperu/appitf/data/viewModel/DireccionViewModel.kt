@@ -172,23 +172,27 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateNuevaDireccion(p: NuevaDireccion) {
-        if (p.nombreMedico.isEmpty()){
+        if (p.nombreMedico.isEmpty()) {
             mensajeError.value = "Seleccione Medico"
             return
         }
-        if (p.nombreDepartamento.isEmpty()){
+        if (p.nombreDepartamento.isEmpty()) {
             mensajeError.value = "Seleccione departamento"
             return
         }
-        if (p.nombreProvincia.isEmpty()){
+        if (p.nombreProvincia.isEmpty()) {
             mensajeError.value = "Seleccione provincia"
             return
         }
-        if (p.nombreDistrito.isEmpty()){
+        if (p.nombreDistrito.isEmpty()) {
             mensajeError.value = "Seleccione distrito"
             return
         }
-        if (p.nombreInstitucion.isEmpty()){
+        if (p.nombreDireccion.isEmpty()) {
+            mensajeError.value = "Ingrese Dirección"
+            return
+        }
+        if (p.nombreInstitucion.isEmpty()) {
             mensajeError.value = "Ingrese nombre de institución"
             return
         }
@@ -227,11 +231,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getDistritos(cod, cod2)
     }
 
-    fun getMedicos(): LiveData<List<Medico>> {
-        return roomRepository.getMedicos()
+    fun getMedicosByEstado(e: Int): LiveData<List<Medico>> {
+        return roomRepository.getMedicosByEstado(e)
     }
 
-    fun getNuevaDireccionId(id:Int) : LiveData<NuevaDireccion>{
+    fun getNuevaDireccionId(id: Int): LiveData<NuevaDireccion> {
         return roomRepository.getNuevaDireccionId(id)
     }
 }
