@@ -148,7 +148,6 @@ class TipoProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
         }
     }
 
-
     companion object {
         @JvmStatic
         fun newInstance(param1: Int) =

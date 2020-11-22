@@ -101,8 +101,6 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(ProgramacionViewModel::class.java)
 
-
-
         itfViewModel.getProgramacionById(programacionId).observe(viewLifecycleOwner, {
             if (it != null) {
                 p = it

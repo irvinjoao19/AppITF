@@ -57,7 +57,6 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     private var tipoMedico: Int = 0
     private var estado: Int = 0
     lateinit var s: SolMedico
-//    var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

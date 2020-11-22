@@ -15,7 +15,7 @@ abstract class TabLayoutAdapter {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> GeneralFragment.newInstance(id, sid, usuarioId, e)
+                0 -> GeneralFragment.newInstance(id, sid, usuarioId,t, e)
                 1 -> DireccionFragment.newInstance(id, sid, usuarioId, t, e)
                 else -> Fragment()
             }

@@ -1078,6 +1078,23 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
+    override fun insertSolMedicoCabInit(c: SolMedico): Completable {
+        return Completable.fromAction {
+            c.usuarioId = dataBase.usuarioDao().getUsuarioId()
+            val a: SolMedico? = dataBase.solMedicoDao().getSolMedicoByIdTask(c.solMedicoId)
+            if (a == null) {
+                c.estado = 3
+                c.descripcionEstado = "Completar Formulario"
+                c.fechaInicio = Util.getFirstDay()
+                c.fechaFinal = Util.getLastaDay()
+                dataBase.solMedicoDao().insertMedicoTask(c)
+            } else {
+
+                dataBase.solMedicoDao().updateMedicoTask(c)
+            }
+        }
+    }
+
     override fun insertSolMedicoCab(c: SolMedico): Completable {
         return Completable.fromAction {
             val list = dataBase.medicoDao().getMedicosInactivos(c.solMedicoId)
@@ -1094,7 +1111,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 } else {
                     dataBase.solMedicoDao().updateMedicoTask(c)
                 }
-
             }
         }
     }
@@ -1107,6 +1123,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getDireccionById(id: Int): LiveData<MedicoDireccion> {
         return dataBase.medicoDireccionDao().getDireccionById(id)
+    }
+
+    override fun deleteSolMedico(m: SolMedico): Completable {
+        return Completable.fromAction {
+            val l: List<Medico>? = dataBase.medicoDao().getMedicoBySolIdTask(m.solMedicoId)
+            if (l != null) {
+                for (m1: Medico in l) {
+                    dataBase.medicoDireccionDao().deleteDireccionesById(m1.medicoId)
+                }
+                dataBase.medicoDao().deleteMedicoById(m.solMedicoId)
+            }
+            dataBase.solMedicoDao().deleteMedicoTask(m)
+        }
     }
 
     override fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>> {
@@ -1493,12 +1522,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 return@fromAction
             }
             dataBase.programacionDetDao().updateProgramacionDetTask(p)
-        }
-    }
-
-    override fun closeProgramacion(programacionId: Int): Completable {
-        return Completable.fromAction {
-            dataBase.programacionDao().closeProgramcion(programacionId)
         }
     }
 

@@ -8,6 +8,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -117,6 +118,21 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         adapterSol = SolMedicoAdapter(object : OnItemClickListener.SolMedicoListener {
             override fun onItemClick(m: SolMedico, view: View, position: Int) {
+                if (m.estado == 3) {
+                    val popupMenu = PopupMenu(context!!, view)
+                    popupMenu.menu.add(0, 1, 0, getText(R.string.ver))
+                    popupMenu.menu.add(0, 2, 0, getText(R.string.delete))
+                    popupMenu.setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            1 -> goActivity(m)
+                            2 -> deleteSolMedico(m)
+                        }
+                        false
+                    }
+                    popupMenu.show()
+                    return
+                }
+
                 val title = when (tipoMedico) {
                     1 -> "Modificar Médico"
                     else -> "Aprobar o Rechazar Médico"
@@ -181,6 +197,36 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         fabAdd.setOnClickListener(this)
         fabSave.setOnClickListener(this)
         //refreshLayout.setOnRefreshListener(this)
+    }
+
+    private fun deleteSolMedico(m: SolMedico) {
+        val dialog = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Mensaje")
+            .setMessage(String.format("Deseas eliminar formulario incompleto ?."))
+            .setPositiveButton("Si") { dialog, _ ->
+                itfViewModel.deleteSolMedico(m)
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+        dialog.show()
+    }
+
+    private fun goActivity(m: SolMedico) {
+        val title = when (tipoMedico) {
+            1 -> "Modificar Médico"
+            else -> "Aprobar o Rechazar Médico"
+        }
+        startActivity(
+            Intent(context, FormActivity::class.java)
+                .putExtra("title", title)
+                .putExtra("tipo", tipo)
+                .putExtra("id", m.solMedicoId)
+                .putExtra("uId", m.usuarioId)
+                .putExtra("tipoMedico", m.tipo)
+                .putExtra("estado", m.estadoSol)
+        )
     }
 
     private fun load() {

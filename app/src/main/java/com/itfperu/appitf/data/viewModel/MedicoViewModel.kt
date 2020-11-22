@@ -102,6 +102,19 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         }
     }
 
+    fun insertSolMedicoInit(c: SolMedico) {
+        roomRepository.insertSolMedicoCabInit(c)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Ok"
+                }
+            })
+    }
+
 
     fun validateSolMedico(c: SolMedico) {
         insertSolMedico(c)
@@ -397,5 +410,19 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getSolMedicoCab(solMedicoId: Int): LiveData<SolMedico> {
         return roomRepository.getSolMedicoCab(solMedicoId)
+    }
+
+    fun deleteSolMedico(m: SolMedico) {
+        roomRepository.deleteSolMedico(m)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    mensajeError.value = "Eliminado"
+                }
+
+                override fun onError(e: Throwable) {}
+            })
     }
 }

@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
+import com.itfperu.appitf.data.local.model.Programacion
 import com.itfperu.appitf.data.local.model.ProgramacionDet
 import com.itfperu.appitf.data.local.model.Stock
 import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
@@ -42,17 +43,12 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 dialogProducto(0)
             } else
                 itfViewModel.setError("Completar el primer formulario.")
-            R.id.fabSave -> if (estado == 13) {
-                when (cantidad) {
+            R.id.fabSave -> when (estado) {
+                13 -> when (cantidad) {
                     0 -> itfViewModel.setError("Debes de agregar un producto")
-                    else -> {
-                        load()
-                        itfViewModel.closeProgramacion(programacionId)
-                    }
+                    else -> formProgramacion()
                 }
-            } else {
-                load()
-                itfViewModel.closeProgramacion(programacionId)
+                else -> formProgramacion()
             }
         }
     }
@@ -61,15 +57,18 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: ProgramacionViewModel
     lateinit var builder: AlertDialog.Builder
+    lateinit var p: Programacion
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var programacionId: Int = 0
     private var validacion: Int = 0
-    private var estado: Int = 0 // si el estado es diferente de 13 no se necesita agregar producto
+    private var estado: Int =
+        0 // si el estado es diferente de 13 no se necesita agregar producto
     private var cantidad: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        p = Programacion()
         arguments?.let {
             programacionId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
@@ -93,6 +92,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.getProgramacionById(programacionId).observe(viewLifecycleOwner, {
             if (it != null) {
+                p = it
                 if (it.estadoProgramacion == 24 && it.active == 0) {
                     fabMenu.visibility = View.GONE
                     return@observe
@@ -100,7 +100,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 validacion = it.active
                 estado = it.resultadoVisitaId
 
-                if (it.active != 0){
+                if (it.active != 0) {
                     fabSave.visibility = View.VISIBLE
                 }
             }
@@ -123,7 +123,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             cantidad = it.size
             productoAdapter.addItems(it)
         })
-        itfViewModel.mensajeSinConexion.observe(viewLifecycleOwner,{
+        itfViewModel.mensajeSinConexion.observe(viewLifecycleOwner, {
             closeLoad()
             Util.toastMensaje(context!!, it)
             activity!!.finish()
@@ -287,6 +287,12 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 dialog!!.dismiss()
             }
         }
+    }
+
+    private fun formProgramacion() {
+        load()
+        p.active = 1
+        itfViewModel.validateProgramacion(p)
     }
 
     companion object {

@@ -187,9 +187,11 @@ interface AppRepository {
     fun getMedicoId(): LiveData<Int>
     fun getSolMedicoId(): LiveData<Int>
     fun deleteMedico(m: Medico): Completable
+    fun insertSolMedicoCabInit(c: SolMedico): Completable
     fun insertSolMedicoCab(c: SolMedico): Completable
     fun deleteDireccion(m: MedicoDireccion): Completable
     fun getDireccionById(id: Int): LiveData<MedicoDireccion>
+    fun deleteSolMedico(m: SolMedico): Completable
 
     fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>>
     fun insertTargets(p: List<TargetM>): Completable
@@ -249,7 +251,6 @@ interface AppRepository {
     fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet>
     fun getStocks(): LiveData<List<Stock>>
     fun insertProgramacionDet(p: ProgramacionDet): Completable
-    fun closeProgramacion(programacionId: Int): Completable
     fun deleteProgramacionDet(p: ProgramacionDet): Completable
 
 

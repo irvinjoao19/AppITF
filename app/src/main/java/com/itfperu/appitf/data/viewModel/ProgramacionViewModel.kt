@@ -238,8 +238,13 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Seleccione Hora Programación"
             return
         }
-        p.estadoProgramacion = 23
-        p.descripcionEstado = "Programado"
+
+        if (p.active == 2) {
+            p.descripcionEstado = "Cerrar formulario"
+        } else {
+            p.estadoProgramacion = 23
+            p.descripcionEstado = "Programado"
+        }
 
         if (p.fechaReporteProgramacion.isNotEmpty()) {
             if (p.descripcionResultado.isEmpty()) {
@@ -257,8 +262,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 mensajeError.value = "Seleccione Hora Reporte"
                 return
             }
-            p.estadoProgramacion = 24
-            p.descripcionEstado = "Ejecutado"
+
+            if (p.active == 1) {
+                p.estadoProgramacion = 24
+                p.descripcionEstado = "Ejecutado"
+            }
         }
         insertProgramacion(p)
     }
@@ -270,7 +278,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
-                    mensajeSuccess.value = "Actualizado"
+                    if (p.active == 2) {
+                        mensajeSuccess.value = "Actualizado"
+                    } else {
+                        sendProgramacionById(p.programacionId)
+                    }
                 }
 
                 override fun onError(e: Throwable) {
@@ -322,22 +334,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
                     mensajeProducto.value = "Guardado"
-                }
-
-                override fun onError(e: Throwable) {
-                    mensajeError.value = e.message
-                }
-            })
-    }
-
-    fun closeProgramacion(programacionId: Int) {
-        roomRepository.closeProgramacion(programacionId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    sendProgramacionById(programacionId)
                 }
 
                 override fun onError(e: Throwable) {
@@ -427,7 +423,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun syncProgramacionPerfilDetalle(medicoId: Int, s: String) {
-        roomRepository.syncProgramacionPerfilDetalle(medicoId,s)
+        roomRepository.syncProgramacionPerfilDetalle(medicoId, s)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<ProgramacionPerfilDetalle>> {

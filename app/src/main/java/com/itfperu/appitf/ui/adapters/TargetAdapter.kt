@@ -50,7 +50,7 @@ class TargetAdapter() :
                 textView1.text = p.nombreUsuario
                 textView2.text = String.format("Cat : %s", p.descripcionCategoria)
                 textView3.text = String.format("Esp : %s", p.descripcionEspecialidad)
-                textView4.text = String.format("Cant : %s", p.numeroContactos)
+                textView4.text = String.format("Cont : %s", p.numeroContactos)
                 textView5.text = String.format("Estado : %s", p.estado)
             }
     }

@@ -30,6 +30,7 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
 private const val ARG_PARAM4 = "param4"
+private const val ARG_PARAM5 = "param5"
 
 class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
@@ -41,7 +42,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             R.id.editTextEspecialidad2 -> spinnerDialog(4, "Especialidad 2")
             R.id.editTextFechaN -> Util.getDateDialog(context!!, editTextFechaN)
             R.id.editTextSexo -> spinnerDialog(5, "Sexo")
-            R.id.fabGenerate -> formValidateMedico()
+            R.id.fabGenerate -> formGenerateCabecera()
         }
     }
 
@@ -49,20 +50,24 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: MedicoViewModel
     lateinit var m: Medico
+    lateinit var s: SolMedico
     private var solMedicoId: Int = 0
     private var medicoId: Int = 0
     private var usuarioId: Int = 0
     private var estado: Int = 0
+    private var tipoMedico: Int = 0
     private var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        s = SolMedico()
         m = Medico()
         arguments?.let {
             medicoId = it.getInt(ARG_PARAM1)
             solMedicoId = it.getInt(ARG_PARAM2)
             usuarioId = it.getInt(ARG_PARAM3)
-            estado = it.getInt(ARG_PARAM4)
+            tipoMedico = it.getInt(ARG_PARAM4)
+            estado = it.getInt(ARG_PARAM5)
         }
     }
 
@@ -102,6 +107,12 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             }
         })
 
+        itfViewModel.getSolMedicoCab(solMedicoId).observe(viewLifecycleOwner, {
+            if (it != null) {
+                s = it
+            }
+        })
+
         editTextIdentificador.setOnClickListener(this)
         editTextCategoria.setOnClickListener(this)
         editTextEspecialidad.setOnClickListener(this)
@@ -118,6 +129,10 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             Util.toastMensaje(context!!, it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
+            if (it == "Ok") {
+                formValidateMedico()
+                return@observe
+            }
             viewPager?.currentItem = 1
             Util.toastMensaje(context!!, it)
         })
@@ -141,6 +156,20 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         m.estado = 10
         m.active = 2
         itfViewModel.validateMedico(m)
+    }
+
+    private fun formGenerateCabecera() {
+        s.usuario = String.format(
+            "%s - %s %s %s",
+            editTextCMP.text.toString(), editTextNombre.text.toString(),
+            editTextApellidoP.text.toString(), editTextApellidoM.text.toString()
+        )
+        s.estadoSol = 11
+        s.solMedicoId = solMedicoId
+        s.usuarioId = usuarioId
+        s.fecha = Util.getFecha()
+        s.tipo = tipoMedico
+        itfViewModel.insertSolMedicoInit(s)
     }
 
     private fun spinnerDialog(tipo: Int, title: String) {
@@ -244,13 +273,14 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int) =
+        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int, param5: Int) =
             GeneralFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)
                     putInt(ARG_PARAM3, param3)
                     putInt(ARG_PARAM4, param4)
+                    putInt(ARG_PARAM5, param5)
                 }
             }
     }

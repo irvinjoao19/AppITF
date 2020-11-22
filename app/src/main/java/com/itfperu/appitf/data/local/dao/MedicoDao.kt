@@ -85,4 +85,7 @@ interface MedicoDao {
 
     @Query("SELECT * FROM Medico WHERE identity =:i")
     fun getMedicoOffLineByIdTask(i: Int): Medico
+
+    @Query("DELETE FROM Medico WHERE medicoSolId =:id")
+    fun deleteMedicoById(id: Int)
 }
