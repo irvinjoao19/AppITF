@@ -82,7 +82,7 @@ class TargetFragment : DaggerFragment() {
         recyclerView.adapter = adapter
 
         itfViewModel.setLoading(true)
-        itfViewModel.syncTarget(usuarioId, 0, 0, 0)
+        itfViewModel.syncTarget(usuarioId, 0, 0, 0, "")
 
 
         itfViewModel.getTargets().observe(viewLifecycleOwner, {
@@ -132,6 +132,7 @@ class TargetFragment : DaggerFragment() {
         val editTextCategoria: TextInputEditText = v.findViewById(R.id.editTextCategoria)
         val editTextEspecialidad: TextInputEditText = v.findViewById(R.id.editTextEspecialidad)
         val editTextContacto: TextInputEditText = v.findViewById(R.id.editTextContacto)
+        val editTextMedico: TextInputEditText = v.findViewById(R.id.editTextMedico)
         val fabSearch: ExtendedFloatingActionButton = v.findViewById(R.id.fabSearch)
 
         builder.setView(v)
@@ -145,12 +146,13 @@ class TargetFragment : DaggerFragment() {
             spinnerDialog(2, "Especialidad", editTextEspecialidad, f)
         }
         fabSearch.setOnClickListener {
+            f.search = editTextMedico.text.toString()
             when {
                 editTextContacto.text.toString().isEmpty() -> f.pageSize = 0
                 else -> f.pageSize = editTextContacto.text.toString().toInt()
             }
             itfViewModel.setLoading(true)
-            itfViewModel.syncTarget(usuarioId, f.categorias, f.especialidad, f.pageSize)
+            itfViewModel.syncTarget(usuarioId, f.categorias, f.especialidad, f.pageSize, f.search)
             dialog.dismiss()
         }
     }

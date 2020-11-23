@@ -83,6 +83,7 @@ interface ApiService {
         @Query("c") c: Int, // categoria
         @Query("e") e: Int, // especialidad
         @Query("n") n: Int,  // nro contacto
+        @Query("s") s: String,  // busqueda
     ): Observable<List<TargetM>>
 
     @Headers("Cache-Control: no-cache")

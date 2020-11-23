@@ -193,7 +193,8 @@ interface AppRepository {
     fun getDireccionById(id: Int): LiveData<MedicoDireccion>
     fun deleteSolMedico(m: SolMedico): Completable
 
-    fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>>
+    fun clearTarget(): Completable
+    fun syncTarget(u: Int, c: Int, e: Int, n: Int,s:String): Observable<List<TargetM>>
     fun insertTargets(p: List<TargetM>): Completable
     fun getTargets(): LiveData<List<TargetM>>
 

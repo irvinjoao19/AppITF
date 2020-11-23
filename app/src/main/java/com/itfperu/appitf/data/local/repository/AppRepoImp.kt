@@ -1138,8 +1138,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun syncTarget(u: Int, c: Int, e: Int, n: Int): Observable<List<TargetM>> {
-        return apiService.getTargets(u, c, e, n)
+    override fun clearTarget(): Completable {
+        return Completable.fromAction {
+            dataBase.targetDao().deleteAll()
+        }
+    }
+
+    override fun syncTarget(u: Int, c: Int, e: Int, n: Int, s: String): Observable<List<TargetM>> {
+        return apiService.getTargets(u, c, e, n, s)
     }
 
     override fun insertTargets(p: List<TargetM>): Completable {

@@ -53,37 +53,40 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         rejas.value = null
     }
 
-    fun syncTarget(u: Int, c: Int, e: Int, n: Int) {
-        roomRepository.syncTarget(u, c, e, n)
-            .delay(1000, TimeUnit.MILLISECONDS)
+    fun syncTarget(u: Int, c: Int, e: Int, n: Int, s: String) {
+        roomRepository.clearTarget()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<List<TargetM>> {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
-                override fun onNext(t: List<TargetM>) {
-                    insertTargets(t)
-                }
-
-                override fun onError(t: Throwable) {
-                    if (t is HttpException) {
-                        val body = t.response().errorBody()
-                        try {
-                            val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
-                        } catch (e1: IOException) {
-                            e1.printStackTrace()
-                        }
-                    } else {
-                        mensajeError.postValue(t.message)
-                    }
-                    loading.value = false
-                }
-
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onError(e: Throwable) {}
                 override fun onComplete() {
+                    roomRepository.syncTarget(u, c, e, n, s)
+                        .delay(1000, TimeUnit.MILLISECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object : Observer<List<TargetM>> {
+                            override fun onSubscribe(d: Disposable) {}
+                            override fun onComplete() {}
+                            override fun onNext(t: List<TargetM>) {
+                                insertTargets(t)
+                            }
 
+                            override fun onError(t: Throwable) {
+                                if (t is HttpException) {
+                                    val body = t.response().errorBody()
+                                    try {
+                                        val error = retrofit.errorConverter.convert(body!!)
+                                        mensajeError.postValue(error.Message)
+                                    } catch (e1: IOException) {
+                                        e1.printStackTrace()
+                                    }
+                                } else {
+                                    mensajeError.postValue(t.message)
+                                }
+                                loading.value = false
+                            }
+                        })
                 }
             })
     }
@@ -353,12 +356,16 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun getCheckMedicos(tipoTarget:String,u:Int): LiveData<PagedList<Medico>> {
+    fun getCheckMedicos(tipoTarget: String, u: Int): LiveData<PagedList<Medico>> {
         return Transformations.switchMap(searchMedico) { input ->
             if (input == null || input.isEmpty()) {
-                roomRepository.getCheckMedicos(tipoTarget,u)
+                roomRepository.getCheckMedicos(tipoTarget, u)
             } else {
-                roomRepository.getCheckMedicos(tipoTarget,u,String.format("%s%s%s", "%", input, "%"))
+                roomRepository.getCheckMedicos(
+                    tipoTarget,
+                    u,
+                    String.format("%s%s%s", "%", input, "%")
+                )
             }
         }
     }
@@ -444,7 +451,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun syncProgramacionPerfilDetalle(medicoId: Int, s: String) {
-        roomRepository.syncProgramacionPerfilDetalle(medicoId,s)
+        roomRepository.syncProgramacionPerfilDetalle(medicoId, s)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<ProgramacionPerfilDetalle>> {
