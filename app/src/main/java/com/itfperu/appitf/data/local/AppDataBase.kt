@@ -41,7 +41,7 @@ import com.itfperu.appitf.data.local.model.*
         PuntoContacto::class
     ],
     views = [Nombre::class],
-    version = 70, // version 1 en play store
+    version = 71, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -63,7 +63,6 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun estadoDao(): EstadoDao
     abstract fun duracionDao(): DuracionDao
     abstract fun solMedicoDao(): SolMedicoDao
-
     abstract fun medicoDao(): MedicoDao
     abstract fun medicoDireccionDao(): MedicoDireccionDao
     abstract fun identificadorDao(): IdentificadorDao

@@ -30,6 +30,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     val mensajeError = MutableLiveData<String>()
     val mensajeSinConexion = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
+    val mensajeInfo = MutableLiveData<String>()
     val mensajeProducto = MutableLiveData<String>()
     val loading = MutableLiveData<Boolean>()
     val search: MutableLiveData<String> = MutableLiveData()
@@ -47,6 +48,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun setLoading(s: Boolean) {
         loading.value = s
+    }
+
+    fun setInfo() {
+        mensajeInfo.value = null
     }
 
     fun setPerfiles() {
@@ -377,12 +382,12 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeInfo.postValue(error.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
                     } else {
-                        mensajeError.postValue(t.message)
+                        mensajeInfo.postValue(t.message)
                     }
                 }
 
@@ -409,12 +414,12 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeInfo.postValue(error.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
                     } else {
-                        mensajeError.postValue(t.message)
+                        mensajeInfo.postValue(t.message)
                     }
                 }
 

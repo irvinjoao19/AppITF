@@ -47,7 +47,7 @@ class TargetAdapter() :
                         ContextCompat.getColor(itemView.context, R.color.colorWhite)
                     )
                 }
-                textView1.text = p.nombreUsuario
+                textView1.text = String.format("%s - %s", p.cmpMedico, p.nombreUsuario)
                 textView2.text = String.format("Cat : %s", p.descripcionCategoria)
                 textView3.text = String.format("Esp : %s", p.descripcionEspecialidad)
                 textView4.text = String.format("Cont : %s", p.numeroContactos)

@@ -30,11 +30,12 @@ open class Medico {
     var nombreEspecialidad: String = ""
     var nombreEspecialidad2: String = ""
     var identity: Int = 0
-    var isSelected:Boolean = false
-    var visitadoPor : String = ""
-    var direccion : String = ""
+    var isSelected: Boolean = false
+    var visitadoPor: String = ""
+    var direccion: String = ""
+    var nombreCompleto: String = ""
 
-    var active : Int = 0 // 1 -> para guardar , 2 -> por completar
+    var active: Int = 0 // 1 -> para guardar , 2 -> por completar
 
     @Ignore
     var direcciones: List<MedicoDireccion>? = null

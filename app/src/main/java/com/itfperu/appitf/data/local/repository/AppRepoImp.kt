@@ -9,6 +9,7 @@ import com.itfperu.appitf.data.local.AppDataBase
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
+import com.itfperu.appitf.data.local.dao.*
 import com.itfperu.appitf.helper.MensajeDetalle
 import com.itfperu.appitf.helper.MensajeDetalleDet
 import com.itfperu.appitf.helper.Util
@@ -66,40 +67,69 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun deleteSesion(): Completable {
         return Completable.fromAction {
-            dataBase.actividadDao().deleteAll()
-            dataBase.categoriaDao().deleteAll()
-            dataBase.cicloDao().deleteAll()
-            dataBase.controlDao().deleteAll()
-            dataBase.duracionDao().deleteAll()
-            dataBase.especialidadDao().deleteAll()
-            dataBase.estadoDao().deleteAll()
+            dataBase.usuarioDao().deleteAll()
+            dataBase.accesosDao().deleteAll()
+            dataBase.perfilDao().deleteAll()
+            dataBase.monedaDao().deleteAll()
             dataBase.feriadoDao().deleteAll()
-            dataBase.identificadorDao().deleteAll()
+            dataBase.categoriaDao().deleteAll()
+            dataBase.especialidadDao().deleteAll()
+            dataBase.productoDao().deleteAll()
+            dataBase.tipoProductoDao().deleteAll()
+            dataBase.visitaDao().deleteAll()
+            dataBase.controlDao().deleteAll()
+            dataBase.personalDao().deleteAll()
+            dataBase.cicloDao().deleteAll()
+            dataBase.actividadDao().deleteAll()
+            dataBase.estadoDao().deleteAll()
+            dataBase.duracionDao().deleteAll()
+            dataBase.solMedicoDao().deleteAll()
             dataBase.medicoDao().deleteAll()
             dataBase.medicoDireccionDao().deleteAll()
-            dataBase.monedaDao().deleteAll()
-            dataBase.perfilDao().deleteAll()
-            dataBase.personalDao().deleteAll()
-            dataBase.productoDao().deleteAll()
-            dataBase.programacionDao().deleteAll()
-
-            dataBase.solMedicoDao().deleteAll()
+            dataBase.identificadorDao().deleteAll()
             dataBase.targetDao().deleteAll()
             dataBase.targetCabDao().deleteAll()
             dataBase.targetDetDao().deleteAll()
             dataBase.targetInfoDao().deleteAll()
-            dataBase.tipoProductoDao().deleteAll()
             dataBase.ubigeoDao().deleteAll()
-            dataBase.usuarioDao().deleteAll()
-            dataBase.visitaDao().deleteAll()
             dataBase.programacionDao().deleteAll()
             dataBase.programacionDetDao().deleteAll()
+            dataBase.stockDao().deleteAll()
+            dataBase.nuevaDireccionDao().deleteAll()
+            dataBase.puntoContactoDao().deleteAll()
         }
     }
 
     override fun deleteSync(): Completable {
         return Completable.fromAction {
-
+            dataBase.perfilDao().deleteAll()
+            dataBase.monedaDao().deleteAll()
+            dataBase.feriadoDao().deleteAll()
+            dataBase.categoriaDao().deleteAll()
+            dataBase.especialidadDao().deleteAll()
+            dataBase.productoDao().deleteAll()
+            dataBase.tipoProductoDao().deleteAll()
+            dataBase.visitaDao().deleteAll()
+            dataBase.controlDao().deleteAll()
+            dataBase.personalDao().deleteAll()
+            dataBase.cicloDao().deleteAll()
+            dataBase.actividadDao().deleteAll()
+            dataBase.estadoDao().deleteAll()
+            dataBase.duracionDao().deleteAll()
+            dataBase.solMedicoDao().deleteAll()
+            dataBase.medicoDao().deleteAll()
+            dataBase.medicoDireccionDao().deleteAll()
+            dataBase.identificadorDao().deleteAll()
+            dataBase.targetDao().deleteAll()
+            dataBase.targetCabDao().deleteAll()
+            dataBase.targetDetDao().deleteAll()
+            dataBase.targetInfoDao().deleteAll()
+            dataBase.ubigeoDao().deleteAll()
+            dataBase.programacionDao().deleteAll()
+            dataBase.programacionDetDao().deleteAll()
+            dataBase.stockDao().deleteAll()
+            dataBase.nuevaDireccionDao().deleteAll()
+            dataBase.puntoContactoDao().deleteAll()
         }
     }
 

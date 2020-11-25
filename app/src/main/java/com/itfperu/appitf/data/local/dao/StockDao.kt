@@ -19,7 +19,7 @@ interface StockDao {
     @Delete
     fun deleteStockTask(c: Stock)
 
-    @Query("SELECT * FROM Stock")
+    @Query("SELECT * FROM Stock ORDER BY descripcion ASC")
     fun getStocks(): LiveData<List<Stock>>
 
     @Query("SELECT * FROM Stock WHERE codigoProducto=:cod")

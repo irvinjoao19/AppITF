@@ -150,34 +150,41 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-
     fun sync(u: Int) {
-        roomRepository.getSync(u)
-            .delay(1000, TimeUnit.MILLISECONDS)
+        roomRepository.deleteSync()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Sync> {
+            .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
-                override fun onNext(t: Sync) {
-                    insertSync(t)
-                }
+                override fun onError(e: Throwable) {}
+                override fun onComplete() {
+                    roomRepository.getSync(u)
+                        .delay(1000, TimeUnit.MILLISECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object : Observer<Sync> {
+                            override fun onSubscribe(d: Disposable) {}
+                            override fun onComplete() {}
+                            override fun onNext(t: Sync) {
+                                insertSync(t)
+                            }
 
-                override fun onError(e: Throwable) {
-                    if (e is HttpException) {
-                        val body = e.response().errorBody()
-                        try {
-                            val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
-                        } catch (e1: IOException) {
-                            e1.printStackTrace()
-                            Log.i("TAG", e1.toString())
-                        }
-                    } else {
-                        mensajeError.postValue(e.toString())
-                    }
+                            override fun onError(e: Throwable) {
+                                if (e is HttpException) {
+                                    val body = e.response().errorBody()
+                                    try {
+                                        val error = retrofit.errorConverter.convert(body!!)
+                                        mensajeError.postValue(error.Message)
+                                    } catch (e1: IOException) {
+                                        e1.printStackTrace()
+                                        Log.i("TAG", e1.toString())
+                                    }
+                                } else {
+                                    mensajeError.postValue(e.toString())
+                                }
+                            }
+                        })
                 }
-
-                override fun onComplete() {}
             })
     }
 

@@ -62,16 +62,16 @@ interface MedicoDao {
     @Query("UPDATE Medico SET isSelected=:b")
     fun enabledMedicoSelected(b: Boolean)
 
-    @Query("SELECT * FROM Medico WHERE estado = 1")
+    @Query("SELECT * FROM Medico WHERE estado = 1 ORDER BY apellidoP,apellidoM,nombreMedico ASC")
     fun getCheckMedicos(): DataSource.Factory<Int, Medico>
 
-    @Query("SELECT * FROM Medico WHERE usuarioId =:u")
+    @Query("SELECT * FROM Medico WHERE usuarioId =:u ORDER BY apellidoP,apellidoM,nombreMedico ASC")
     fun getCheckMedicos(u: Int): DataSource.Factory<Int, Medico>
 
-    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s ) AND estado = 1")
+    @Query("SELECT * FROM Medico WHERE (nombreCompleto LIKE :s  OR cpmMedico LIKE :s ) AND estado = 1 ORDER BY apellidoP,apellidoM,nombreMedico ASC")
     fun getCheckMedicos(s: String): DataSource.Factory<Int, Medico>
 
-    @Query("SELECT * FROM Medico WHERE (nombreMedico LIKE :s OR apellidoP LIKE :s OR apellidoM LIKE :s OR cpmMedico LIKE :s )  AND usuarioId =:u ")
+    @Query("SELECT * FROM Medico WHERE (nombreCompleto LIKE :s  OR cpmMedico LIKE :s )  AND usuarioId =:u ORDER BY apellidoP,apellidoM,nombreMedico ASC")
     fun getCheckMedicos(s: String, u: Int): DataSource.Factory<Int, Medico>
 
     @Query("UPDATE Medico SET active = 1 WHERE medicoId=:id")

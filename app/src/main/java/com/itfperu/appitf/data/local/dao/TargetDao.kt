@@ -34,6 +34,6 @@ interface TargetDao {
     @Query("SELECT targetId FROM TargetM")
     fun getTargetIdTask(): Int
 
-    @Query("SELECT * FROM TargetM")
+    @Query("SELECT * FROM TargetM ORDER BY nombreUsuario ASC")
     fun getTargets(): LiveData<List<TargetM>>
 }

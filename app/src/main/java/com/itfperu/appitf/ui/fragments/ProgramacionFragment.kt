@@ -282,15 +282,17 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
         imageViewClose.setOnClickListener {
             dialog.dismiss()
         }
+
+        itfViewModel.setInfo()
         itfViewModel.setPerfiles()
         itfViewModel.syncProgramacionPerfil(p.medicoId)
 
         val mTableAdapter =
             TablePerfilAdapter(context, object : OnItemClickListener.ProgramacionPerfilListener {
                 override fun onItemClick(s: String) {
-                    if (!Util.isNumeric(s)){
-                        if (s != "Total"){
-                            dialogPerfilDetalle(p.medicoId,s)
+                    if (!Util.isNumeric(s)) {
+                        if (s != "Total") {
+                            dialogPerfilDetalle(p.medicoId, s)
                         }
                     }
                 }
@@ -326,34 +328,33 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
                         tableView.visibility = View.VISIBLE
                         linearLayoutLoad.visibility = View.GONE
                         linearLayoutPrincipal.visibility = View.VISIBLE
-//                        dialog.window!!.setLayout(1000, 500)
-                    } else {
-                        dialog.dismiss()
                     }
                 })
             }, 800)
         }
+
+        itfViewModel.mensajeInfo.observe(viewLifecycleOwner, {
+            if (it != null) {
+                Util.toastMensaje(context!!, it)
+                dialog.dismiss()
+            }
+        })
     }
 
     private fun dialogPerfilDetalle(medicoId: Int, s: String) {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val view =
             LayoutInflater.from(context).inflate(R.layout.dialog_perfil_detalle, null)
-        val linearLayoutLoad: ConstraintLayout = view.findViewById(R.id.linearLayoutLoad)
-        val linearLayoutPrincipal: ConstraintLayout = view.findViewById(R.id.linearLayoutPrincipal)
-        val imageViewClose: ImageView = view.findViewById(R.id.imageViewClose)
         val tableView: TableView = view.findViewById(R.id.tableView)
+        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
 
         builder.setView(view)
         val dialog = builder.create()
         dialog.show()
 
-        imageViewClose.setOnClickListener {
-            dialog.dismiss()
-        }
-
+        progressBar.visibility = View.VISIBLE
         itfViewModel.setRejas()
-        itfViewModel.syncProgramacionPerfilDetalle(medicoId,s)
+        itfViewModel.syncProgramacionPerfilDetalle(medicoId, s)
 
         val mTableAdapter =
             TableDetalleAdapter(context)
@@ -364,11 +365,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
                 itfViewModel.detalles.observe(this, { p ->
                     if (p != null) {
                         mTableAdapter.setUserList(p)
-                        tableView.visibility = View.VISIBLE
-                        linearLayoutLoad.visibility = View.GONE
-                        linearLayoutPrincipal.visibility = View.VISIBLE
-                    } else {
-                        dialog.dismiss()
+                        progressBar.visibility = View.GONE
                     }
                 })
             }, 800)
@@ -391,7 +388,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
         imageViewClose.setOnClickListener {
             dialog.dismiss()
         }
-
+        itfViewModel.setInfo()
         itfViewModel.setRejas()
         itfViewModel.syncProgramacionReja(p.especialidadId)
 
@@ -408,11 +405,15 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
                         tableView.visibility = View.VISIBLE
                         linearLayoutLoad.visibility = View.GONE
                         linearLayoutPrincipal.visibility = View.VISIBLE
-                    } else {
-                        dialog.dismiss()
                     }
                 })
             }, 800)
         }
+        itfViewModel.mensajeInfo.observe(viewLifecycleOwner, {
+            if (it != null) {
+                Util.toastMensaje(context!!, it)
+                dialog.dismiss()
+            }
+        })
     }
 }
