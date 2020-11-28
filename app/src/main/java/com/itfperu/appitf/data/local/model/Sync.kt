@@ -12,5 +12,4 @@ open class Sync {
     var ubigeos: List<Ubigeo> = ArrayList()
     var medicos: List<Medico> = ArrayList()
     var visitas: List<Visita> = ArrayList()
-    var stocks: List<Stock> = ArrayList()
 }

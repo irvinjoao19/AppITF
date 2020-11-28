@@ -286,7 +286,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                     if (p.active == 2) {
                         mensajeSuccess.value = "Actualizado"
                     } else {
-                        sendProgramacionById(p.programacionId)
+                        mensajeSuccess.value = "Guardado"
                     }
                 }
 
@@ -328,11 +328,55 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             return
         }
 
-        insertProgramacionDet(p)
+        verificateProgramacionDet(p)
     }
 
-    private fun insertProgramacionDet(p: ProgramacionDet) {
-        roomRepository.insertProgramacionDet(p)
+    private fun verificateProgramacionDet(p: ProgramacionDet) {
+        roomRepository.verificateProgramacionDet(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {
+                    sendProgramacionDet(p)
+                }
+
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
+            })
+    }
+
+    private fun sendProgramacionDet(p: ProgramacionDet) {
+        roomRepository.sendProgramacionDet(p)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onNext(t: Mensaje) {
+                    insertProgramacionDet(p, t)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+
+                override fun onComplete() {}
+            })
+    }
+
+    private fun insertProgramacionDet(p: ProgramacionDet, m: Mensaje) {
+        roomRepository.insertProgramacionDet(p, m)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -348,17 +392,40 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun deleteProgramacionDet(p: ProgramacionDet) {
-        roomRepository.deleteProgramacionDet(p)
+        roomRepository.sendDeleteProgramacionDet(p.identity)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : CompletableObserver {
+            .subscribe(object : Observer<Mensaje> {
                 override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {
-                    mensajeSuccess.value = "Eliminado"
+                override fun onComplete() {}
+                override fun onNext(t: Mensaje) {
+                    roomRepository.deleteProgramacionDet(p)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object : CompletableObserver {
+                            override fun onSubscribe(d: Disposable) {}
+                            override fun onComplete() {
+                                mensajeSuccess.value = "Eliminado"
+                            }
+
+                            override fun onError(e: Throwable) {
+                                mensajeError.value = e.message
+                            }
+                        })
                 }
 
-                override fun onError(e: Throwable) {
-                    mensajeError.value = e.message
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
                 }
             })
     }
@@ -456,6 +523,47 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onComplete() {}
+            })
+    }
+
+    fun syncProductos() {
+        roomRepository.synsProductos()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<List<Stock>> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+                override fun onError(t: Throwable) {
+                    rejas.value = null
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeInfo.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeInfo.postValue(t.message)
+                    }
+                }
+
+                override fun onNext(t: List<Stock>) {
+                    insertProductoStocks(t)
+                }
+            })
+    }
+
+    private fun insertProductoStocks(s: List<Stock>) {
+        roomRepository.insertProductoStocks(s)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : CompletableObserver {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+                override fun onError(e: Throwable) {
+                    mensajeError.value = e.message
+                }
             })
     }
 }

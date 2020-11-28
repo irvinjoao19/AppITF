@@ -87,6 +87,8 @@ class EditPerfilFragment : DaggerFragment(), View.OnClickListener {
                 editTextCodigo.setText(it.codigo)
                 editTextCodigo.isEnabled = false
                 editTextNombre.setText(it.descripcion)
+                editTextCuotaFrecuencia.setText(it.cuotaFrecuencia.toString())
+                editTextCuotaCobertura.setText(it.cuotaCobertura.toString())
                 editTextEstado.setText(it.estado)
             }
         })
@@ -111,6 +113,15 @@ class EditPerfilFragment : DaggerFragment(), View.OnClickListener {
         p.descripcion = editTextNombre.text.toString()
         p.estado = editTextEstado.text.toString()
         p.usuarioId = usuarioId
+
+        when {
+            editTextCuotaFrecuencia.text.toString().isEmpty() -> p.cuotaFrecuencia = 0
+            else -> p.cuotaFrecuencia = editTextCuotaFrecuencia.text.toString().toInt()
+        }
+        when {
+            editTextCuotaCobertura.text.toString().isEmpty() -> p.cuotaCobertura = 0
+            else -> p.cuotaCobertura = editTextCuotaCobertura.text.toString().toInt()
+        }
         load()
         itfViewModel.validatePerfil(p)
     }

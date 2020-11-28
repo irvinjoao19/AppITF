@@ -124,16 +124,13 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             productoAdapter.addItems(it)
         })
         itfViewModel.mensajeSinConexion.observe(viewLifecycleOwner, {
-            closeLoad()
             Util.toastMensaje(context!!, it)
             activity!!.finish()
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            closeLoad()
             Util.toastMensaje(context!!, it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            closeLoad()
             Util.toastMensaje(context!!, it)
             if (it == "Guardado") {
                 activity!!.finish()
@@ -207,9 +204,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         })
     }
 
-    private fun spinnerDialog(
-        p: ProgramacionDet, vista: View
-    ) {
+    private fun spinnerDialog(p: ProgramacionDet, vista: View) {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val v =
             LayoutInflater.from(context).inflate(R.layout.dialog_combo, null)
@@ -229,11 +224,11 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             )
         )
         textViewTitulo.text = String.format("Productos")
-
         val editTextProducto: TextInputEditText = vista.findViewById(R.id.editTextProducto)
         val editTextLote: TextInputEditText = vista.findViewById(R.id.editTextLote)
         val editTextStock: TextInputEditText = vista.findViewById(R.id.editTextStock)
 
+        itfViewModel.syncProductos()
         val stockAdapter =
             ComboStockAdapter(object : OnItemClickListener.StockListener {
                 override fun onItemClick(s: Stock, view: View, position: Int) {
@@ -268,29 +263,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         dialog.show()
     }
 
-    private fun load() {
-        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
-        @SuppressLint("InflateParams") val view =
-            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
-        builder.setView(view)
-        val textViewTitle: TextView = view.findViewById(R.id.textView)
-        textViewTitle.text = String.format("Enviando..")
-        dialog = builder.create()
-        dialog!!.setCanceledOnTouchOutside(false)
-        dialog!!.setCancelable(false)
-        dialog!!.show()
-    }
-
-    private fun closeLoad() {
-        if (dialog != null) {
-            if (dialog!!.isShowing) {
-                dialog!!.dismiss()
-            }
-        }
-    }
-
     private fun formProgramacion() {
-        load()
         p.active = 1
         itfViewModel.validateProgramacion(p)
     }

@@ -150,6 +150,10 @@ interface ApiService {
     ): Observable<List<PuntoContacto>>
 
     @Headers("Cache-Control: no-cache")
+    @GET("Stock")
+    fun getStocks(): Observable<List<Stock>>
+
+    @Headers("Cache-Control: no-cache")
     @GET("AlertaActividad")
     fun getAlertaActividad(
         @Query("c") c: Int,
@@ -216,6 +220,14 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveProgramacion")
     fun sendProgramacion(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveProgramacionDet")
+    fun sendProgramacionDet(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("DeleteProgramacionDet")
+    fun sendDeleteProgramacionDet(@Query("id") id: Int): Observable<Mensaje>
 
     @Headers("Cache-Control: no-cache")
     @POST("SaveNuevaDireccion")

@@ -12,4 +12,6 @@ open class Perfil {
     var estado: String = ""
     var estadoId : Int = 0
     var usuarioId : Int = 0
+    var cuotaFrecuencia : Int = 0
+    var cuotaCobertura : Int = 0
 }

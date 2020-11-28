@@ -154,7 +154,7 @@ interface AppRepository {
     fun updateEnabledActividad(t: Mensaje): Completable
     fun getNombreUsuario(): LiveData<String>
     fun getActividades(u: Int, c: Int, e: Int, t: Int): LiveData<List<Actividad>>
-    fun getAlertaActividad(cicloId: Int, medicoId: Int, usuarioId: Int) :Observable<Mensaje>
+    fun getAlertaActividad(cicloId: Int, medicoId: Int, usuarioId: Int): Observable<Mensaje>
 
     //Medico
     fun clearSolMedico(): Completable
@@ -179,7 +179,7 @@ interface AppRepository {
     fun getProvincias(cod: String): LiveData<List<Ubigeo>>
     fun getDistritos(cod: String, cod2: String): LiveData<List<Ubigeo>>
     fun getMedicos(): LiveData<List<Medico>>
-    fun getMedicosByEstado(e:Int): LiveData<List<Medico>>
+    fun getMedicosByEstado(e: Int): LiveData<List<Medico>>
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
     fun insertDireccion(m: MedicoDireccion): Completable
@@ -194,7 +194,7 @@ interface AppRepository {
     fun deleteSolMedico(m: SolMedico): Completable
 
     fun clearTarget(): Completable
-    fun syncTarget(u: Int, c: Int, e: Int, n: Int,s:String): Observable<List<TargetM>>
+    fun syncTarget(u: Int, c: Int, e: Int, n: Int, s: String): Observable<List<TargetM>>
     fun insertTargets(p: List<TargetM>): Completable
     fun getTargets(): LiveData<List<TargetM>>
 
@@ -251,9 +251,11 @@ interface AppRepository {
     fun getProgramacionesDetById(programacionId: Int): LiveData<List<ProgramacionDet>>
     fun getProgramacionDetById(id: Int): LiveData<ProgramacionDet>
     fun getStocks(): LiveData<List<Stock>>
-    fun insertProgramacionDet(p: ProgramacionDet): Completable
+    fun verificateProgramacionDet(p: ProgramacionDet): Completable
+    fun sendProgramacionDet(p: ProgramacionDet): Observable<Mensaje>
+    fun insertProgramacionDet(p: ProgramacionDet,t:Mensaje): Completable
+    fun sendDeleteProgramacionDet(id:Int) : Observable<Mensaje>
     fun deleteProgramacionDet(p: ProgramacionDet): Completable
-
 
     fun syncDireccion(
         u: Int,
@@ -283,9 +285,12 @@ interface AppRepository {
 
     fun syncPuntoContacto(u: Int, fi: String, ff: String): Observable<List<PuntoContacto>>
     fun insertPuntoContactos(p: List<PuntoContacto>): Completable
-    fun getPuntoContactos(f:String): LiveData<List<PuntoContacto>>
+    fun getPuntoContactos(f: String): LiveData<List<PuntoContacto>>
     fun getPuntoContactoTask(): Observable<List<PuntoContacto>>
     fun sendPuntoContacto(body: RequestBody): Observable<Mensaje>
     fun updateEnabledPuntoContacto(t: Mensaje): Completable
     fun insertPuntoContacto(p: PuntoContacto): Completable
+
+    fun synsProductos(): Observable<List<Stock>>
+    fun insertProductoStocks(s: List<Stock>): Completable
 }

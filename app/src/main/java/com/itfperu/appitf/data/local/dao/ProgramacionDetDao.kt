@@ -40,6 +40,9 @@ interface ProgramacionDetDao {
     @Query("SELECT * FROM ProgramacionDet WHERE identity=:id")
     fun getProgramacionDetOffLineByIdTask(id: Int): ProgramacionDet
 
-    @Query("UPDATE ProgramacionDet SET identity =:detalleRetornoId , active = 0 WHERE programacionDetId=:detalleBaseId")
-    fun updateEnabledProgramacionDet(detalleBaseId: Int, detalleRetornoId: Int)
+//    @Query("UPDATE ProgramacionDet SET identity =:detalleRetornoId , active = 0 WHERE programacionDetId=:detalleBaseId")
+//    fun updateEnabledProgramacionDet(detalleBaseId: Int, detalleRetornoId: Int)
+
+    @Query("UPDATE ProgramacionDet SET active = 0 WHERE programacionId=:detalleBaseId")
+    fun updateEnabledProgramacionDet(detalleBaseId: Int)
 }

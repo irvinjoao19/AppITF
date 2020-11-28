@@ -41,7 +41,7 @@ import com.itfperu.appitf.data.local.model.*
         PuntoContacto::class
     ],
     views = [Nombre::class],
-    version = 71, // version 1 en play store
+    version = 72, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {

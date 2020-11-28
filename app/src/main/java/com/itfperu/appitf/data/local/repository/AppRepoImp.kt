@@ -9,7 +9,6 @@ import com.itfperu.appitf.data.local.AppDataBase
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
-import com.itfperu.appitf.data.local.dao.*
 import com.itfperu.appitf.helper.MensajeDetalle
 import com.itfperu.appitf.helper.MensajeDetalleDet
 import com.itfperu.appitf.helper.Util
@@ -188,10 +187,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             val v1: List<Visita>? = s.visitas
             if (v1 != null) {
                 dataBase.visitaDao().insertVisitaListTask(v1)
-            }
-            val v2: List<Stock>? = s.stocks
-            if (v2 != null) {
-                dataBase.stockDao().insertStockListTask(v2)
             }
         }
     }
@@ -1460,11 +1455,11 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 e.onComplete()
                 return@create
             }
-            for (r: Programacion in data) {
-                r.productos =
-                    dataBase.programacionDetDao().getProgramacionesByIdTask(r.programacionId)
-                a.add(r)
-            }
+//            for (r: Programacion in data) {
+//                r.productos =
+//                    dataBase.programacionDetDao().getProgramacionesByIdTask(r.programacionId)
+//                a.add(r)
+//            }
             e.onNext(a)
             e.onComplete()
         }
@@ -1487,13 +1482,17 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun updateEnabledProgramacion(t: Mensaje): Completable {
         return Completable.fromAction {
             dataBase.programacionDao().updateEnabledProgramacion(t.codigoBase, t.codigoRetorno)
-            val d: List<MensajeDetalle>? = t.detalle
-            if (d != null) {
-                for (m: MensajeDetalle in d) {
-                    dataBase.programacionDetDao()
-                        .updateEnabledProgramacionDet(m.detalleBaseId, m.detalleRetornoId)
-                }
-            }
+
+            dataBase.programacionDetDao()
+                .updateEnabledProgramacionDet(t.codigoBase)
+
+//            val d: List<MensajeDetalle>? = t.detalle
+//            if (d != null) {
+//                for (m: MensajeDetalle in d) {
+//                    dataBase.programacionDetDao()
+//                        .updateEnabledProgramacionDet(m.detalleBaseId, m.detalleRetornoId)
+//                }
+//            }
         }
     }
 
@@ -1541,7 +1540,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.stockDao().getStocks()
     }
 
-    override fun insertProgramacionDet(p: ProgramacionDet): Completable {
+    override fun verificateProgramacionDet(p: ProgramacionDet): Completable {
         return Completable.fromAction {
             val validate: ProgramacionDet? =
                 dataBase.programacionDetDao()
@@ -1551,6 +1550,20 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                     error("Ingrese otro numero de orden")
                 }
             }
+        }
+    }
+
+    override fun sendProgramacionDet(p: ProgramacionDet): Observable<Mensaje> {
+        val json = Gson().toJson(p)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.sendProgramacionDet(body)
+    }
+
+    override fun insertProgramacionDet(p: ProgramacionDet, t: Mensaje): Completable {
+        return Completable.fromAction {
+            p.identity = t.codigoRetorno
+
             val cab: ProgramacionDet? =
                 dataBase.programacionDetDao().getProgramacionByIdTask(p.programacionDetId)
             if (cab == null) {
@@ -1559,6 +1572,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             }
             dataBase.programacionDetDao().updateProgramacionDetTask(p)
         }
+    }
+
+    override fun sendDeleteProgramacionDet(id: Int): Observable<Mensaje> {
+        return apiService.sendDeleteProgramacionDet(id)
     }
 
     override fun deleteProgramacionDet(p: ProgramacionDet): Completable {
@@ -1715,6 +1732,16 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun insertPuntoContacto(p: PuntoContacto): Completable {
         return Completable.fromAction {
             dataBase.puntoContactoDao().updatePuntoContactoTask(p)
+        }
+    }
+
+    override fun synsProductos(): Observable<List<Stock>> {
+        return apiService.getStocks()
+    }
+
+    override fun insertProductoStocks(s: List<Stock>): Completable {
+        return Completable.fromAction {
+            dataBase.stockDao().insertStockListTask(s)
         }
     }
 }
