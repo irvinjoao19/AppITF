@@ -96,6 +96,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             dataBase.stockDao().deleteAll()
             dataBase.nuevaDireccionDao().deleteAll()
             dataBase.puntoContactoDao().deleteAll()
+            dataBase.rptGeneralDao().deleteAll()
+            dataBase.rptDiarioDao().deleteAll()
         }
     }
 
@@ -129,6 +131,8 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             dataBase.stockDao().deleteAll()
             dataBase.nuevaDireccionDao().deleteAll()
             dataBase.puntoContactoDao().deleteAll()
+            dataBase.rptGeneralDao().deleteAll()
+            dataBase.rptDiarioDao().deleteAll()
         }
     }
 
@@ -1455,11 +1459,11 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 e.onComplete()
                 return@create
             }
-//            for (r: Programacion in data) {
+            for (r: Programacion in data) {
 //                r.productos =
 //                    dataBase.programacionDetDao().getProgramacionesByIdTask(r.programacionId)
-//                a.add(r)
-//            }
+                a.add(r)
+            }
             e.onNext(a)
             e.onComplete()
         }
@@ -1735,13 +1739,101 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun synsProductos(): Observable<List<Stock>> {
-        return apiService.getStocks()
+    override fun synsProductos(u: Int): Observable<List<Stock>> {
+        return apiService.getStocks(u)
     }
 
     override fun insertProductoStocks(s: List<Stock>): Completable {
         return Completable.fromAction {
             dataBase.stockDao().insertStockListTask(s)
         }
+    }
+
+    override fun clearStockMantenimiento(): Completable {
+        return Completable.fromAction {
+            dataBase.stockMantenimientoDao().deleteAll()
+        }
+    }
+
+    override fun syncStockMantenimiento(u: Int, c: Int): Observable<List<StockMantenimiento>> {
+        return apiService.getStockMantenimiento(u, c)
+    }
+
+    override fun insertStockMantenimientos(p: List<StockMantenimiento>): Completable {
+        return Completable.fromAction {
+            dataBase.stockMantenimientoDao().insertStockMantenimientoListTask(p)
+        }
+    }
+
+    override fun getStockMantenimientos(): LiveData<List<StockMantenimiento>> {
+        return dataBase.stockMantenimientoDao().getStockMantenimiento()
+    }
+
+    override fun syncRRMMGeneral(c: Int, u: Int): Observable<List<RptGeneral>> {
+        return apiService.getRRMMGeneral(c, u)
+    }
+
+    override fun syncRRMMDiario(c: Int, u: Int): Observable<List<RptDiario>> {
+        return apiService.getRRMMDiario(c, u)
+    }
+
+    override fun clearRptGeneral(): Completable {
+        return Completable.fromAction {
+            dataBase.rptGeneralDao().deleteAll()
+        }
+    }
+
+    override fun clearRptDiario(): Completable {
+        return Completable.fromAction {
+            dataBase.rptDiarioDao().deleteAll()
+        }
+    }
+
+    override fun insertRptGeneral(g: List<RptGeneral>): Completable {
+        return Completable.fromAction {
+            for (p: RptGeneral in g) {
+                val id = dataBase.rptGeneralDao().getMaxIdRpt()
+                p.id = if (id == 0) 1 else id + 1
+                dataBase.rptGeneralDao().insertRptGeneralTask(p)
+            }
+        }
+    }
+
+    override fun insertRptDiario(g: List<RptDiario>): Completable {
+        return Completable.fromAction {
+            for (p: RptDiario in g) {
+                val id = dataBase.rptDiarioDao().getMaxIdRpt()
+                p.id = if (id == 0) 1 else id + 1
+                dataBase.rptDiarioDao().insertRptDiarioTask(p)
+            }
+        }
+    }
+
+    override fun syncSUPGeneral(c: Int, u: Int): Observable<List<RptGeneral>> {
+        return apiService.getSUPGeneral(c, u)
+    }
+
+    override fun syncSUPDiario(c: Int, u: Int): Observable<List<RptDiario>> {
+        return apiService.getSUPDiario(c, u)
+    }
+
+    override fun getRptGeneralCabecera(): LiveData<RptGeneral> {
+        return dataBase.rptGeneralDao().getRptGeneralCabecera()
+    }
+
+    override fun getRptGeneral(): LiveData<List<RptGeneral>> {
+        return dataBase.rptGeneralDao().getRptGeneral()
+    }
+
+    override fun getRptDiarioCabecera(): LiveData<RptDiario> {
+        return dataBase.rptDiarioDao().getRptDiarioCabecera()
+    }
+
+    override fun getRptDiario(): LiveData<List<RptDiario>> {
+        return dataBase.rptDiarioDao().getRptDiario()
+    }
+
+    override fun verificateVisitaMedico(medicoId: Int, fecha: String): Observable<Mensaje> {
+        return apiService.getVerificateVisitaMedico(medicoId, fecha)
     }
 }

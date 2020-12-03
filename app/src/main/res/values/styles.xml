@@ -55,4 +55,10 @@
         <item name="android:background">@color/colorTrans</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
+
+    <style name="estilo_celda">
+        <item name="android:typeface">normal</item>
+        <item name="android:textColor">@color/textoColor</item>
+        <item name="android:textSize">10sp</item>
+    </style>
 </resources>

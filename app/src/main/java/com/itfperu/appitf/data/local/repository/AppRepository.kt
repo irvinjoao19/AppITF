@@ -253,8 +253,8 @@ interface AppRepository {
     fun getStocks(): LiveData<List<Stock>>
     fun verificateProgramacionDet(p: ProgramacionDet): Completable
     fun sendProgramacionDet(p: ProgramacionDet): Observable<Mensaje>
-    fun insertProgramacionDet(p: ProgramacionDet,t:Mensaje): Completable
-    fun sendDeleteProgramacionDet(id:Int) : Observable<Mensaje>
+    fun insertProgramacionDet(p: ProgramacionDet, t: Mensaje): Completable
+    fun sendDeleteProgramacionDet(id: Int): Observable<Mensaje>
     fun deleteProgramacionDet(p: ProgramacionDet): Completable
 
     fun syncDireccion(
@@ -291,6 +291,30 @@ interface AppRepository {
     fun updateEnabledPuntoContacto(t: Mensaje): Completable
     fun insertPuntoContacto(p: PuntoContacto): Completable
 
-    fun synsProductos(): Observable<List<Stock>>
+    fun synsProductos(u: Int): Observable<List<Stock>>
     fun insertProductoStocks(s: List<Stock>): Completable
+
+    fun clearStockMantenimiento(): Completable
+    fun syncStockMantenimiento(u: Int, c: Int): Observable<List<StockMantenimiento>>
+    fun insertStockMantenimientos(p: List<StockMantenimiento>): Completable
+    fun getStockMantenimientos(): LiveData<List<StockMantenimiento>>
+
+    fun syncRRMMGeneral(c: Int, u: Int): Observable<List<RptGeneral>>
+    fun syncRRMMDiario(c: Int, u: Int): Observable<List<RptDiario>>
+
+    fun clearRptGeneral(): Completable
+    fun clearRptDiario(): Completable
+    fun insertRptGeneral(g: List<RptGeneral>): Completable
+    fun insertRptDiario(g: List<RptDiario>): Completable
+    fun syncSUPGeneral(c: Int, u: Int): Observable<List<RptGeneral>>
+    fun syncSUPDiario(c: Int, u: Int): Observable<List<RptDiario>>
+    fun getRptGeneralCabecera(): LiveData<RptGeneral>
+    fun getRptGeneral(): LiveData<List<RptGeneral>>
+    fun getRptDiarioCabecera(): LiveData<RptDiario>
+    fun getRptDiario(): LiveData<List<RptDiario>>
+
+    fun verificateVisitaMedico(medicoId: Int, fecha: String): Observable<Mensaje>
+
+
+
 }

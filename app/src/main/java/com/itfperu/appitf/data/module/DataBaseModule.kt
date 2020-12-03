@@ -173,8 +173,26 @@ class DataBaseModule {
     internal fun provideNuevaDireccionDao(appDataBase: AppDataBase): NuevaDireccionDao {
         return appDataBase.nuevaDireccionDao()
     }
+
     @Provides
     internal fun providePuntoContactoDao(appDataBase: AppDataBase): PuntoContactoDao {
         return appDataBase.puntoContactoDao()
     }
+
+    @Provides
+    internal fun provideStockMantenimientoDao(appDataBase: AppDataBase): StockMantenimientoDao {
+        return appDataBase.stockMantenimientoDao()
+    }
+
+    @Provides
+    internal fun provideRptGeneralDao(appDataBase: AppDataBase): RptGeneralDao {
+        return appDataBase.rptGeneralDao()
+    }
+
+    @Provides
+    internal fun provideRptDiarioDao(appDataBase: AppDataBase): RptDiarioDao {
+        return appDataBase.rptDiarioDao()
+    }
+
+
 }

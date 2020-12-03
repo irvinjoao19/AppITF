@@ -316,7 +316,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
                 recyclerView.adapter = cicloAdapter
                 itfViewModel.getCiclos().observe(viewLifecycleOwner, {
                     if (it.isNullOrEmpty()) {
-                        itfViewModel.setError("Datos vacios favor de sincronizar Visita Medica")
+                        itfViewModel.setError("Datos vacios favor de sincronizar.")
                     }
                     cicloAdapter.addItems(it)
                 })
@@ -351,7 +351,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
                 recyclerView.adapter = estadoAdapter
                 itfViewModel.getEstados("tbl_Actividades").observe(viewLifecycleOwner, {
                     if (it.isNullOrEmpty()) {
-                        itfViewModel.setError("Datos vacios favor de sincronizar Visita Medica")
+                        itfViewModel.setError("Datos vacios favor de sincronizar.")
                     }
                     estadoAdapter.addItems(it)
                 })

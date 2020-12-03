@@ -44,6 +44,13 @@ class PuntoContactoAdapter(private var listener: OnItemClickListener.PuntoContac
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
+
+                if (p.estadoId == 31) {
+                    view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorPrimary)
+                    )
+                }
+
                 textView1.text = p.descripcion
                 textView2.text = String.format("Fecha: %s", p.fechaPuntoContacto)
                 textView3.text = String.format("Estado: %s", p.descripcionEstado)

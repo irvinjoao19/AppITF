@@ -202,4 +202,5 @@
     <color name="separator_color">#273e5b</color>
 
     <color name="popup_menu_item_text_color">#88a5c9</color>
+    <color name="celdaCabecera">#cccccc</color>
 </resources>

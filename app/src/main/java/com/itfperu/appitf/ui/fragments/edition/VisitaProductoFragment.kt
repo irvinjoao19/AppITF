@@ -28,7 +28,6 @@ import com.itfperu.appitf.ui.adapters.ComboStockAdapter
 import com.itfperu.appitf.ui.adapters.ProgramacionDetAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.cardview_programacion_det.view.*
 import kotlinx.android.synthetic.main.fragment_visita_producto.*
 import javax.inject.Inject
 
@@ -56,9 +55,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: ProgramacionViewModel
-    lateinit var builder: AlertDialog.Builder
     lateinit var p: Programacion
-    private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var programacionId: Int = 0
     private var validacion: Int = 0
@@ -181,10 +178,13 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             m.descripcionProducto = editTextProducto.text.toString()
             m.programacionId = programacionId
             m.lote = editTextLote.text.toString()
-            when {
-                editTextStock.text.toString().isEmpty() -> m.stock = 0
-                else -> m.stock = editTextStock.text.toString().toInt()
+
+            if (editTextStock.text.toString().isEmpty()) {
+                Util.toastMensaje(context!!, "Ingrese Cantidad")
+                return@setOnClickListener
             }
+            m.stock = editTextStock.text.toString().toInt()
+
             when {
                 editTextCantidad.text.toString().isEmpty() -> m.cantidad = 0
                 else -> m.cantidad = editTextCantidad.text.toString().toInt()
@@ -228,7 +228,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         val editTextLote: TextInputEditText = vista.findViewById(R.id.editTextLote)
         val editTextStock: TextInputEditText = vista.findViewById(R.id.editTextStock)
 
-        itfViewModel.syncProductos()
+        itfViewModel.syncProductos(usuarioId)
         val stockAdapter =
             ComboStockAdapter(object : OnItemClickListener.StockListener {
                 override fun onItemClick(s: Stock, view: View, position: Int) {

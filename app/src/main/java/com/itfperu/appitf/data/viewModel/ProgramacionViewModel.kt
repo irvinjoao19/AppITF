@@ -151,10 +151,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .delay(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
-                override fun onComplete() {
-                    mensajeSuccess.value = "Enviado"
-                }
-
+                override fun onComplete() {}
                 override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Mensaje) {
                     updateEnabledProgramacion(t)
@@ -182,7 +179,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {}
-                override fun onComplete() {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Guardado"
+                }
+
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message
                 }
@@ -207,7 +207,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
                 override fun onComplete() {
-                    mensajeSuccess.value = "Guardado"
+
                 }
 
                 override fun onSubscribe(d: Disposable) {}
@@ -273,7 +273,31 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 p.descripcionEstado = "Ejecutado"
             }
         }
-        insertProgramacion(p)
+
+        verificateVisitaMedico(p)
+    }
+
+    private fun verificateVisitaMedico(p: Programacion) {
+        roomRepository.verificateVisitaMedico(p.medicoId, p.fechaReporteProgramacion)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {
+
+                }
+
+                override fun onNext(t: Mensaje) {
+                    mensajeError.value = t.mensaje
+                }
+
+                override fun onError(e: Throwable) {
+                    insertProgramacion(p)
+                }
+
+                override fun onComplete() {
+
+                }
+            })
     }
 
     private fun insertProgramacion(p: Programacion) {
@@ -317,14 +341,12 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     }
 
     fun validateProgramacionDet(p: ProgramacionDet) {
-
         if (p.cantidad > p.stock) {
-            mensajeError.value = "Cantidad entregada no debe ser mayor a stock"
+            mensajeError.value = "Cantidad entregada no debe ser mayor a stock."
             return
         }
-
         if (p.ordenProgramacion == 0) {
-            mensajeError.value = "Cantidad entregada no debe ser mayor a stock"
+            mensajeError.value = "Ingrese orden."
             return
         }
 
@@ -526,8 +548,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun syncProductos() {
-        roomRepository.synsProductos()
+    fun syncProductos(u: Int) {
+        roomRepository.synsProductos(u)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<Stock>> {

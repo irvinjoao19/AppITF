@@ -120,6 +120,7 @@ interface OnItemClickListener {
     interface ProgramacionPerfilListener {
         fun onItemClick(s: String)
     }
+
     interface PuntoContactoListener {
         fun onItemClick(p: PuntoContacto, view: View, position: Int)
     }

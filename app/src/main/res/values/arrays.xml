@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cabecera_tabla">
+        <item>Cliente</item>
+        <item>Asignados</item>
+        <item>Ejecutados</item>
+        <item>Pendientes</item>
+        <item>No Efectivos</item>
+        <item>%</item>
+    </string-array>
+
+    <string-array name="table_detalle_operario">
+        <item>Operario</item>
+        <item>Asignado</item>
+        <item>Pendiente</item>
+        <item>Efectivo</item>
+        <item>%Efectivo</item>
+        <item>NOEfectivo</item>
+        <item>%NOEfectivo</item>
+        <item>HoraInicial</item>
+        <item>HoraFinal</item>
+        <item>TotalHora</item>
+
+    </string-array>
+
+
+    <string-array name="cabecera1">
+        <item>Codigo</item>
+        <item>Descripcion</item>
+        <item>Asignado</item>
+        <item>SinFoto</item>
+        <item>% Foto</item>
+        <item>ConFoto</item>
+        <item>% Foto </item>
+    </string-array>
+
+
+    <string-array name="distrito">
+        <item>Distrito</item>
+        <item>Asignado</item>
+        <item>Efectivo</item>
+        <item>NO Efectivo</item>
+        <item>%</item>
+        <item>Minimo</item>
+        <item>Maximo</item>
+        <item>Total Hora</item>
+        <item> Cantidad Operario</item>
+    </string-array>
+
+    <string-array name="operario">
+        <item>Codigo</item>
+        <item>Apellidos</item>
+        <item>Asignado</item>
+        <item>Asignado Dia</item>
+        <item>PendDia</item>
+        <item>Efectivo</item>
+        <item>Por Efectividad</item>
+        <item>NoEfectivo</item>
+        <item>Por no Efectividad</item>
+        <item>Foto</item>
+        <item>Por Foto</item>
+        <item>Minimo</item>
+        <item>Maximo</item>
+        <item>Total Hora</item>
+        <item>Fuera Hora</item>
+        <item>Prom Evento</item>
+    </string-array>
+</resources>

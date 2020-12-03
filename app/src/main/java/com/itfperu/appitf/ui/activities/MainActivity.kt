@@ -39,6 +39,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var builder: AlertDialog.Builder
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
+    private var tipo: Int  = 0
     private var logout: String = "off"
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -96,7 +97,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     navigationView.invalidate()
                 })
 
-                fragmentByDefault()
+                if (u.esSupervisorId == 0) {
+                    fragmentByDefault(ReporteFragment.newInstance(usuarioId, 0), "Reporte RR-MM")
+                } else {
+                    fragmentByDefault(ReporteFragment.newInstance(usuarioId, 1), "Reporte Supervisor")
+                }
+
                 message()
             } else {
                 goLogin()
@@ -180,8 +186,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Aprobación Direcciones" -> changeFragment(
                 DireccionesFragment.newInstance(usuarioId, 2), item.title.toString()
             )
-            "Punto Contacto" ->changeFragment(
+            "Punto Contacto" -> changeFragment(
                 PuntoContactoFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Stock" -> changeFragment(
+                StockFragment.newInstance(usuarioId), item.title.toString()
+            )
+            "Reporte diario"->changeFragment(
+                ReporteDiarioFragment.newInstance(usuarioId,tipo), item.title.toString()
             )
             "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
@@ -219,16 +231,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         supportActionBar!!.title = title
     }
 
-    private fun fragmentByDefault() {
+    private fun fragmentByDefault(f: Fragment, title: String) {
         supportFragmentManager
             .beginTransaction()
-            .replace(
-                R.id.content_frame,
-                MainFragment.newInstance("", "")
-            )
+            .replace(R.id.content_frame, f)
             .commit()
-        supportActionBar!!.title = "Menu Principal"
-//        navigationView.menu.getItem(1).isChecked = true
+        supportActionBar!!.title = title
     }
 
     private fun getUser(u: Usuario) {
@@ -236,6 +244,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         header.textViewName.text = u.nombre
         header.textViewEmail.text = u.email
         usuarioId = u.usuarioId
+        tipo = u.esSupervisorId
 
         header.textViewName.setOnClickListener { goPerfil() }
         header.textViewEmail.setOnClickListener { goPerfil() }

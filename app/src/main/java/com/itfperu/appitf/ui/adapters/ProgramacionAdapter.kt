@@ -43,6 +43,10 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                     card.setCardBackgroundColor(
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
+                } else {
+                    card.setCardBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorWhite)
+                    )
                 }
 
                 when (p.estadoProgramacion) {
@@ -56,7 +60,7 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                             itemView.context, R.color.colorWhiteBlue
                         )
                     )
-                    22 ->  view.setBackgroundColor(
+                    22 -> view.setBackgroundColor(
                         ContextCompat.getColor(
                             itemView.context, R.color.colorOrange
                         )
@@ -82,7 +86,13 @@ class ProgramacionAdapter(private var listener: OnItemClickListener.Programacion
                 textView7.text = p.descripcionEstado
 //                imgInfo.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 textViewReja.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
-                textViewPerfil.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
+                textViewPerfil.setOnClickListener { v ->
+                    listener.onItemClick(
+                        p,
+                        v,
+                        adapterPosition
+                    )
+                }
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }

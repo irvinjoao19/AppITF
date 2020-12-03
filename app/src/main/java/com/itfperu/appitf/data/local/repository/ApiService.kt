@@ -151,7 +151,7 @@ interface ApiService {
 
     @Headers("Cache-Control: no-cache")
     @GET("Stock")
-    fun getStocks(): Observable<List<Stock>>
+    fun getStocks(@Query("u") u: Int): Observable<List<Stock>>
 
     @Headers("Cache-Control: no-cache")
     @GET("AlertaActividad")
@@ -160,6 +160,15 @@ interface ApiService {
         @Query("m") m: Int,
         @Query("u") u: Int
     ): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("StockMantenimiento")
+    fun getStockMantenimiento(
+        @Query("u") u: Int,
+        @Query("c") c: Int
+    ): Observable<List<StockMantenimiento>>
+
+    //todo save
 
     @Headers("Cache-Control: no-cache")
     @POST("SaveCategoria")
@@ -236,4 +245,37 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SavePuntoContacto")
     fun sendPuntoContacto(@Body body: RequestBody): Observable<Mensaje>
+
+    //todo verificaciones
+    @Headers("Cache-Control: no-cache")
+    @GET("GetVerificateVisitaMedico")
+    fun getVerificateVisitaMedico(
+        @Query("m") m: Int, @Query("f") f: String
+    ): Observable<Mensaje>
+
+
+    // todo reporte
+    @Headers("Cache-Control: no-cache")
+    @GET("GetRRMMGeneral")
+    fun getRRMMGeneral(
+        @Query("c") c: Int, @Query("u") u: Int
+    ): Observable<List<RptGeneral>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("GetRRMMDiario")
+    fun getRRMMDiario(
+        @Query("c") c: Int, @Query("u") u: Int
+    ): Observable<List<RptDiario>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("GetSUPGeneral")
+    fun getSUPGeneral(
+        @Query("c") c: Int, @Query("u") u: Int
+    ): Observable<List<RptGeneral>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("GetSUPDiario")
+    fun getSUPDiario(
+        @Query("c") c: Int, @Query("u") u: Int
+    ): Observable<List<RptDiario>>
 }

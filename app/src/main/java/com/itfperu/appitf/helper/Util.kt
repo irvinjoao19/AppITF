@@ -671,7 +671,11 @@ object Util {
         datePickerDialog.show()
     }
 
-    fun getTextHTML(html: String): Spanned {
+    private fun getTextHTML(html: String): Spanned {
+//        textViewTotal.setText(
+//            Util.getTextHTML(String.format("%s %s", "<font color='#4CAF50'>Total</font> : ", b.showTotal())),
+//            TextView.BufferType.SPANNABLE
+//        )
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(html, Html.FROM_HTML_OPTION_USE_CSS_COLORS)
         } else {

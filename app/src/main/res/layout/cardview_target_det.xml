@@ -125,58 +125,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/imgInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="Perfil"
-            android:textColor="@color/colorRed"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/colorTrans"
-            app:layout_constraintBottom_toTopOf="@+id/imgAprobar"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/imgAprobar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:contentDescription="@string/img"
-            android:text="Aprobar"
-            android:visibility="gone"
-            app:backgroundTint="@color/colorBlue"
-            app:icon="@drawable/ic_check"
-            app:iconGravity="end"
-            app:layout_constraintBottom_toTopOf="@+id/imgRechazar"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/imgRechazar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:contentDescription="@string/img"
-            android:text="Rechazar"
-            android:visibility="gone"
-            app:backgroundTint="@color/colorRed"
-            app:icon="@drawable/ic_rechazar"
-            app:iconGravity="end"
-            app:layout_constraintBottom_toTopOf="@+id/imgPositive"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <TextView
             android:id="@+id/textViewC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:text="Nro Contactos"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_margin="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imgNegative"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imgNegative" />
 
         <EditText
@@ -218,5 +176,46 @@
             app:layout_constraintTop_toBottomOf="@+id/textView7"
             app:srcCompat="@drawable/ic_add"
             app:tint="@color/colorWhite" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/imgInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Perfil"
+            android:textColor="@color/colorRed"
+            app:backgroundTint="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/editTextCantidad" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/imgAprobar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/img"
+            android:text="Aprobar"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgRechazar"
+            app:layout_constraintStart_toEndOf="@+id/imgInfo"
+            app:layout_constraintTop_toBottomOf="@+id/editTextCantidad" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/imgRechazar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/img"
+            android:text="Rechazar"
+            android:visibility="gone"
+
+            app:backgroundTint="@color/colorRed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgAprobar"
+            app:layout_constraintTop_toBottomOf="@+id/editTextCantidad" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

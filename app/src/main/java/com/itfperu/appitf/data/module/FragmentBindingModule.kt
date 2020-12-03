@@ -62,6 +62,27 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providPuntoContactoFragment(): PuntoContactoFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providStockFragment(): StockFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteFragment(): ReporteFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteFechaFragment(): ReporteFechaFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteMesFragment(): ReporteMesFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteSubFechaFragment(): ReporteSubFechaFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteSubMesFragment(): ReporteSubMesFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providReporteDiarioFragment(): ReporteDiarioFragment
     }
 
     @Module

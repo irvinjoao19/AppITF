@@ -25,7 +25,8 @@
     <string name="tab1">General</string>
     <string name="tab2">Direcciones</string>
     <string name="tab3">Productos</string>
-
+    <string name="tab4">A la Fecha</string>
+    <string name="tab5">Mensual</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

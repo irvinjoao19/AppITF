@@ -87,6 +87,8 @@ dependencies {
 
 
     implementation 'com.evrencoskun.library:tableview:0.8.8'
+    implementation 'com.ekn.gruzer.gaugelibrary:gaugelibrary:0.2.2'
+//    implementation 'pl.pawelkleczkowski.customgauge:CustomGauge:1.0.4'
     //socket
     //implementation 'com.github.nkzawa:socket.io-client:0.5.0'
 
