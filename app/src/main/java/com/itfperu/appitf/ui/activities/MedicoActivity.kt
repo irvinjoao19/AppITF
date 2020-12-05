@@ -20,12 +20,13 @@ class MedicoActivity : DaggerAppCompatActivity() {
                 b.getInt("medicoId"),
                 b.getString("title")!!,
                 b.getInt("tipoMedico"),
-                b.getInt("estado")
+                b.getInt("estado"),
+                b.getInt("tipoEnvio")
             )
         }
     }
 
-    private fun bindUI(u: Int, sid: Int, id: Int, title: String, t: Int,e:Int) {
+    private fun bindUI(u: Int, sid: Int, id: Int, title: String, t: Int, e: Int, tipoEnvio: Int) {
         setSupportActionBar(toolbar)
         supportActionBar!!.title = title
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -37,7 +38,7 @@ class MedicoActivity : DaggerAppCompatActivity() {
 
         val tabLayoutAdapter =
             TabLayoutAdapter.MedicoForm(
-                supportFragmentManager, tabLayout.tabCount, sid, id, u,t,e
+                supportFragmentManager, tabLayout.tabCount, sid, id, u, t, e, tipoEnvio
             )
         viewPager.adapter = tabLayoutAdapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))

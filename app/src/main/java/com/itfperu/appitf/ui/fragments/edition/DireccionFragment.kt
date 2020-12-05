@@ -27,6 +27,7 @@ import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.cardview_medico_direccion.view.*
 import kotlinx.android.synthetic.main.fragment_direccion.*
+import kotlinx.android.synthetic.main.fragment_general.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -34,6 +35,7 @@ private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
 private const val ARG_PARAM4 = "param4"
 private const val ARG_PARAM5 = "param5"
+private const val ARG_PARAM6 = "param6"
 
 class DireccionFragment : DaggerFragment(), View.OnClickListener {
 
@@ -56,6 +58,8 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     private var solMedicoId: Int = 0
     private var tipoMedico: Int = 0
     private var estado: Int = 0
+    private var identity: Int = 0
+    private var tipoEnvio: Int = 0 //0-> sol medico,1 target solo actualizacion de medico
     lateinit var s: SolMedico
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +71,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             usuarioId = it.getInt(ARG_PARAM3)
             tipoMedico = it.getInt(ARG_PARAM4)
             estado = it.getInt(ARG_PARAM5)
+            tipoEnvio = it.getInt(ARG_PARAM6)
         }
     }
 
@@ -91,6 +96,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                     "%s - %s %s %s",
                     it.cpmMedico, it.nombreMedico, it.apellidoP, it.apellidoM
                 )
+                identity = it.identity
                 validacion = 1
             }
         })
@@ -117,7 +123,11 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         fabDireccion.setOnClickListener(this)
         fabSave.setOnClickListener(this)
 
-        if (estado == 12 || estado == 13 || estado == 100) {
+        if (tipoEnvio == 0) {
+            if (estado == 12 || estado == 13 || estado == 100) {
+                fabMenu.visibility = View.GONE
+            }
+        } else {
             fabMenu.visibility = View.GONE
         }
 
@@ -139,7 +149,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(p1: Int, p2: Int, p3: Int, p4: Int, p5: Int) =
+        fun newInstance(p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int) =
             DireccionFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, p1)
@@ -147,6 +157,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                     putInt(ARG_PARAM3, p3)
                     putInt(ARG_PARAM4, p4)
                     putInt(ARG_PARAM5, p5)
+                    putInt(ARG_PARAM6, p6)
                 }
             }
     }
@@ -179,14 +190,22 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                 editTextInstitucion.setText(it.institucion)
                 editTextDireccion.setText(it.direccion)
                 editTextReferencia.setText(it.referencia)
+            } else {
+                m.estado = 10
             }
         })
 
-        if (estado == 100 || estado == 12 || estado == 13) {
+        if (tipoMedico == 1) {
+            if (estado == 100 || estado == 12 || estado == 13) {
+                editTextDepartamento.isEnabled = false
+                editTextProvincia.isEnabled = false
+                editTextDistrito.isEnabled = false
+                fabDirection.visibility = View.GONE
+            }
+        } else {
             editTextDepartamento.isEnabled = false
             editTextProvincia.isEnabled = false
             editTextDistrito.isEnabled = false
-            fabDirection.visibility = View.GONE
         }
 
         editTextDepartamento.setOnClickListener {
@@ -207,8 +226,8 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
             m.institucion = editTextInstitucion.text.toString()
             m.direccion = editTextDireccion.text.toString()
             m.referencia = editTextReferencia.text.toString()
-            m.estado = 10
             m.active = 1
+            m.identity = identity
             if (itfViewModel.validateDireccion(m)) {
                 dialog.dismiss()
             }

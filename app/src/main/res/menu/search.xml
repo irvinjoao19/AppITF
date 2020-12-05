@@ -9,10 +9,10 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/ok"
-        android:icon="@drawable/ic_check"
-        android:orderInCategory="200"
-        android:title="@string/ok"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/ok"-->
+<!--        android:icon="@drawable/ic_check"-->
+<!--        android:orderInCategory="200"-->
+<!--        android:title="@string/ok"-->
+<!--        app:showAsAction="ifRoom" />-->
 </menu>

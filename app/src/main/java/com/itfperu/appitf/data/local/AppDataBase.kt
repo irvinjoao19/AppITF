@@ -45,7 +45,7 @@ import com.itfperu.appitf.data.local.model.*
 
     ],
     views = [Nombre::class],
-    version = 76, // version 1 en play store
+    version = 79, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {

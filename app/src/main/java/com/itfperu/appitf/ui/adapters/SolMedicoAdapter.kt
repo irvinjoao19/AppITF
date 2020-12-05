@@ -8,13 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.SolMedico
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
-import kotlinx.android.synthetic.main.cardview_actividad.view.*
 import kotlinx.android.synthetic.main.cardview_sol_medico.view.*
-import kotlinx.android.synthetic.main.cardview_sol_medico.view.card
-import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView1
-import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView2
-import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView4
-import kotlinx.android.synthetic.main.cardview_sol_medico.view.textView5
 
 class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListener) :
     RecyclerView.Adapter<SolMedicoAdapter.ViewHolder>() {
@@ -49,13 +43,26 @@ class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListen
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
-                textView1.text = p.usuario
-//                if (p.identity == 0) {
-//                    textView1.setTextColor(
-//                        ContextCompat.getColor(itemView.context, R.color.colorRed)
-//                    )
-//                }
 
+                when (p.estadoSol) {
+                    11 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                    14 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorYellow
+                        )
+                    )
+                    13 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorGreen
+                        )
+                    )
+                }
+
+                textView1.text = p.usuario
                 textView2.text = p.fecha
                 textView4.text = p.usuarioAprobador
                 textView5.text = p.descripcionEstado

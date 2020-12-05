@@ -141,7 +141,7 @@ interface AppRepository {
 
     //Actividad
     fun clearActividad(): Completable
-    fun syncActividad(u: Int, c: Int, e: Int, t: Int): Observable<List<Actividad>>
+    fun syncActividad(u: Int, c: Int, e: Int, t: Int,ul:Int): Observable<List<Actividad>>
     fun insertActividads(p: List<Actividad>): Completable
     fun sendActividad(body: RequestBody): Observable<Mensaje>
     fun insertActividad(c: Actividad): Completable
@@ -172,7 +172,7 @@ interface AppRepository {
     fun updateEnabledMedico(t: Mensaje): Completable
 
     fun getMedicoById(id: Int): LiveData<Medico>
-    fun insertMedico(m: Medico): Completable
+    fun insertMedico(m: Medico,t:Mensaje): Completable
     fun getIdentificadores(): LiveData<List<Identificador>>
 
     fun getDepartamentos(): LiveData<List<Ubigeo>>
@@ -182,7 +182,7 @@ interface AppRepository {
     fun getMedicosByEstado(e: Int): LiveData<List<Medico>>
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
-    fun insertDireccion(m: MedicoDireccion): Completable
+    fun insertDireccion(m: MedicoDireccion,t:Mensaje): Completable
     fun getMedicosById(solMedicoId: Int): LiveData<List<Medico>>
     fun getMedicoId(): LiveData<Int>
     fun getSolMedicoId(): LiveData<Int>
@@ -213,7 +213,7 @@ interface AppRepository {
     ): LiveData<List<TargetCab>>
 
     fun syncTargetCab(
-        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
+        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int,ul:Int
     ): Observable<List<TargetCab>>
 
     fun insertTargetsCab(p: List<TargetCab>): Completable
@@ -239,8 +239,8 @@ interface AppRepository {
     fun syncProgramacion(u: Int, c: Int): Observable<List<Programacion>>
     fun insertProgramacions(p: List<Programacion>): Completable
     fun getProgramacionTask(): Observable<List<Programacion>>
-    fun getProgramacionTaskById(id: Int): Observable<Programacion>
     fun sendProgramacion(body: RequestBody): Observable<Mensaje>
+    fun sendProgramacionOnline(p:Programacion): Observable<Mensaje>
     fun updateEnabledProgramacion(t: Mensaje): Completable
     fun getProgramaciones(): LiveData<List<Programacion>>
     fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
@@ -315,6 +315,9 @@ interface AppRepository {
 
     fun verificateVisitaMedico(medicoId: Int, fecha: String): Observable<Mensaje>
 
+    // nuevo
+    fun sendMedicoCabecera(m: Medico) : Observable<Mensaje>
+    fun sendMedicoDireccion(m: MedicoDireccion) : Observable<Mensaje>
 
 
 }

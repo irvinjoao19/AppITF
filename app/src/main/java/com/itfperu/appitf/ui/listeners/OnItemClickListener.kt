@@ -74,7 +74,7 @@ interface OnItemClickListener {
     }
 
     interface CheckMedicoListener {
-        fun onCheckedChanged(m: Medico, p: Int, b: Boolean)
+        fun onItemClick(m: Medico, p: Int, b: Boolean)
     }
 
     interface MedicoDireccionListener {

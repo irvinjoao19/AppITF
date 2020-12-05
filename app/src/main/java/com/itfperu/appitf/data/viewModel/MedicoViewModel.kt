@@ -214,11 +214,38 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Seleccione Sexo"
             return
         }
-        insertMedico(m)
+        sendMedicoCabecera(m)
     }
 
-    private fun insertMedico(m: Medico) {
-        roomRepository.insertMedico(m)
+    private fun sendMedicoCabecera(m: Medico) {
+        roomRepository.sendMedicoCabecera(m)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+                override fun onNext(t: Mensaje) {
+                    insertMedico(m, t)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+            })
+    }
+
+    private fun insertMedico(m: Medico, t: Mensaje) {
+        roomRepository.insertMedico(m, t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -286,12 +313,40 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Ingrese Dirección"
             return false
         }
-        insertDireccion(m)
+        sendMedicoDireccion(m)
         return true
     }
 
-    private fun insertDireccion(m: MedicoDireccion) {
-        roomRepository.insertDireccion(m)
+    private fun sendMedicoDireccion(m: MedicoDireccion) {
+        roomRepository.sendMedicoDireccion(m)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+
+                override fun onNext(t: Mensaje) {
+                    insertDireccion(m, t)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+            })
+    }
+
+    private fun insertDireccion(m: MedicoDireccion,t:Mensaje) {
+        roomRepository.insertDireccion(m,t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {

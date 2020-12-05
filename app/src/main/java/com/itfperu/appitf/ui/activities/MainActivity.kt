@@ -39,7 +39,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var builder: AlertDialog.Builder
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
-    private var tipo: Int  = 0
+    private var tipo: Int = 0
     private var logout: String = "off"
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -100,7 +100,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 if (u.esSupervisorId == 0) {
                     fragmentByDefault(ReporteFragment.newInstance(usuarioId, 0), "Reporte RR-MM")
                 } else {
-                    fragmentByDefault(ReporteFragment.newInstance(usuarioId, 1), "Reporte Supervisor")
+                    fragmentByDefault(
+                        ReporteFragment.newInstance(usuarioId, 1),
+                        "Reporte Supervisor"
+                    )
                 }
 
                 message()
@@ -163,7 +166,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 MedicosFragment.newInstance(usuarioId, 2), item.title.toString()
             )
             "Target" -> changeFragment(
-                TargetFragment.newInstance(usuarioId, 2), item.title.toString()
+                TargetFragment.newInstance(usuarioId, 2, 1), item.title.toString()
+            )
+            "Médicos" -> changeFragment(
+                TargetFragment.newInstance(usuarioId, 2, 2), item.title.toString()
             )
             "Altas" -> changeFragment(
                 TargetAltasFragment.newInstance(usuarioId, "A", 1), item.title.toString()
@@ -192,9 +198,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Stock" -> changeFragment(
                 StockFragment.newInstance(usuarioId), item.title.toString()
             )
-            "Reporte diario"->changeFragment(
-                ReporteDiarioFragment.newInstance(usuarioId,tipo), item.title.toString()
+            "Reporte diario" -> changeFragment(
+                ReporteDiarioFragment.newInstance(usuarioId, tipo), item.title.toString()
             )
+            "Inicio" -> if (tipo == 0) {
+                changeFragment(ReporteFragment.newInstance(usuarioId, 0), "Reporte RR-MM")
+            } else {
+                changeFragment(
+                    ReporteFragment.newInstance(usuarioId, 1),
+                    "Reporte Supervisor"
+                )
+            }
             "Descargar Información" -> dialogFunction(1, "Deseas Sincronizar ?")
             "Cerrar Sesión" -> dialogFunction(3, "Deseas Salir ?")
         }

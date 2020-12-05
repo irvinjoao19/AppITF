@@ -72,7 +72,8 @@ interface ApiService {
         @Query("u") u: Int, // usuario
         @Query("c") c: Int, // ciclo
         @Query("e") e: Int,  // estado
-        @Query("t") t: Int  // tipo
+        @Query("t") t: Int,  // tipo
+        @Query("ul") ul: Int,  // usuario Logeado
     ): Observable<List<Actividad>>
 
     @Headers("Cache-Control: no-cache")
@@ -95,6 +96,7 @@ interface ApiService {
         @Query("e") e: Int, // estado
         @Query("tt") tt: String,  // tipo target
         @Query("t") t: Int,  // tipo
+        @Query("ul") ul: Int,  // usuario logeado
     ): Observable<List<TargetCab>>
 
     @Headers("Cache-Control: no-cache")
@@ -221,6 +223,14 @@ interface ApiService {
     @Headers("Cache-Control: no-cache")
     @POST("SaveMedico")
     fun saveMedico(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveMedicoCabecera")
+    fun saveMedicoCabecera(@Body body: RequestBody): Observable<Mensaje>
+
+    @Headers("Cache-Control: no-cache")
+    @POST("SaveMedicoDireccion")
+    fun saveMedicoDireccion(@Body body: RequestBody): Observable<Mensaje>
 
     @Headers("Cache-Control: no-cache")
     @POST("SaveTarget")

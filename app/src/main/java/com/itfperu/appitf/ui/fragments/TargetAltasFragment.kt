@@ -156,7 +156,7 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             if (tipo == 1) usuarioId else 0,
             finicio, ffinal,
             if (tipo == 2) 16 else 0,
-            tipoTarget, tipo
+            tipoTarget, tipo, usuarioId
         )
         itfViewModel.search.value = Gson().toJson(f)
 
@@ -240,7 +240,8 @@ class TargetAltasFragment : DaggerFragment(), View.OnClickListener {
             f.ffinal = editTextHasta.text.toString()
             itfViewModel.setLoading(true)
             itfViewModel.syncTargetCab(
-                if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipoTarget, tipo
+                if (tipo == 1) usuarioId else 0,
+                f.finicio, f.ffinal, f.estadoId, tipoTarget, tipo, usuarioId
             )
             val search = Filtro(
                 if (tipo == 1) usuarioId else 0, f.finicio, f.ffinal, f.estadoId, tipo, tipoTarget

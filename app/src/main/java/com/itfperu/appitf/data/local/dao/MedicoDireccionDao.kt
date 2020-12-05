@@ -46,7 +46,7 @@ interface MedicoDireccionDao {
     @Query("SELECT COUNT(*) FROM MedicoDireccion WHERE medicoId =:id")
     fun getMedicoDirecciones(id: Int): Int
 
-    @Query("UPDATE MedicoDireccion SET identity =:codigoRetorno, active = 0 WHERE medicoDireccionId =:codigoBase")
+    @Query("UPDATE MedicoDireccion SET identityDetalle =:codigoRetorno, active = 0 WHERE medicoDireccionId =:codigoBase")
     fun updateEnabledDireccion(codigoBase: Int, codigoRetorno: Int)
 
     @Query("SELECT * FROM MedicoDireccion WHERE identity =:i")

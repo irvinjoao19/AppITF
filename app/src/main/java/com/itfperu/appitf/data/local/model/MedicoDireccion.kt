@@ -22,5 +22,6 @@ open class MedicoDireccion {
     var nombreDistrito: String = ""
 
     var identity: Int = 0
+    var identityDetalle:Int = 0
     var active : Int = 0 // 1 -> por enviar 0-> enviado
 }

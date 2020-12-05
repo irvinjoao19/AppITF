@@ -28,7 +28,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     ViewModel() {
 
     val mensajeError = MutableLiveData<String>()
-    val mensajeSinConexion = MutableLiveData<String>()
     val mensajeSuccess = MutableLiveData<String>()
     val mensajeInfo = MutableLiveData<String>()
     val mensajeProducto = MutableLiveData<String>()
@@ -189,20 +188,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun sendProgramacionById(id: Int) {
-        val ots: Observable<Programacion> =
-            roomRepository.getProgramacionTaskById(id)
-        ots.flatMap { a ->
-            val json = Gson().toJson(a)
-            Log.i("TAG", json)
-            val body =
-                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
-            Observable.zip(
-                Observable.just(a), roomRepository.sendProgramacion(body), { _, mensaje ->
-                    mensaje
-                })
-
-        }.subscribeOn(Schedulers.io())
+    private fun sendProgramacionById(p: Programacion) {
+        roomRepository.sendProgramacionOnline(p)
+            .subscribeOn(Schedulers.io())
             .delay(1000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
@@ -216,8 +204,17 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
 
                 override fun onError(t: Throwable) {
-                    mensajeSinConexion.value =
-                        "No cuentas con buena señal de internet registro se guardara en pendientes."
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
                 }
             })
     }
@@ -274,7 +271,11 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             }
         }
 
-        verificateVisitaMedico(p)
+        if (p.active == 1){
+            sendProgramacionById(p)
+        }else{
+            verificateVisitaMedico(p)
+        }
     }
 
     private fun verificateVisitaMedico(p: Programacion) {

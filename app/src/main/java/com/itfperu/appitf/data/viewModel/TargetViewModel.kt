@@ -204,8 +204,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         }
     }
 
-    fun syncTargetCab(u: Int, fi: String, ff: String, e: Int, tt: String, t: Int) {
-        roomRepository.syncTargetCab(u, fi, ff, e, tt, t)
+    fun syncTargetCab(u: Int, fi: String, ff: String, e: Int, tt: String, t: Int, ul: Int) {
+        roomRepository.syncTargetCab(u, fi, ff, e, tt, t, ul)
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -380,7 +380,9 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onComplete() {}
+                override fun onComplete() {
+                    mensajeSuccess.value = "Ok"
+                }
                 override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
                     mensajeError.value = e.message.toString()

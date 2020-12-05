@@ -1,6 +1,7 @@
 package com.itfperu.appitf.data.local.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -18,4 +19,7 @@ open class TargetM {
     var descripcionEspecialidad: String = ""
     var numeroContactos: Int = 0
     var estado: String = ""
+
+    @Ignore
+    var medicos: List<Medico>? = null
 }

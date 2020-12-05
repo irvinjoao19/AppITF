@@ -39,14 +39,14 @@ class CheckMedicoAdapter(private var listener: OnItemClickListener.CheckMedicoLi
                 textView5.text = s.direccion
                 textView6.text = s.visitadoPor
 
-                checkboxAdd.isChecked = s.isSelected
-                checkboxAdd.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkboxAdd.isPressed) {
-                        listener.onCheckedChanged(s, adapterPosition, isChecked)
-                    }
-                }
+//                checkboxAdd.isChecked = s.isSelected
+//                checkboxAdd.setOnCheckedChangeListener { _, isChecked ->
+//                    if (checkboxAdd.isPressed) {
+//                        listener.onCheckedChanged(s, adapterPosition, isChecked)
+//                    }
+//                }
                 itemView.setOnClickListener {
-                    listener.onCheckedChanged(s, adapterPosition, !s.isSelected)
+                    listener.onItemClick(s, adapterPosition, !s.isSelected)
                 }
             }
     }

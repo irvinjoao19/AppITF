@@ -120,10 +120,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             cantidad = it.size
             productoAdapter.addItems(it)
         })
-        itfViewModel.mensajeSinConexion.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
-        })
+
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             Util.toastMensaje(context!!, it)
         })

@@ -1,6 +1,7 @@
 package com.itfperu.appitf.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.ProgressBar
@@ -19,6 +20,7 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.viewModel.TargetViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
+import com.itfperu.appitf.ui.activities.MedicoActivity
 import com.itfperu.appitf.ui.adapters.*
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
@@ -27,6 +29,7 @@ import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val ARG_PARAM3 = "param3"
 
 class TargetFragment : DaggerFragment() {
 
@@ -50,12 +53,14 @@ class TargetFragment : DaggerFragment() {
     private var dialog: AlertDialog? = null
     private var usuarioId: Int = 0
     private var tipoTarget: Int = 0 // 1 -> actividades , 2 -> aprobadas
+    private var tipo: Int = 0 //1-> target , 2 -> medicos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             usuarioId = it.getInt(ARG_PARAM1)
             tipoTarget = it.getInt(ARG_PARAM2)
+            tipo = it.getInt(ARG_PARAM3)
         }
         setHasOptionsMenu(true)
     }
@@ -75,7 +80,21 @@ class TargetFragment : DaggerFragment() {
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
 
-        adapter = TargetAdapter()
+        adapter = TargetAdapter(object : OnItemClickListener.TargetListener {
+            override fun onItemClick(t: TargetM, view: View, position: Int) {
+                if (tipo == 2) {
+                    startActivity(
+                        Intent(context, MedicoActivity::class.java)
+                            .putExtra("usuarioId", usuarioId)
+                            .putExtra("solMedicoId", 0)
+                            .putExtra("medicoId", t.medicoId)
+                            .putExtra("title", "Editar Medico")
+                            .putExtra("tipoMedico", 0)
+                            .putExtra("tipoEnvio", 1)
+                    )
+                }
+            }
+        })
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         recyclerView.setHasFixedSize(true)
@@ -83,7 +102,6 @@ class TargetFragment : DaggerFragment() {
 
         itfViewModel.setLoading(true)
         itfViewModel.syncTarget(usuarioId, 0, 0, 0, "")
-
 
         itfViewModel.getTargets().observe(viewLifecycleOwner, {
             textviewMessage.text = String.format("Se encontraron %s registros", it.size)
@@ -115,11 +133,12 @@ class TargetFragment : DaggerFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int) =
+        fun newInstance(param1: Int, param2: Int, param3: Int) =
             TargetFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)
+                    putInt(ARG_PARAM3, param3)
                 }
             }
     }

@@ -41,13 +41,6 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.ok -> itfViewModel.saveMedico(cabId, tipoTarget)
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_medico)
@@ -71,14 +64,9 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
 
         val checkMedicoAdapter =
             CheckMedicoAdapter(object : OnItemClickListener.CheckMedicoListener {
-                override fun onCheckedChanged(m: Medico, p: Int, b: Boolean) {
-                    if (b) {
-                        m.isSelected = true
-                        itfViewModel.updateCheckMedico(m)
-                    } else {
-                        m.isSelected = false
-                        itfViewModel.updateCheckMedico(m)
-                    }
+                override fun onItemClick(m: Medico, p: Int, b: Boolean) {
+                    m.isSelected = true
+                    itfViewModel.updateCheckMedico(m)
                 }
             })
         val layoutManager = LinearLayoutManager(this)
@@ -89,7 +77,7 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
         )
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = checkMedicoAdapter
-        itfViewModel.getCheckMedicos(tipoTarget,usuarioId)
+        itfViewModel.getCheckMedicos(tipoTarget, usuarioId)
             .observe(this, Observer(checkMedicoAdapter::submitList))
 
         itfViewModel.searchMedico.value = ""
@@ -97,8 +85,12 @@ class SearchMedicoActivity : DaggerAppCompatActivity() {
         itfViewModel.mensajeError.observe(this, { s ->
             Util.toastMensaje(this, s)
         })
-        itfViewModel.mensajeSuccess.observe(this, { s ->
-            Util.toastMensaje(this, s)
+        itfViewModel.mensajeSuccess.observe(this, {
+            if (it == "Ok") {
+                itfViewModel.saveMedico(cabId, tipoTarget)
+                return@observe
+            }
+            Util.toastMensaje(this, it)
             finish()
         })
     }

@@ -42,8 +42,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         loading.value = s
     }
 
-    fun syncActividad(u: Int, c: Int, e: Int, t: Int) {
-        roomRepository.syncActividad(u, c, e, t)
+    fun syncActividad(u: Int, c: Int, e: Int, t: Int,ul:Int) {
+        roomRepository.syncActividad(u, c, e, t,ul)
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

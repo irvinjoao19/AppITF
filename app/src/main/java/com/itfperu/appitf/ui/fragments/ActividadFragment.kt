@@ -149,7 +149,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.setLoading(true)
         itfViewModel.syncActividad(
             if (tipoActividad == 1) usuarioId else 0, f.cicloId,
-            if (tipoActividad == 1) 0 else 7, tipoActividad
+            if (tipoActividad == 1) 0 else 7, tipoActividad, usuarioId
         )
 
         itfViewModel.search.value = Gson().toJson(f)
@@ -269,7 +269,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
                 if (f.usuarioId == 0) usuarioId else f.usuarioId,
                 f.cicloId,
                 f.estadoId,
-                tipoActividad
+                tipoActividad, usuarioId
             )
             val search = Filtro(
                 if (f.usuarioId == 0) usuarioId else f.usuarioId,

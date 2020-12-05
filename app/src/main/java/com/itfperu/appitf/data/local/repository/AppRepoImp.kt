@@ -788,8 +788,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun syncActividad(u: Int, c: Int, e: Int, t: Int): Observable<List<Actividad>> {
-        return apiService.getActividad(u, c, e, t)
+    override fun syncActividad(
+        u: Int,
+        c: Int,
+        e: Int,
+        t: Int,
+        ul: Int
+    ): Observable<List<Actividad>> {
+        return apiService.getActividad(u, c, e, t, ul)
     }
 
     override fun insertActividads(p: List<Actividad>): Completable {
@@ -963,7 +969,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return apiService.saveMedico(body)
     }
 
-
     override fun insertSolMedico(c: SolMedico, m: Mensaje): Completable {
         return Completable.fromAction {
             if (m.codigoBase == 0) {
@@ -993,7 +998,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 val detalle = dataBase.medicoDao()
                     .getMedicoBySolIdTask(r.solMedicoId)
                 for (m: Medico in detalle) {
-                    m.direcciones = dataBase.medicoDireccionDao().getDireccionIdTask(m.medicoId)
+//                    m.direcciones = dataBase.medicoDireccionDao().getDireccionIdTask(m.medicoId)
                     d.add(m)
                 }
                 r.medicos = d
@@ -1008,19 +1013,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return Completable.fromAction {
             dataBase.solMedicoDao().updateEnabledMedico(t.codigoBase, t.codigoRetorno)
 
-            val d: List<MensajeDetalle>? = t.detalle
-            if (d != null) {
-                for (m: MensajeDetalle in d) {
-                    dataBase.medicoDao().updateEnabledMedico(m.detalleBaseId, m.detalleRetornoId)
-                    val e = m.subDetalles
-                    if (e != null) {
-                        for (dt: MensajeDetalleDet in e) {
-                            dataBase.medicoDireccionDao()
-                                .updateEnabledDireccion(dt.codigoBase, dt.codigoRetorno)
-                        }
-                    }
-                }
-            }
+//            val d: List<MensajeDetalle>? = t.detalle
+//            if (d != null) {
+//                for (m: MensajeDetalle in d) {
+//                    dataBase.medicoDao().updateEnabledMedico(m.detalleBaseId, m.detalleRetornoId)
+//                    val e = m.subDetalles
+//                    if (e != null) {
+//                        for (dt: MensajeDetalleDet in e) {
+//                            dataBase.medicoDireccionDao()
+//                                .updateEnabledDireccion(dt.codigoBase, dt.codigoRetorno)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -1028,24 +1033,33 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.medicoDao().getMedicoById(id)
     }
 
-    override fun insertMedico(m: Medico): Completable {
+    override fun insertMedico(m: Medico, t: Mensaje): Completable {
         return Completable.fromAction {
+            m.identity = t.codigoRetorno
             val e: Medico? = dataBase.medicoDao().getMedicoByIdTask(m.medicoId)
             if (e == null) {
-                val a: Medico? =
-                    dataBase.medicoDao().getMedicoCmpIdentificador(m.cpmMedico, m.identificadorId)
-                if (a != null) {
-                    error("Ya existe un medico con el mismo CMP e Identificador")
-                } else {
-                    dataBase.medicoDao().insertMedicoTask(m)
-                }
+                dataBase.medicoDao().insertMedicoTask(m)
             } else {
-                val a = dataBase.medicoDireccionDao().getMedicoDirecciones(e.medicoId)
-                if (a > 0) {
-                    m.active = 1
-                }
                 dataBase.medicoDao().updateMedicoTask(m)
             }
+
+
+//            val e: Medico? = dataBase.medicoDao().getMedicoByIdTask(m.medicoId)
+//            if (e == null) {
+//                val a: Medico? =
+//                    dataBase.medicoDao().getMedicoCmpIdentificador(m.cpmMedico, m.identificadorId)
+//                if (a != null) {
+//                    error("Ya existe un medico con el mismo CMP e Identificador")
+//                } else {
+//                    dataBase.medicoDao().insertMedicoTask(m)
+//                }
+//            } else {
+//                val a = dataBase.medicoDireccionDao().getMedicoDirecciones(e.medicoId)
+//                if (a > 0) {
+//                    m.active = 1
+//                }
+//                dataBase.medicoDao().updateMedicoTask(m)
+//            }
         }
     }
 
@@ -1077,10 +1091,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return dataBase.medicoDireccionDao().getMedicoDireccionesById(id)
     }
 
-    override fun insertDireccion(m: MedicoDireccion): Completable {
+    override fun insertDireccion(m: MedicoDireccion, t: Mensaje): Completable {
         return Completable.fromAction {
             dataBase.medicoDao().closeMedico(m.medicoId)
-
+            m.identityDetalle = t.codigoRetorno
             if (m.medicoDireccionId == 0)
                 dataBase.medicoDireccionDao().insertMedicoDireccionTask(m)
             else
@@ -1180,6 +1194,33 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun insertTargets(p: List<TargetM>): Completable {
         return Completable.fromAction {
             dataBase.targetDao().insertTargetListTask(p)
+            for (a: TargetM in p) {
+                val b: List<Medico>? = a.medicos
+                if (b != null) {
+                    for (c: Medico in b) {
+                        val det: Medico? =
+                            dataBase.medicoDao().getMedicoOffLineByIdTask(c.identity)
+                        if (det == null) {
+                            dataBase.medicoDao().insertMedicoTask(c)
+                        } else {
+                            dataBase.medicoDao().updateMedicoTask(c)
+                        }
+
+                        val dir: List<MedicoDireccion>? = c.direcciones
+                        if (dir != null) {
+                            for (d: MedicoDireccion in dir) {
+                                val md: MedicoDireccion? = dataBase.medicoDireccionDao()
+                                    .getMedicoDireccionOffLineByIdTask(d.identity)
+                                if (md == null) {
+                                    dataBase.medicoDireccionDao().insertMedicoDireccionTask(d)
+                                } else {
+                                    dataBase.medicoDireccionDao().updateMedicoDireccionTask(d)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1230,9 +1271,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun syncTargetCab(
-        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int
+        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int, ul: Int
     ): Observable<List<TargetCab>> {
-        return apiService.getTargetsCab(u, fi, ff, e, tt, t)
+        return apiService.getTargetsCab(u, fi, ff, e, tt, t, ul)
     }
 
     override fun insertTargetsCab(p: List<TargetCab>): Completable {
@@ -1469,17 +1510,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         }
     }
 
-    override fun getProgramacionTaskById(id: Int): Observable<Programacion> {
-        return Observable.create { e ->
-            val data: Programacion = dataBase.programacionDao().getProgramacionTaskById(id)
-            data.productos =
-                dataBase.programacionDetDao().getProgramacionesByIdTask(data.programacionId)
-            e.onNext(data)
-            e.onComplete()
-        }
+    override fun sendProgramacion(body: RequestBody): Observable<Mensaje> {
+        return apiService.sendProgramacion(body)
     }
 
-    override fun sendProgramacion(body: RequestBody): Observable<Mensaje> {
+    override fun sendProgramacionOnline(p: Programacion): Observable<Mensaje> {
+        val json = Gson().toJson(p)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
         return apiService.sendProgramacion(body)
     }
 
@@ -1835,5 +1873,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateVisitaMedico(medicoId: Int, fecha: String): Observable<Mensaje> {
         return apiService.getVerificateVisitaMedico(medicoId, fecha)
+    }
+
+    override fun sendMedicoCabecera(m: Medico): Observable<Mensaje> {
+        val json = Gson().toJson(m)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveMedicoCabecera(body)
+    }
+
+    override fun sendMedicoDireccion(m: MedicoDireccion): Observable<Mensaje> {
+        val json = Gson().toJson(m)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.saveMedicoDireccion(body)
     }
 }

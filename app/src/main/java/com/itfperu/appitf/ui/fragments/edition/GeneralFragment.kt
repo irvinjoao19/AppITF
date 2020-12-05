@@ -31,6 +31,7 @@ private const val ARG_PARAM2 = "param2"
 private const val ARG_PARAM3 = "param3"
 private const val ARG_PARAM4 = "param4"
 private const val ARG_PARAM5 = "param5"
+private const val ARG_PARAM6 = "param6"
 
 class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
@@ -42,7 +43,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             R.id.editTextEspecialidad2 -> spinnerDialog(4, "Especialidad 2")
             R.id.editTextFechaN -> Util.getDateDialog(context!!, editTextFechaN)
             R.id.editTextSexo -> spinnerDialog(5, "Sexo")
-            R.id.fabGenerate -> formGenerateCabecera()
+            R.id.fabGenerate -> if (tipoEnvio == 0) formGenerateCabecera() else formValidateMedico()
         }
     }
 
@@ -56,6 +57,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     private var usuarioId: Int = 0
     private var estado: Int = 0
     private var tipoMedico: Int = 0
+    private var tipoEnvio: Int = 0 //0-> sol medico,1 target solo actualizacion de medico
     private var viewPager: ViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +70,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             usuarioId = it.getInt(ARG_PARAM3)
             tipoMedico = it.getInt(ARG_PARAM4)
             estado = it.getInt(ARG_PARAM5)
+            tipoEnvio = it.getInt(ARG_PARAM6)
         }
     }
 
@@ -104,6 +107,8 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextSexo.setText(if (it.sexo == "M") "Masculino" else "Femenino")
                 editTextEmail.setText(it.email)
                 editTextTelefono.setText(it.telefono)
+            } else {
+                m.estado = 10
             }
         })
 
@@ -121,8 +126,12 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         editTextSexo.setOnClickListener(this)
         fabGenerate.setOnClickListener(this)
 
-        if (estado == 12 || estado == 13 || estado == 100) {
-            fabGenerate.visibility = View.GONE
+        if (tipoEnvio == 0) {
+            if (tipoMedico == 1) {
+                if (estado == 12 || estado == 13 || estado == 100) {
+                    fabGenerate.visibility = View.GONE
+                }
+            }
         }
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
@@ -153,7 +162,6 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         m.fechaNacimiento = editTextFechaN.text.toString()
         m.email = editTextEmail.text.toString()
         m.telefono = editTextTelefono.text.toString()
-        m.estado = 10
         m.active = 2
         itfViewModel.validateMedico(m)
     }
@@ -273,14 +281,15 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int, param3: Int, param4: Int, param5: Int) =
+        fun newInstance(p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int) =
             GeneralFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, param1)
-                    putInt(ARG_PARAM2, param2)
-                    putInt(ARG_PARAM3, param3)
-                    putInt(ARG_PARAM4, param4)
-                    putInt(ARG_PARAM5, param5)
+                    putInt(ARG_PARAM1, p1)
+                    putInt(ARG_PARAM2, p2)
+                    putInt(ARG_PARAM3, p3)
+                    putInt(ARG_PARAM4, p4)
+                    putInt(ARG_PARAM5, p5)
+                    putInt(ARG_PARAM6, p6)
                 }
             }
     }

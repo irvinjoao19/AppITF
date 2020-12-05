@@ -44,14 +44,31 @@ class TargetAltasAdapter(private var listener: OnItemClickListener.TargetAltasLi
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
-                textView1.text = String.format("N° : %s", p.targetCabId)
-                if (p.usuarioSolicitante.isNotEmpty()) {
-                    textViewUsuario.visibility = View.VISIBLE
-                    textViewUsuario.text = p.usuarioSolicitante
+
+                when (p.estado) {
+                    16 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorRed
+                        )
+                    )
+                    17 ->view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorYellow
+                        )
+                    )
+                    18 -> view.setBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context, R.color.colorGreen
+                        )
+                    )
                 }
-                textView2.text = p.fechaSolicitud
-                textView4.text = p.aprobador
-                textView5.text = p.nombreEstado
+
+                textView1.text = String.format("CMP : %s", p.cmpMedico)
+                textView2.text = p.nombresMedico
+                textView3.text = String.format("Categoria : %s", p.descripcionCategoria)
+                textView5.text = p.descripcionEspecialidad
+                textView6.text = String.format("Nro Contactos : %s", p.numeroContactos)
+                textView7.text = p.nombreEstado
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }

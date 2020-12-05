@@ -10,7 +10,7 @@ import com.itfperu.appitf.data.local.model.TargetM
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_target.view.*
 
-class TargetAdapter() :
+class TargetAdapter(private var listener: OnItemClickListener.TargetListener) :
     RecyclerView.Adapter<TargetAdapter.ViewHolder>() {
 
     private var perfiles = emptyList<TargetM>()
@@ -28,7 +28,7 @@ class TargetAdapter() :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(perfiles[position], position)
+        holder.bind(perfiles[position], position, listener)
     }
 
     override fun getItemCount(): Int {
@@ -36,7 +36,7 @@ class TargetAdapter() :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: TargetM, position: Int) =
+        fun bind(p: TargetM, position: Int, listener: OnItemClickListener.TargetListener) =
             with(itemView) {
                 if (position % 2 == 1) {
                     card.setCardBackgroundColor(
@@ -52,6 +52,7 @@ class TargetAdapter() :
                 textView3.text = String.format("Esp : %s", p.descripcionEspecialidad)
                 textView4.text = String.format("Cont : %s", p.numeroContactos)
                 textView5.text = String.format("Estado : %s", p.estado)
+                itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }
 }

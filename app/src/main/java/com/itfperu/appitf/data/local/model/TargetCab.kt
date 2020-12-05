@@ -15,12 +15,18 @@ open class TargetCab {
     var usuarioSolicitante: String = ""
     var usuarioId: Int = 0
     var tipoTarget: String = "" // A -> Alta , B -> baja
-    var tipo : Int = 0 // 1 -> altas ,2 -> aprobaciones
+    var tipo: Int = 0 // 1 -> altas ,2 -> aprobaciones
 
     var active: Int = 0 // 1 -> por enviar  , 2 -> enviado
     var identity: Int = 0
-    var fechaInicio:String = ""
-    var fechaFinal:String = ""
+    var fechaInicio: String = ""
+    var fechaFinal: String = ""
+
+    var cmpMedico: String = ""
+    var nombresMedico: String = ""
+    var descripcionCategoria: String = ""
+    var descripcionEspecialidad: String = ""
+    var numeroContactos: Int = 0
 
     @Ignore
     var detalle: List<TargetDet>? = null
