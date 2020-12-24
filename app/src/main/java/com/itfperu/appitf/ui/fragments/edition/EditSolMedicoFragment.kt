@@ -12,12 +12,10 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Medico
-import com.itfperu.appitf.data.local.model.MedicoDireccion
 import com.itfperu.appitf.data.local.model.SolMedico
 import com.itfperu.appitf.data.viewModel.MedicoViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
@@ -27,8 +25,6 @@ import com.itfperu.appitf.ui.adapters.MedicoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_sol_medico.*
-import kotlinx.android.synthetic.main.fragment_edit_sol_medico.recyclerView
-import kotlinx.android.synthetic.main.fragment_general.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -101,7 +97,7 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
             })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = medicoAdapter
 
@@ -114,11 +110,14 @@ class EditSolMedicoFragment : DaggerFragment(), View.OnClickListener {
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            activity!!.finish()
-            Util.toastMensaje(context!!, it)
+            if (it == "Medico Guardado"){
+                Util.executeMedicoWork(requireContext(),tipoMedico)
+            }
+            requireActivity().finish()
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.getSolMedicoCab(solMedicoId).observe(viewLifecycleOwner, {
             if (it != null) {

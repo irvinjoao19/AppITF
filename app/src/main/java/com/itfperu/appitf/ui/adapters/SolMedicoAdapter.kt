@@ -46,26 +46,24 @@ class SolMedicoAdapter(private var listener: OnItemClickListener.SolMedicoListen
 
                 when (p.estadoSol) {
                     11 -> view.setBackgroundColor(
-                        ContextCompat.getColor(
-                            itemView.context, R.color.colorRed
-                        )
+                        ContextCompat.getColor(itemView.context, R.color.colorWhiteBlue)
                     )
-                    14 -> view.setBackgroundColor(
-                        ContextCompat.getColor(
-                            itemView.context, R.color.colorYellow
-                        )
+                    12 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorRed)
                     )
                     13 -> view.setBackgroundColor(
-                        ContextCompat.getColor(
-                            itemView.context, R.color.colorGreen
-                        )
+                        ContextCompat.getColor(itemView.context, R.color.colorGreen)
+                    )
+                    14 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorYellow)
                     )
                 }
 
                 textView1.text = p.usuario
                 textView2.text = p.fecha
                 textView4.text = p.usuarioAprobador
-                textView5.text = p.descripcionEstado
+                textView6.text = p.respuestaAprobador
+                textView7.text = p.descripcionEstado
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }
     }

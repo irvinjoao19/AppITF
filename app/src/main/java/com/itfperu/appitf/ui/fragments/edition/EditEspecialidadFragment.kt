@@ -23,13 +23,7 @@ import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_categoria.*
 import kotlinx.android.synthetic.main.fragment_edit_especialidad.*
-import kotlinx.android.synthetic.main.fragment_edit_especialidad.editTextCodigo
-import kotlinx.android.synthetic.main.fragment_edit_especialidad.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_especialidad.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_especialidad.fabGenerate
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -96,13 +90,13 @@ class EditEspecialidadFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

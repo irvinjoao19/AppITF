@@ -41,11 +41,11 @@ import com.itfperu.appitf.data.local.model.*
         PuntoContacto::class,
         StockMantenimiento::class,
         RptGeneral::class,
-        RptDiario::class
-
+        RptDiario::class,
+        BirthDay::class
     ],
     views = [Nombre::class],
-    version = 79, // version 1 en play store
+    version = 82, // version 1 en play store
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -83,6 +83,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun stockMantenimientoDao(): StockMantenimientoDao
     abstract fun rptGeneralDao(): RptGeneralDao
     abstract fun rptDiarioDao(): RptDiarioDao
+    abstract fun birthDayDao(): BirthDayDao
 
     companion object {
         @Volatile

@@ -91,13 +91,13 @@ class EditTipoProductoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

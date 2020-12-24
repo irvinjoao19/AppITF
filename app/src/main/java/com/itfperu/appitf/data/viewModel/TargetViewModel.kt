@@ -82,7 +82,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                                     val body = t.response().errorBody()
                                     try {
                                         val error = retrofit.errorConverter.convert(body!!)
-                                        mensajeError.postValue(error.Message)
+                                        mensajeError.postValue(error!!.Message)
                                     } catch (e1: IOException) {
                                         e1.printStackTrace()
                                     }
@@ -120,11 +120,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getTargets()
     }
 
-    fun validateTarget(c: TargetCab) {
-        insetTargetCab(c)
-    }
-
-    private fun insetTargetCab(c: TargetCab) {
+    fun insetTargetCab(c: TargetCab) {
         roomRepository.insertTargetCab(c)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -197,7 +193,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     fun getTargetsAltas(): LiveData<List<TargetCab>> {
         return Transformations.switchMap(search) { input ->
-            val f = Gson().fromJson(search.value, Filtro::class.java)
+            val f = Gson().fromJson(input, Filtro::class.java)
             roomRepository.getTargetsAltas(
                 f.usuarioId, f.finicio, f.ffinal, f.estadoId, f.tipo, f.tipoTarget
             )
@@ -220,7 +216,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -321,7 +317,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -444,7 +440,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeInfo.postValue(error.Message)
+                            mensajeInfo.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -476,7 +472,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }

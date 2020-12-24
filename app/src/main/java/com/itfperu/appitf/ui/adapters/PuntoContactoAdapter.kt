@@ -45,9 +45,12 @@ class PuntoContactoAdapter(private var listener: OnItemClickListener.PuntoContac
                     )
                 }
 
-                if (p.estadoId == 31) {
-                    view.setBackgroundColor(
-                        ContextCompat.getColor(itemView.context, R.color.colorPrimary)
+                when (p.estadoId) {
+                    30 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorWhiteBlue)
+                    )
+                    31 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorGreen)
                     )
                 }
 

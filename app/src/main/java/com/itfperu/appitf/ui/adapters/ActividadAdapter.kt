@@ -9,11 +9,6 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Actividad
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_actividad.view.*
-import kotlinx.android.synthetic.main.cardview_actividad.view.card
-import kotlinx.android.synthetic.main.cardview_actividad.view.textView1
-import kotlinx.android.synthetic.main.cardview_actividad.view.textView2
-import kotlinx.android.synthetic.main.cardview_actividad.view.textView4
-import kotlinx.android.synthetic.main.cardview_actividad.view.textView6
 
 class ActividadAdapter(private var listener: OnItemClickListener.ActividadListener) :
     RecyclerView.Adapter<ActividadAdapter.ViewHolder>() {
@@ -46,6 +41,18 @@ class ActividadAdapter(private var listener: OnItemClickListener.ActividadListen
                 if (p.active != 0) {
                     card.setCardBackgroundColor(
                         ContextCompat.getColor(itemView.context, R.color.divider)
+                    )
+                }
+
+                when (p.estado) {
+                    7 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorWhiteBlue)
+                    )
+                    8 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+                    )
+                    9 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorGreen)
                     )
                 }
                 textView1.text = p.usuario

@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_colorPressed="@color/colorGrey"
+            fab:fab_colorPressed="@color/material_red_a100"
             fab:fab_icon="@drawable/ic_check"
             fab:fab_title="Agregar Producto" />
 

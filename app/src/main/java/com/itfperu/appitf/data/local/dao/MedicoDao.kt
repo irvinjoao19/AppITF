@@ -50,6 +50,9 @@ interface MedicoDao {
     @Query("SELECT * FROM Medico WHERE estado =:e")
     fun getMedicosByEstado(e: Int): LiveData<List<Medico>>
 
+    @Query("SELECT * FROM Medico WHERE estado =:e AND usuarioId =:u ORDER BY apellidoP,apellidoM,nombreMedico")
+    fun getMedicosByEstado(e: Int, u: Int): LiveData<List<Medico>>
+
     @Query("SELECT * FROM Medico WHERE cpmMedico=:c AND  identificadorId=:id")
     fun getMedicoCmpIdentificador(c: String, id: Int): Medico
 

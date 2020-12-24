@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
@@ -25,9 +24,7 @@ import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.*
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.cardview_medico_direccion.view.*
 import kotlinx.android.synthetic.main.fragment_direccion.*
-import kotlinx.android.synthetic.main.fragment_general.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -108,7 +105,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = direccionAdapter
         itfViewModel.getDireccionesById(medicoId).observe(viewLifecycleOwner, {
@@ -132,12 +129,12 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         }
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
             if (it == "Medico Guardado") {
-                activity!!.finish()
+                requireActivity().finish()
             }
         })
         itfViewModel.getSolMedicoCab(solMedicoId).observe(viewLifecycleOwner, {

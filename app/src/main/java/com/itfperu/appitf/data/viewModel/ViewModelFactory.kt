@@ -21,6 +21,5 @@ internal constructor(private val creators: Map<Class<out ViewModel>,@JvmSuppress
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-
     }
 }

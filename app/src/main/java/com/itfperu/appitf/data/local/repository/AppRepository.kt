@@ -141,10 +141,10 @@ interface AppRepository {
 
     //Actividad
     fun clearActividad(): Completable
-    fun syncActividad(u: Int, c: Int, e: Int, t: Int,ul:Int): Observable<List<Actividad>>
+    fun syncActividad(u: Int, c: Int, e: Int, t: Int, ul: Int): Observable<List<Actividad>>
     fun insertActividads(p: List<Actividad>): Completable
     fun sendActividad(body: RequestBody): Observable<Mensaje>
-    fun insertActividad(c: Actividad): Completable
+    fun insertActividad(c: Actividad,t:Mensaje): Completable
     fun getActividadById(id: Int): LiveData<Actividad>
     fun getEstados(tipo: String): LiveData<List<Estado>>
     fun getCicloProceso(): LiveData<List<Ciclo>>
@@ -172,7 +172,7 @@ interface AppRepository {
     fun updateEnabledMedico(t: Mensaje): Completable
 
     fun getMedicoById(id: Int): LiveData<Medico>
-    fun insertMedico(m: Medico,t:Mensaje): Completable
+    fun insertMedico(m: Medico, t: Mensaje): Completable
     fun getIdentificadores(): LiveData<List<Identificador>>
 
     fun getDepartamentos(): LiveData<List<Ubigeo>>
@@ -180,9 +180,10 @@ interface AppRepository {
     fun getDistritos(cod: String, cod2: String): LiveData<List<Ubigeo>>
     fun getMedicos(): LiveData<List<Medico>>
     fun getMedicosByEstado(e: Int): LiveData<List<Medico>>
+    fun getMedicosByEstado(e: Int, u: Int): LiveData<List<Medico>>
 
     fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>>
-    fun insertDireccion(m: MedicoDireccion,t:Mensaje): Completable
+    fun insertDireccion(m: MedicoDireccion, t: Mensaje): Completable
     fun getMedicosById(solMedicoId: Int): LiveData<List<Medico>>
     fun getMedicoId(): LiveData<Int>
     fun getSolMedicoId(): LiveData<Int>
@@ -213,7 +214,7 @@ interface AppRepository {
     ): LiveData<List<TargetCab>>
 
     fun syncTargetCab(
-        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int,ul:Int
+        u: Int, fi: String, ff: String, e: Int, tt: String, t: Int, ul: Int
     ): Observable<List<TargetCab>>
 
     fun insertTargetsCab(p: List<TargetCab>): Completable
@@ -240,7 +241,7 @@ interface AppRepository {
     fun insertProgramacions(p: List<Programacion>): Completable
     fun getProgramacionTask(): Observable<List<Programacion>>
     fun sendProgramacion(body: RequestBody): Observable<Mensaje>
-    fun sendProgramacionOnline(p:Programacion): Observable<Mensaje>
+    fun sendProgramacionOnline(p: Programacion): Observable<Mensaje>
     fun updateEnabledProgramacion(t: Mensaje): Completable
     fun getProgramaciones(): LiveData<List<Programacion>>
     fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
@@ -288,6 +289,7 @@ interface AppRepository {
     fun getPuntoContactos(f: String): LiveData<List<PuntoContacto>>
     fun getPuntoContactoTask(): Observable<List<PuntoContacto>>
     fun sendPuntoContacto(body: RequestBody): Observable<Mensaje>
+    fun sendOnlinePuntoContacto(p:PuntoContacto): Observable<Mensaje>
     fun updateEnabledPuntoContacto(t: Mensaje): Completable
     fun insertPuntoContacto(p: PuntoContacto): Completable
 
@@ -316,8 +318,11 @@ interface AppRepository {
     fun verificateVisitaMedico(medicoId: Int, fecha: String): Observable<Mensaje>
 
     // nuevo
-    fun sendMedicoCabecera(m: Medico) : Observable<Mensaje>
-    fun sendMedicoDireccion(m: MedicoDireccion) : Observable<Mensaje>
+    fun sendMedicoCabecera(m: Medico): Observable<Mensaje>
+    fun sendMedicoDireccion(m: MedicoDireccion): Observable<Mensaje>
+    fun syncBirthDay(u: Int, m: Int): Observable<List<BirthDay>>
+    fun insertBirthDays(p: List<BirthDay>): Completable
+    fun getBirthDays(usuarioId: Int, mes: Int): LiveData<List<BirthDay>>
 
 
 }

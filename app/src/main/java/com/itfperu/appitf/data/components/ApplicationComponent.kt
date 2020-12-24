@@ -2,10 +2,8 @@ package com.itfperu.appitf.data.components
 
 import android.app.Application
 import com.itfperu.appitf.data.App
-import com.itfperu.appitf.data.module.ActivityBindingModule
-import com.itfperu.appitf.data.module.DataBaseModule
-import com.itfperu.appitf.data.module.RetrofitModule
-import com.itfperu.appitf.data.module.ServicesModule
+import com.itfperu.appitf.data.module.*
+import com.itfperu.appitf.ui.workManager.WorkManagerFactory
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -19,7 +17,8 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         RetrofitModule::class,
         DataBaseModule::class,
-        ServicesModule::class
+        ServicesModule::class,
+        WorkerModule::class
     ]
 )
 interface ApplicationComponent : AndroidInjector<App> {

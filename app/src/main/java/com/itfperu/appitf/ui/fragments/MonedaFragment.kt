@@ -16,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Moneda
-import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.MonedaViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -79,7 +78,7 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = monedaAdapter
 
@@ -105,12 +104,12 @@ class MonedaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
     private fun confirmDelete(m: Moneda) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar esta Moneda ?")
             .setPositiveButton("SI") { dialog, _ ->

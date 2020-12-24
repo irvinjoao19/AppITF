@@ -194,5 +194,8 @@ class DataBaseModule {
         return appDataBase.rptDiarioDao()
     }
 
-
+    @Provides
+    internal fun provideBirthDayDao(appDataBase: AppDataBase): BirthDayDao {
+        return appDataBase.birthDayDao()
+    }
 }

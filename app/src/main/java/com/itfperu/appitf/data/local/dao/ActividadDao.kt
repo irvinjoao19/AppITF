@@ -31,6 +31,9 @@ interface ActividadDao {
     @Query("SELECT * FROM Actividad WHERE estado=:e AND tipo=:t ")
     fun getActividades(e: Int, t: Int): LiveData<List<Actividad>>
 
+    @Query("SELECT * FROM Actividad WHERE cicloId=:c AND tipo=:t ")
+    fun getActividadesCiclo(c: Int, t: Int): LiveData<List<Actividad>>
+
     @Query("SELECT * FROM Actividad WHERE tipo=:t ")
     fun getActividades(t: Int): LiveData<List<Actividad>>
 
@@ -61,4 +64,7 @@ interface ActividadDao {
 
     @Query("SELECT * FROM Actividad WHERE actividadId =:id")
     fun getActividadByIdTask(id: Int): Actividad
+
+    @Query("SELECT * FROM Actividad WHERE identity =:id")
+    fun getActividadOffLineByIdTask(id: Int): Actividad
 }

@@ -83,6 +83,9 @@ abstract class FragmentBindingModule {
 
         @ContributesAndroidInjector
         internal abstract fun providReporteDiarioFragment(): ReporteDiarioFragment
+
+        @ContributesAndroidInjector
+        internal abstract fun providBirthDayFragment(): BirthDayFragment
     }
 
     @Module

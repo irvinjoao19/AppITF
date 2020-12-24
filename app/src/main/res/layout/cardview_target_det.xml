@@ -87,7 +87,6 @@
             android:ellipsize="end"
             android:text="Visita por"
             android:textColor="@color/colorRed"
-            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 

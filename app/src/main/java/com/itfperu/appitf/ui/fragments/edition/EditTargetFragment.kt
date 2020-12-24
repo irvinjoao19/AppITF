@@ -57,7 +57,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun clearDetalle() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas Cancelar Operación ?")
             .setPositiveButton("Si") { dialog, _ ->
@@ -108,7 +108,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             ViewModelProvider(this, viewModelFactory).get(TargetViewModel::class.java)
 
         val targetDetAdapter =
-            TargetDetAdapter(tipo,tipoTarget, object : OnItemClickListener.TargetDetListener {
+            TargetDetAdapter(tipo, tipoTarget, object : OnItemClickListener.TargetDetListener {
                 override fun onItemClick(t: TargetDet, view: View, position: Int) {
                     when (view.id) {
                         R.id.editTextCantidad -> updateCantidadProducto(t)
@@ -139,7 +139,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
             })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = targetDetAdapter
 
@@ -151,7 +151,17 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                     if (it.isNotEmpty()) {
                         fabCancelar.visibility = View.VISIBLE
                         fabSave.visibility = View.VISIBLE
-                    } else{
+                        fabPerson.visibility = View.GONE
+
+                        val b: TargetDet? = it[0]
+                        if (b != null) {
+                            s.cmpMedico = b.cmp
+                            s.nombresMedico = b.nombreMedico
+                            s.descripcionCategoria = b.nombreCategoria
+                            s.descripcionEspecialidad = b.nombreEspecialidad
+                            s.numeroContactos = b.nroContacto
+                        }
+                    } else {
                         fabCancelar.visibility = View.GONE
                         fabSave.visibility = View.GONE
                     }
@@ -161,11 +171,14 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            activity!!.finish()
-            Util.toastMensaje(context!!, it)
+            if (it == "Guardado") {
+                Util.executeTarget(requireContext(), tipoTarget, tipo)
+            }
+            requireActivity().finish()
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.getTarget(targetId).observe(viewLifecycleOwner, {
@@ -194,7 +207,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         s.fechaSolicitud = Util.getFecha()
         s.estado = 16
         s.active = 1
-        itfViewModel.validateTarget(s)
+        itfViewModel.insetTargetCab(s)
     }
 
     companion object {
@@ -219,7 +232,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         val buttonCancelar: MaterialButton = v.findViewById(R.id.buttonCancelar)
         val buttonAceptar: MaterialButton = v.findViewById(R.id.buttonAceptar)
         //editTextProducto.setText(p.cantidad.toString())
-        Util.showKeyboard(editTextProducto, context!!)
+        Util.showKeyboard(editTextProducto, requireContext())
         builder.setView(v)
         val dialog = builder.create()
         dialog.show()
@@ -234,7 +247,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
 
                 p.nroContacto = nPositive
                 itfViewModel.insertTargetDet(p, 1)
-                Util.hideKeyboardFrom(context!!, v)
+                Util.hideKeyboardFrom(requireContext(), v)
                 dialog.dismiss()
             } else {
                 itfViewModel.setError("Digite cantidad")
@@ -246,7 +259,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmAprobation(t: TargetDet, estado: Int, message: String) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(message)
             .setPositiveButton("Si") { dialog, _ ->
@@ -262,7 +275,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
     }
 
 
-    private fun dialogPerfil(id:Int) {
+    private fun dialogPerfil(id: Int) {
         val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
         @SuppressLint("InflateParams") val view =
             LayoutInflater.from(context).inflate(R.layout.dialog_perfil, null)
@@ -289,9 +302,9 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         val mTableAdapter =
             TablePerfilAdapter(context, object : OnItemClickListener.ProgramacionPerfilListener {
                 override fun onItemClick(s: String) {
-                    if (!Util.isNumeric(s)){
-                        if (s != "Total"){
-                            dialogPerfilDetalle(id,s)
+                    if (!Util.isNumeric(s)) {
+                        if (s != "Total") {
+                            dialogPerfilDetalle(id, s)
                         }
                     }
                 }
@@ -331,9 +344,9 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
                 })
             }, 800)
         }
-        itfViewModel.mensajeInfo.observe(viewLifecycleOwner,{
-            if(it != null){
-                Util.toastMensaje(context!!,it)
+        itfViewModel.mensajeInfo.observe(viewLifecycleOwner, {
+            if (it != null) {
+                Util.toastMensaje(requireContext(), it)
                 dialog.dismiss()
             }
         })
@@ -353,7 +366,7 @@ class EditTargetFragment : DaggerFragment(), View.OnClickListener {
         progressBar.visibility = View.VISIBLE
         itfViewModel.setRejas()
         itfViewModel.setInfo()
-        itfViewModel.syncProgramacionPerfilDetalle(medicoId,s)
+        itfViewModel.syncProgramacionPerfilDetalle(medicoId, s)
 
         val mTableAdapter =
             TableDetalleAdapter(context)

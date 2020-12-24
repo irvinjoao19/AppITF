@@ -113,7 +113,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = productoAdapter
         itfViewModel.getProgramacionesDetById(programacionId).observe(viewLifecycleOwner, {
@@ -122,12 +122,13 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
             if (it == "Guardado") {
-                activity!!.finish()
+                Util.executeMedicoWork(requireContext(),1)
+                requireActivity().finish()
             }
         })
         fabProducto.setOnClickListener(this)
@@ -177,7 +178,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             m.lote = editTextLote.text.toString()
 
             if (editTextStock.text.toString().isEmpty()) {
-                Util.toastMensaje(context!!, "Ingrese Cantidad")
+                Util.toastMensaje(requireContext(), "Ingrese Cantidad")
                 return@setOnClickListener
             }
             m.stock = editTextStock.text.toString().toInt()
@@ -247,7 +248,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmDelete(p: ProgramacionDet) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas eliminar este producto ?")
             .setPositiveButton("SI") { dialog, _ ->

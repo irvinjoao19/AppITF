@@ -36,4 +36,7 @@ interface TargetDao {
 
     @Query("SELECT * FROM TargetM ORDER BY nombreUsuario ASC")
     fun getTargets(): LiveData<List<TargetM>>
+
+    @Query("SELECT * FROM TargetM WHERE  medicoId =:id")
+    fun getTargetByMedico(id: Int): TargetM
 }

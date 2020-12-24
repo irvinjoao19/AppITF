@@ -79,7 +79,7 @@ class ProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
@@ -106,12 +106,12 @@ class ProductoFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
     private fun confirmDelete(p: Producto) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar este producto ?")
             .setPositiveButton("SI") { dialog, _ ->

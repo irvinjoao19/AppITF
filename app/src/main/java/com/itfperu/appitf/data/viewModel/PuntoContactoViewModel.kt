@@ -63,7 +63,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -142,7 +142,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -166,7 +166,34 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    fun insertPuntoContacto(p: PuntoContacto) {
+    fun sendOnlinePuntoContacto(p: PuntoContacto) {
+        roomRepository.sendOnlinePuntoContacto(p)
+            .delay(1000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+                override fun onNext(t: Mensaje) {
+                    insertPuntoContacto(p)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val body = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(body!!)
+                            mensajeError.postValue(error!!.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+            })
+    }
+
+    private fun insertPuntoContacto(p: PuntoContacto) {
         roomRepository.insertPuntoContacto(p)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

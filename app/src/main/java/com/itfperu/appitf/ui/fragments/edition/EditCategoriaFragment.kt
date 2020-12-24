@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Categoria
 import com.itfperu.appitf.data.local.model.Combos
@@ -25,10 +24,6 @@ import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_categoria.*
-import kotlinx.android.synthetic.main.fragment_edit_categoria.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_categoria.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_categoria.fabGenerate
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -96,13 +91,13 @@ class EditCategoriaFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

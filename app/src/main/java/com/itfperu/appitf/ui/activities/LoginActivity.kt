@@ -11,12 +11,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.viewModel.UsuarioViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Permission
 import com.itfperu.appitf.helper.Util
+import com.itfperu.appitf.ui.workManager.WorkManagerFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
@@ -70,7 +73,6 @@ class LoginActivity : DaggerAppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var usuarioViewModel: UsuarioViewModel

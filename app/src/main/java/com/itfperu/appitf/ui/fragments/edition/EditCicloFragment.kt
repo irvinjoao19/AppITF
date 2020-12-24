@@ -34,8 +34,8 @@ class EditCicloFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.editTextDesde -> Util.getDateDialog(context!!, editTextDesde)
-            R.id.editTextHasta -> Util.getDateDialog(context!!, editTextHasta)
+            R.id.editTextDesde -> Util.getDateDialog(requireContext(), editTextDesde)
+            R.id.editTextHasta -> Util.getDateDialog(requireContext(), editTextHasta)
             R.id.editTextEstado -> spinnerDialog()
             R.id.fabGenerate -> formCiclo()
         }
@@ -94,13 +94,13 @@ class EditCicloFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

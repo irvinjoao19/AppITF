@@ -59,7 +59,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                                     val body = t.response().errorBody()
                                     try {
                                         val error = retrofit.errorConverter.convert(body!!)
-                                        mensajeError.postValue(error.Message)
+                                        mensajeError.postValue(error!!.Message)
                                     } catch (e1: IOException) {
                                         e1.printStackTrace()
                                     }
@@ -98,7 +98,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                                         val body = t.response().errorBody()
                                         try {
                                             val error = retrofit.errorConverter.convert(body!!)
-                                            mensajeError.postValue(error.Message)
+                                            mensajeError.postValue(error!!.Message)
                                         } catch (e1: IOException) {
                                             e1.printStackTrace()
                                         }
@@ -149,7 +149,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                                     val body = t.response().errorBody()
                                     try {
                                         val error = retrofit.errorConverter.convert(body!!)
-                                        mensajeError.postValue(error.Message)
+                                        mensajeError.postValue(error!!.Message)
                                     } catch (e1: IOException) {
                                         e1.printStackTrace()
                                     }
@@ -187,7 +187,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                                     val body = t.response().errorBody()
                                     try {
                                         val error = retrofit.errorConverter.convert(body!!)
-                                        mensajeError.postValue(error.Message)
+                                        mensajeError.postValue(error!!.Message)
                                     } catch (e1: IOException) {
                                         e1.printStackTrace()
                                     }

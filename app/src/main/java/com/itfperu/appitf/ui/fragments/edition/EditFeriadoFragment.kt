@@ -24,10 +24,6 @@ import com.itfperu.appitf.ui.adapters.ComboAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_edit_feriado.*
-import kotlinx.android.synthetic.main.fragment_edit_feriado.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_feriado.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_feriado.fabGenerate
-import kotlinx.android.synthetic.main.fragment_edit_visita.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -37,7 +33,7 @@ class EditFeriadoFragment : DaggerFragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.editTextFecha -> Util.getDateDialog(context!!, editTextFecha)
+            R.id.editTextFecha -> Util.getDateDialog(requireContext(), editTextFecha)
             R.id.editTextEstado -> spinnerDialog()
             R.id.fabGenerate -> formFeriado()
         }
@@ -94,13 +90,13 @@ class EditFeriadoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

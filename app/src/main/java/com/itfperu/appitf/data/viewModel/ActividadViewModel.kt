@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
 import com.google.gson.Gson
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.local.repository.ApiError
@@ -42,8 +41,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         loading.value = s
     }
 
-    fun syncActividad(u: Int, c: Int, e: Int, t: Int,ul:Int) {
-        roomRepository.syncActividad(u, c, e, t,ul)
+    fun syncActividad(u: Int, c: Int, e: Int, t: Int, ul: Int) {
+        roomRepository.syncActividad(u, c, e, t, ul)
             .delay(1000, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +60,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -126,18 +125,47 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             }
         }
 
-        insertActividad(c)
+        sendActividad(c)
     }
 
-    private fun insertActividad(c: Actividad) {
-        roomRepository.insertActividad(c)
+    private fun sendActividad(c: Actividad) {
+        val json = Gson().toJson(c)
+        Log.i("TAG", json)
+        val body =
+            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        roomRepository.sendActividad(body)
+            .delay(1000, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<Mensaje> {
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
+
+                override fun onNext(t: Mensaje) {
+                    insertActividad(c, t)
+                }
+
+                override fun onError(t: Throwable) {
+                    if (t is HttpException) {
+                        val b = t.response().errorBody()
+                        try {
+                            val error = retrofit.errorConverter.convert(b!!)
+                            mensajeError.postValue(error!!.Message)
+                        } catch (e1: IOException) {
+                            e1.printStackTrace()
+                        }
+                    } else {
+                        mensajeError.postValue(t.message)
+                    }
+                }
+            })
+    }
+
+    private fun insertActividad(c: Actividad, t: Mensaje) {
+        roomRepository.insertActividad(c, t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onSubscribe(d: Disposable) {}
                 override fun onComplete() {
                     mensajeSuccess.value = "Guardado"
                 }
@@ -147,7 +175,6 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                 }
             })
     }
-
 
     fun sendActividad(tipo: Int) {
         val ots: Observable<List<Actividad>> = roomRepository.getActividadTask(tipo)
@@ -180,7 +207,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -238,8 +265,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
         return roomRepository.getNombreUsuario()
     }
 
-    fun getMedicosByEstado(e:Int): LiveData<List<Medico>> {
-        return roomRepository.getMedicosByEstado(e)
+    fun getMedicosByEstado(e: Int, u: Int): LiveData<List<Medico>> {
+        return roomRepository.getMedicosByEstado(e, u)
     }
 
     fun getAlertaActividad(cicloId: Int, medicoId: Int, usuarioId: Int) {
@@ -257,7 +284,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -265,6 +292,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         mensajeError.postValue(t.message)
                     }
                 }
+
                 override fun onComplete() {}
 
             })

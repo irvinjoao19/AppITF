@@ -42,7 +42,7 @@ class ComboMedicoAdapter(private val listener: OnItemClickListener.MedicoListene
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(m: Medico, listener: OnItemClickListener.MedicoListener) = with(itemView) {
             textViewTitulo.text =
-                String.format("%s %s %s", m.nombreMedico, m.apellidoP, m.apellidoM)
+                String.format("%s %s %s", m.apellidoP, m.apellidoM,m.nombreMedico)
             itemView.setOnClickListener { v -> listener.onItemClick(m, v, adapterPosition) }
         }
     }

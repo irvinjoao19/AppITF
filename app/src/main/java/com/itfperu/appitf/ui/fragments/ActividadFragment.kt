@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -32,7 +31,6 @@ import com.itfperu.appitf.ui.adapters.ComboPersonalAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_actividades.*
-import kotlinx.android.synthetic.main.fragment_edit_aprobation_a.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -137,13 +135,13 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
         f = Filtro(
             if (tipoActividad == 1) usuarioId else 0, f.cicloId,
-            if (tipoActividad == 1) 0 else 7, tipoActividad
+            0, tipoActividad
         )
 
         itfViewModel.setLoading(true)
@@ -166,11 +164,11 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
         }
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.loading.observe(viewLifecycleOwner, {
             if (it) {
@@ -252,10 +250,10 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
                 itfViewModel.setError("Seleccione Ciclo")
                 return@setOnClickListener
             }
-            if (f.estadoId == 0) {
-                itfViewModel.setError("Seleccione Estado")
-                return@setOnClickListener
-            }
+//            if (f.estadoId == 0) {
+//                itfViewModel.setError("Seleccione Estado")
+//                return@setOnClickListener
+//            }
 
             if (tipoActividad == 2) {
                 if (f.usuarioId == 0) {
@@ -360,7 +358,7 @@ class ActividadFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmSend() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->

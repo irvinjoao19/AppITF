@@ -139,7 +139,7 @@ class DireccionesFragment : DaggerFragment(), View.OnClickListener {
             })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = direccionAdapter
 
@@ -166,11 +166,11 @@ class DireccionesFragment : DaggerFragment(), View.OnClickListener {
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         if(tipo == 2){
             fabAdd.visibility = View.GONE
@@ -219,8 +219,8 @@ class DireccionesFragment : DaggerFragment(), View.OnClickListener {
         editTextDesde.setText(finicio)
         editTextHasta.setText(ffinal)
 
-        editTextDesde.setOnClickListener { Util.getDateDialog(context!!, editTextDesde) }
-        editTextHasta.setOnClickListener { Util.getDateDialog(context!!, editTextHasta) }
+        editTextDesde.setOnClickListener { Util.getDateDialog(requireContext(), editTextDesde) }
+        editTextHasta.setOnClickListener { Util.getDateDialog(requireContext(), editTextHasta) }
         editTextEstado.setOnClickListener { spinnerDialog(editTextEstado, f) }
         fabSearch.setOnClickListener {
             f.finicio = editTextDesde.text.toString()
@@ -280,7 +280,7 @@ class DireccionesFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmSend() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->

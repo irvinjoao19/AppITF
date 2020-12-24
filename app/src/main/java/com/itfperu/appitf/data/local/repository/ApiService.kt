@@ -123,7 +123,6 @@ interface ApiService {
         @Query("t") t: Int  // tipo
     ): Observable<List<NuevaDireccion>>
 
-
     @Headers("Cache-Control: no-cache")
     @GET("ProgramacionPerfil")
     fun getProgramacionPerfil(
@@ -169,6 +168,10 @@ interface ApiService {
         @Query("u") u: Int,
         @Query("c") c: Int
     ): Observable<List<StockMantenimiento>>
+
+    @Headers("Cache-Control: no-cache")
+    @GET("BirthDay")
+    fun getBirthDay(@Query("u") u: Int, @Query("m") m: Int): Observable<List<BirthDay>>
 
     //todo save
 

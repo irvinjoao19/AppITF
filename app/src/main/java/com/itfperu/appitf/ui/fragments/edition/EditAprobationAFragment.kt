@@ -36,7 +36,7 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.editTextCiclo -> spinnerDialog(1, "Ciclo")
-            R.id.editTextFechaAc -> Util.getDateDialog(context!!, editTextFechaAc)
+            R.id.editTextFechaAc -> Util.getDateDialog(requireContext(), editTextFechaAc)
             R.id.editTextDuracion -> spinnerDialog(2, "Duración")
             R.id.fabAprobar -> formActividad(9, "Aprobada")
             R.id.fabRechazar -> formActividad(8, "Rechazada")
@@ -46,6 +46,8 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     lateinit var itfViewModel: ActividadViewModel
+    lateinit var builder: AlertDialog.Builder
+    private var dialog: AlertDialog? = null
     lateinit var p: Actividad
     private var usuarioId: Int = 0
     private var categoriaId: Int = 0
@@ -107,12 +109,14 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
         editTextDuracion.setOnClickListener(this)
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            closeLoad()
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            closeLoad()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 
@@ -129,8 +133,9 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
         p.observacion = editTextObservacion.text.toString()
         p.usuarioId = usuarioId
         p.tipoInterfaz = "M"
-        p.active = 1
+        p.active = 0
         p.tipo = 2
+        load()
         itfViewModel.validateActividad(p)
     }
 
@@ -183,6 +188,27 @@ class EditAprobationAFragment : DaggerFragment(), View.OnClickListener {
                 itfViewModel.getDuracion().observe(this, {
                     duracionAdapter.addItems(it)
                 })
+            }
+        }
+    }
+
+    private fun load() {
+        builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        @SuppressLint("InflateParams") val view =
+            LayoutInflater.from(context).inflate(R.layout.dialog_login, null)
+        builder.setView(view)
+        val textViewTitle: TextView = view.findViewById(R.id.textView)
+        textViewTitle.text = String.format("Actualizando..")
+        dialog = builder.create()
+        dialog!!.setCanceledOnTouchOutside(false)
+        dialog!!.setCancelable(false)
+        dialog!!.show()
+    }
+
+    private fun closeLoad() {
+        if (dialog != null) {
+            if (dialog!!.isShowing) {
+                dialog!!.dismiss()
             }
         }
     }

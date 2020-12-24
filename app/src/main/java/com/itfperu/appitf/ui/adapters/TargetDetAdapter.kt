@@ -53,10 +53,9 @@ class TargetDetAdapter(
                 textView3.text = String.format("Categoria : %s", p.nombreCategoria)
                 textView5.text = p.nombreEspecialidad
                 editTextCantidad.setText(p.nroContacto.toString())
-
+                textView9.text = p.visitadoPor
                 if (tipo == 2) {
-                    textView9.text = String.format("Visitado por : %s", p.visitadoPor)
-                    textView9.visibility = View.VISIBLE
+//                    textView9.visibility = View.VISIBLE
                     if (tipoTarget == "A") {
 //                        if (p.visitado == 0)
 //                            imgInfo.visibility = View.GONE

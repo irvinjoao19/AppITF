@@ -2,8 +2,6 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -31,11 +28,7 @@ import com.itfperu.appitf.ui.adapters.ComboTipoProductoAdapter
 import com.itfperu.appitf.ui.adapters.ControlAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_edit_feriado.*
 import kotlinx.android.synthetic.main.fragment_edit_producto.*
-import kotlinx.android.synthetic.main.fragment_edit_producto.editTextEstado
-import kotlinx.android.synthetic.main.fragment_edit_producto.editTextNombre
-import kotlinx.android.synthetic.main.fragment_edit_producto.fabGenerate
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
@@ -110,13 +103,13 @@ class EditProductoFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 

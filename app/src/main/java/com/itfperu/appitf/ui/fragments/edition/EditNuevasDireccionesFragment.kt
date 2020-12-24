@@ -26,11 +26,9 @@ import com.itfperu.appitf.data.viewModel.DireccionViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboMedicoAdapter
-import com.itfperu.appitf.ui.adapters.MedicoAdapter
 import com.itfperu.appitf.ui.adapters.UbigeoAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_edit_nuevas_direcciones.*
 import javax.inject.Inject
 
@@ -98,11 +96,14 @@ class EditNuevasDireccionesFragment : DaggerFragment(), View.OnClickListener {
             }
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            if (it == "Guardado"){
+                Util.executeDireccionWork(requireContext(),1)
+            }
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         editTextMedico.setOnClickListener(this)
         editTextDepartamento.setOnClickListener(this)

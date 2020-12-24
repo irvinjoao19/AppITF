@@ -10,7 +10,6 @@ import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.helper.Mensaje
 import com.google.gson.Gson
 import com.itfperu.appitf.helper.MensajeDetalle
-import com.itfperu.appitf.helper.MensajeDetalleDet
 import com.itfperu.appitf.helper.Util
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -789,18 +788,24 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun syncActividad(
-        u: Int,
-        c: Int,
-        e: Int,
-        t: Int,
-        ul: Int
+        u: Int, c: Int, e: Int, t: Int, ul: Int
     ): Observable<List<Actividad>> {
         return apiService.getActividad(u, c, e, t, ul)
     }
 
     override fun insertActividads(p: List<Actividad>): Completable {
         return Completable.fromAction {
-            dataBase.actividadDao().insertActividadListTask(p)
+            for (a: Actividad in p) {
+                val det: Actividad? =
+                    dataBase.actividadDao().getActividadOffLineByIdTask(a.identity)
+                if (det == null) {
+                    dataBase.actividadDao().insertActividadTask(a)
+                } else {
+                    if (det.active == 0) {
+                        dataBase.actividadDao().updateActividadTask(a)
+                    }
+                }
+            }
         }
     }
 
@@ -808,8 +813,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return apiService.saveActividad(body)
     }
 
-    override fun insertActividad(c: Actividad): Completable {
+    override fun insertActividad(c: Actividad, t: Mensaje): Completable {
         return Completable.fromAction {
+            c.identity = t.codigoRetorno
             c.usuario = dataBase.usuarioDao().getUsuarioNombre()
             val a: Actividad? = dataBase.actividadDao().getActividadByIdTask(c.actividadId)
             if (a == null) {
@@ -872,13 +878,25 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                     dataBase.actividadDao().getActividadesU(u, e, t)
                 }
             } else {
-                dataBase.actividadDao().getActividades(c, e, t)
+                if (e == 0) {
+                    dataBase.actividadDao().getActividadesCiclo(c, t)
+                } else {
+                    dataBase.actividadDao().getActividades(c, e, t)
+                }
             }
         } else {
             if (c != 0) {
-                dataBase.actividadDao().getActividades(c, e, t)
+                if (e != 0) {
+                    dataBase.actividadDao().getActividades(c, e, t)
+                } else {
+                    dataBase.actividadDao().getActividadesCiclo(c, t)
+                }
             } else {
-                dataBase.actividadDao().getActividades(e, t)
+                if (e == 0) {
+                    dataBase.actividadDao().getActividades(t)
+                } else {
+                    dataBase.actividadDao().getActividades(e, t)
+                }
             }
         }
     }
@@ -1043,6 +1061,15 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 dataBase.medicoDao().updateMedicoTask(m)
             }
 
+            val ta: TargetM? = dataBase.targetDao().getTargetByMedico(m.medicoId)
+            if (ta != null) {
+                ta.nombreUsuario =
+                    String.format("%s %s %s", m.apellidoP, m.apellidoM, m.nombreMedico)
+                ta.descripcionCategoria = m.nombreCategoria
+                ta.descripcionEspecialidad = m.nombreEspecialidad
+                dataBase.targetDao().updateTargetTask(ta)
+            }
+
 
 //            val e: Medico? = dataBase.medicoDao().getMedicoByIdTask(m.medicoId)
 //            if (e == null) {
@@ -1085,6 +1112,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun getMedicosByEstado(e: Int): LiveData<List<Medico>> {
         return dataBase.medicoDao().getMedicosByEstado(e)
+    }
+
+    override fun getMedicosByEstado(e: Int, u: Int): LiveData<List<Medico>> {
+        return dataBase.medicoDao().getMedicosByEstado(e, u)
     }
 
     override fun getDireccionesById(id: Int): LiveData<List<MedicoDireccion>> {
@@ -1438,6 +1469,7 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
                 a.nombreMedico = String.format("%s %s %s", s.nombreMedico, s.apellidoP, s.apellidoM)
                 a.nroContacto = 1
                 a.tipoTarget = tipoTarget
+                a.visitadoPor = s.visitadoPor
                 a.estadoTarget = 16
 
                 if (!dataBase.targetDetDao().getMedicoExits(a.medicoId, a.targetCabId)) {
@@ -1524,7 +1556,6 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     override fun updateEnabledProgramacion(t: Mensaje): Completable {
         return Completable.fromAction {
             dataBase.programacionDao().updateEnabledProgramacion(t.codigoBase, t.codigoRetorno)
-
             dataBase.programacionDetDao()
                 .updateEnabledProgramacionDet(t.codigoBase)
 
@@ -1765,6 +1796,14 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         return apiService.sendPuntoContacto(body)
     }
 
+
+    override fun sendOnlinePuntoContacto(p: PuntoContacto): Observable<Mensaje> {
+        val json = Gson().toJson(p)
+        Log.i("TAG", json)
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+        return apiService.sendPuntoContacto(body)
+    }
+
     override fun updateEnabledPuntoContacto(t: Mensaje): Completable {
         return Completable.fromAction {
             dataBase.puntoContactoDao().updateEnabledPuntoContacto(t.codigoBase)
@@ -1887,5 +1926,23 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         Log.i("TAG", json)
         val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
         return apiService.saveMedicoDireccion(body)
+    }
+
+    override fun syncBirthDay(u: Int, m: Int): Observable<List<BirthDay>> {
+        return apiService.getBirthDay(u, m)
+    }
+
+    override fun insertBirthDays(p: List<BirthDay>): Completable {
+        return Completable.fromAction {
+            dataBase.birthDayDao().insertBirthDayListTask(p)
+        }
+    }
+
+    override fun getBirthDays(usuarioId: Int, mes: Int): LiveData<List<BirthDay>> {
+        return if (mes == 0) {
+            dataBase.birthDayDao().getBirthDays()
+        } else {
+            dataBase.birthDayDao().getBirthDaysByMonth(mes)
+        }
     }
 }

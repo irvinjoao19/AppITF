@@ -79,7 +79,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -161,7 +161,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -200,7 +200,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 override fun onSubscribe(d: Disposable) {}
                 override fun onNext(t: Mensaje) {
-                    updateEnabledProgramacion(t)
+                    p.active = 0
+                    insertProgramacion(p)
                 }
 
                 override fun onError(t: Throwable) {
@@ -208,7 +209,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -255,25 +256,30 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             }
         }
 
-        if (p.descripcionResultado.isNotEmpty()) {
-            if (p.fechaReporteProgramacion.isEmpty()) {
-                mensajeError.value = "Seleccione Fecha Reporte"
-                return
-            }
-            if (p.horaReporteProgramacion.isEmpty()) {
-                mensajeError.value = "Seleccione Hora Reporte"
-                return
-            }
+        if (p.resultadoVisitaId != 14) {
+            if (p.descripcionResultado.isNotEmpty()) {
+                if (p.fechaReporteProgramacion.isEmpty()) {
+                    mensajeError.value = "Seleccione Fecha Reporte"
+                    return
+                }
+                if (p.horaReporteProgramacion.isEmpty()) {
+                    mensajeError.value = "Seleccione Hora Reporte"
+                    return
+                }
 
-            if (p.active == 1) {
-                p.estadoProgramacion = 24
-                p.descripcionEstado = "Ejecutado"
+                if (p.active == 1) {
+                    p.estadoProgramacion = 24
+                    p.descripcionEstado = "Ejecutado"
+                }
             }
+        } else {
+            p.estadoProgramacion = 23
+            p.descripcionEstado = "Programado"
         }
 
-        if (p.active == 1){
+        if (p.active == 1) {
             sendProgramacionById(p)
-        }else{
+        } else {
             verificateVisitaMedico(p)
         }
     }
@@ -385,7 +391,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -442,7 +448,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -472,7 +478,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeInfo.postValue(error.Message)
+                            mensajeInfo.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -504,7 +510,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeInfo.postValue(error.Message)
+                            mensajeInfo.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -536,7 +542,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeError.postValue(error.Message)
+                            mensajeError.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }
@@ -562,7 +568,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                         val body = t.response().errorBody()
                         try {
                             val error = retrofit.errorConverter.convert(body!!)
-                            mensajeInfo.postValue(error.Message)
+                            mensajeInfo.postValue(error!!.Message)
                         } catch (e1: IOException) {
                             e1.printStackTrace()
                         }

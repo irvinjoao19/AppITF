@@ -94,7 +94,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         f = Filtro(
             if (tipoMedico == 1) usuarioId else 0,
             finicio, ffinal,
-            if (tipoMedico == 1) 0 else 11,
+            0,
             tipoMedico
         )
 
@@ -150,7 +150,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapterSol
 
@@ -188,11 +188,11 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         fabAdd.setOnClickListener(this)
         fabSave.setOnClickListener(this)
@@ -200,7 +200,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun deleteSolMedico(m: SolMedico) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas eliminar formulario incompleto ?."))
             .setPositiveButton("Si") { dialog, _ ->
@@ -285,8 +285,8 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         editTextDesde.setText(finicio)
         editTextHasta.setText(ffinal)
 
-        editTextDesde.setOnClickListener { Util.getDateDialog(context!!, editTextDesde) }
-        editTextHasta.setOnClickListener { Util.getDateDialog(context!!, editTextHasta) }
+        editTextDesde.setOnClickListener { Util.getDateDialog(requireContext(), editTextDesde) }
+        editTextHasta.setOnClickListener { Util.getDateDialog(requireContext(), editTextHasta) }
         editTextEstado.setOnClickListener { spinnerDialog(editTextEstado, f) }
         fabSearch.setOnClickListener {
             f.finicio = editTextDesde.text.toString()
@@ -346,7 +346,7 @@ class MedicosFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun confirmSend() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->

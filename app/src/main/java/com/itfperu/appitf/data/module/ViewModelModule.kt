@@ -2,7 +2,9 @@ package com.itfperu.appitf.data.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.Worker
 import com.itfperu.appitf.data.viewModel.*
+import com.itfperu.appitf.ui.workManager.MedicoWork
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -104,6 +106,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReporteViewModel::class)
     internal abstract fun bindReporteViewModel(reporteViewModel: ReporteViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BirthDayViewModel::class)
+    internal abstract fun bindBirthDayViewModel(birthDayViewModel: BirthDayViewModel): ViewModel
+
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

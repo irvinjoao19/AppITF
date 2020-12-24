@@ -78,11 +78,14 @@ class EditNuevasDireccionesAFragment : DaggerFragment(), View.OnClickListener {
             }
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            if (it == "Guardado"){
+                Util.executeDireccionWork(requireContext(),2)
+            }
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         fabAprobar.setOnClickListener(this)

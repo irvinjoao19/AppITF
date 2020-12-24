@@ -52,7 +52,7 @@ class EditUsuarioFragment : DaggerFragment(), View.OnClickListener {
 
         when (v.id) {
             R.id.editTextRol -> spinnerDialog(3, "Rol")
-            R.id.editTextFechaN -> Util.getDateDialog(context!!, editTextFechaN)
+            R.id.editTextFechaN -> Util.getDateDialog(requireContext(), editTextFechaN)
             R.id.editTextSexo -> spinnerDialog(2, "Sexo")
             R.id.editTextSupervisor -> spinnerDialog(4, "Supervisores")
             R.id.editTextEstado -> spinnerDialog(1, "Estado")
@@ -135,13 +135,13 @@ class EditUsuarioFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
-            activity!!.finish()
+            Util.toastMensaje(requireContext(), it)
+            requireActivity().finish()
         })
     }
 
@@ -160,7 +160,7 @@ class EditUsuarioFragment : DaggerFragment(), View.OnClickListener {
         p.nombreEstado = editTextEstado.text.toString()
         p.usuarioId = usuarioId
         load()
-        itfViewModel.updateUsuario(p, context!!)
+        itfViewModel.updateUsuario(p, requireContext())
     }
 
     private fun load() {

@@ -27,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
+import androidx.work.*
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -34,6 +35,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.itfperu.appitf.data.local.model.Month
+import com.itfperu.appitf.ui.workManager.DireccionWork
+import com.itfperu.appitf.ui.workManager.MedicoWork
+import com.itfperu.appitf.ui.workManager.TargetWork
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -42,11 +47,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.io.*
 import java.nio.channels.FileChannel
+import java.text.DateFormatSymbols
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.*
 
 object Util {
@@ -105,6 +112,50 @@ object Util {
         val calendar = Calendar.getInstance()
         calendar[Calendar.DAY_OF_MONTH] = 1
         return sdf.format(calendar.time)
+    }
+
+    fun getMonthCurrent(): Int {
+        val c = Calendar.getInstance()
+//        var month: String = String.format("%s", c.get(Calendar.MONTH) + 1)
+//        if (month.length < 2) {
+//            month = "0$month"
+//        }
+        return c.get(Calendar.MONTH) + 1
+    }
+
+    fun getMoths(): List<Month> {
+        val m = ArrayList<Month>()
+        val shortMonths: Array<String> = DateFormatSymbols(Locale("es", "ES")).months
+        for (i in shortMonths.indices) {
+            val shortMonth = shortMonths[i]
+            m.add(Month(i + 1, shortMonth))
+        }
+//        val m1 = Month(1, "Enero")
+//        val m2 = Month(2, "Febrero")
+//        val m3 = Month(3, "Marzo")
+//        val m4 = Month(4, "Abril")
+//        val m5 = Month(5, "Mayo")
+//        val m6 = Month(6, "Junio")
+//        val m7 = Month(7, "Julio")
+//        val m8 = Month(8, "Agosto")
+//        val m9 = Month(9, "Septiembre")
+//        val m10 = Month(10, "Octubre")
+//        val m11 = Month(10, "Noviembre")
+//        val m12 = Month(10, "Diciembre")
+//        m.add(m1)
+//        m.add(m2)
+//        m.add(m3)
+//        m.add(m4)
+//        m.add(m5)
+//        m.add(m6)
+//        m.add(m7)
+//        m.add(m8)
+//        m.add(m9)
+//        m.add(m10)
+//        m.add(m11)
+//        m.add(m12)
+
+        return m
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -948,5 +999,61 @@ object Util {
                 }
             }
         }
+    }
+
+    // execute services
+    fun executeMedicoWork(context:Context,tipo: Int) {
+//        val downloadConstraints = Constraints.Builder()
+//            .setRequiresCharging(true)
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .build()
+        // Define the input data for work manager
+        val data = Data.Builder()
+        data.putInt("tipo", tipo)
+
+        // Create an one time work request
+        val downloadImageWork = OneTimeWorkRequest
+            .Builder(MedicoWork::class.java)
+            .setInputData(data.build())
+//            .setConstraints(downloadConstraints)
+            .build()
+        WorkManager.getInstance(context).enqueue((downloadImageWork))
+    }
+
+    fun executeDireccionWork(context:Context,tipo: Int) {
+//        val downloadConstraints = Constraints.Builder()
+//            .setRequiresCharging(true)
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .build()
+        // Define the input data for work manager
+        val data = Data.Builder()
+        data.putInt("tipo", tipo)
+
+        // Create an one time work request
+        val downloadImageWork = OneTimeWorkRequest
+            .Builder(DireccionWork::class.java)
+            .setInputData(data.build())
+//            .setConstraints(downloadConstraints)
+            .build()
+        WorkManager.getInstance(context).enqueue((downloadImageWork))
+    }
+
+    fun executeTarget(context:Context,tipoTarget: String, tipo: Int) {
+//        val downloadConstraints = Constraints.Builder()
+//            .setRequiresCharging(true)
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .build()
+        // Define the input data for work manager
+        val data = Data.Builder()
+        data.putString("tipoTarget", tipoTarget)
+        data.putInt("tipo", tipo)
+
+        // Create an one time work request
+        val downloadImageWork = OneTimeWorkRequest
+            .Builder(TargetWork::class.java)
+            .setInputData(data.build())
+//            .setConstraints(downloadConstraints)
+            .build()
+        WorkManager.getInstance(context).enqueue((downloadImageWork))
     }
 }

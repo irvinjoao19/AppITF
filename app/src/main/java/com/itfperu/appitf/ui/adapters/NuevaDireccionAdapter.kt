@@ -9,6 +9,12 @@ import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.NuevaDireccion
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.*
+import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.card
+import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.textView1
+import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.textView2
+import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.textView3
+import kotlinx.android.synthetic.main.cardview_nueva_direccion.view.view
+import kotlinx.android.synthetic.main.cardview_punto_contacto.view.*
 
 class NuevaDireccionAdapter(private var listener: OnItemClickListener.NuevaDireccionListener) :
     RecyclerView.Adapter<NuevaDireccionAdapter.ViewHolder>() {
@@ -44,6 +50,30 @@ class NuevaDireccionAdapter(private var listener: OnItemClickListener.NuevaDirec
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
                 }
+
+
+//                26	tbl_Sol_Medico_Direccion	Enviada
+//                27	tbl_Sol_Medico_Direccion	Rechazada
+//                28	tbl_Sol_Medico_Direccion	Aprobada
+//                29	tbl_Sol_Medico_Direccion	Observado
+
+                when (p.estadoId) {
+                    26->view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorWhiteBlue)
+                    )
+                    27 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorRed)
+                    )
+                    28 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorGreen)
+                    )
+                    29 -> view.setBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorYellow)
+                    )
+                }
+
+
+
                 textView1.text = p.nombreMedico
                 textView2.text = p.fechaSolicitud
                 textView3.text = String.format(

@@ -201,6 +201,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             "Reporte diario" -> changeFragment(
                 ReporteDiarioFragment.newInstance(usuarioId, tipo), item.title.toString()
             )
+            "Cumpleaños" -> changeFragment(
+                BirthDayFragment.newInstance(usuarioId), "Cumpleaños"
+            )
             "Inicio" -> if (tipo == 0) {
                 changeFragment(ReporteFragment.newInstance(usuarioId, 0), "Reporte RR-MM")
             } else {

@@ -175,8 +175,9 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
                         p.longitud = gps.longitude.toString()
                         p.estadoId = 31
                         p.descripcionEstado = "Registrado"
-                        p.active = 1
-                        itfViewModel.insertPuntoContacto(p)
+                        p.active = 0
+                        load()
+                        itfViewModel.sendOnlinePuntoContacto(p)
                     }
                 } else {
                     gps.showSettingsAlert(context!!)

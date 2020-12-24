@@ -124,4 +124,12 @@ interface OnItemClickListener {
     interface PuntoContactoListener {
         fun onItemClick(p: PuntoContacto, view: View, position: Int)
     }
+
+    interface BirthDayListener {
+        fun onItemClick(b: BirthDay, view: View, position: Int)
+    }
+
+    interface MonthListener {
+        fun onItemClick(m: Month, view: View, position: Int)
+    }
 }

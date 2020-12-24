@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.fragment_personal.*
 import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
     View.OnClickListener {
@@ -79,7 +78,7 @@ class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = perfilAdapter
 
@@ -107,13 +106,13 @@ class PersonalFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             if (it != null) {
                 closeLoad()
-                Util.toastMensaje(context!!, it)
+                Util.toastMensaje(requireContext(), it)
             }
         })
     }
 
     private fun confirmDelete(p: Personal) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar el usuario ?")
             .setPositiveButton("SI") { dialog, _ ->

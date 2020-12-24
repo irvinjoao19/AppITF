@@ -39,21 +39,26 @@ class TargetAltasAdapter(private var listener: OnItemClickListener.TargetAltasLi
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(p: TargetCab, listener: OnItemClickListener.TargetAltasListener) =
             with(itemView) {
-                if (p.active != 0){
+                if (p.active != 0) {
                     card.setCardBackgroundColor(
                         ContextCompat.getColor(itemView.context, R.color.divider)
                     )
+                } else {
+                    card.setCardBackgroundColor(
+                        ContextCompat.getColor(itemView.context, R.color.colorWhite)
+                    )
                 }
+
 
                 when (p.estado) {
                     16 -> view.setBackgroundColor(
                         ContextCompat.getColor(
-                            itemView.context, R.color.colorRed
+                            itemView.context, R.color.colorWhiteBlue
                         )
                     )
-                    17 ->view.setBackgroundColor(
+                    17 -> view.setBackgroundColor(
                         ContextCompat.getColor(
-                            itemView.context, R.color.colorYellow
+                            itemView.context, R.color.colorRed
                         )
                     )
                     18 -> view.setBackgroundColor(
