@@ -134,7 +134,7 @@ class ReporteDiarioFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             if (it != null) {
-                Util.toastMensaje(context!!, it)
+                Util.toastMensaje(requireContext(), it)
             }
         })
         editTextCiclo.setOnClickListener(this)

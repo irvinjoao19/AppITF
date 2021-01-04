@@ -78,7 +78,7 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
@@ -105,12 +105,12 @@ class VisitaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener,
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
     private fun confirmDelete(v: Visita) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar este resultado de visita?")
             .setPositiveButton("SI") { dialog, _ ->

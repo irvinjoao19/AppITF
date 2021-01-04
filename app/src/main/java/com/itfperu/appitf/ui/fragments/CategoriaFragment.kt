@@ -16,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Categoria
-import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.CategoriaViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -79,7 +78,7 @@ class CategoriaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
@@ -106,12 +105,12 @@ class CategoriaFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListener
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
     private fun confirmDelete(c: Categoria) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar esta categoria ?")
             .setPositiveButton("SI") { dialog, _ ->

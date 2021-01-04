@@ -112,7 +112,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
             }
         })
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
@@ -136,12 +136,12 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         itfViewModel.getProgramacionId().observe(viewLifecycleOwner, {
@@ -248,7 +248,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmSend() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->
@@ -335,7 +335,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeInfo.observe(viewLifecycleOwner, {
             if (it != null) {
-                Util.toastMensaje(context!!, it)
+                Util.toastMensaje(requireContext(), it)
                 dialog.dismiss()
             }
         })
@@ -411,7 +411,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
         }
         itfViewModel.mensajeInfo.observe(viewLifecycleOwner, {
             if (it != null) {
-                Util.toastMensaje(context!!, it)
+                Util.toastMensaje(requireContext(), it)
                 dialog.dismiss()
             }
         })

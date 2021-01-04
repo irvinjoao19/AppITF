@@ -16,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.Especialidad
-import com.itfperu.appitf.data.local.model.Visita
 import com.itfperu.appitf.data.viewModel.EspecialidadViewModel
 import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Util
@@ -83,7 +82,7 @@ class EspecialidadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
         })
 
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
@@ -110,12 +109,12 @@ class EspecialidadFragment : DaggerFragment(), SwipeRefreshLayout.OnRefreshListe
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
     private fun confirmDelete(e:Especialidad) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage("Deseas inactivar esta especialidad ?")
             .setPositiveButton("SI") { dialog, _ ->

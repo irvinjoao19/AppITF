@@ -73,7 +73,7 @@ class StockFragment : DaggerFragment() {
 
         val stockAdapter = StockAdapter()
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = stockAdapter
 
@@ -86,10 +86,10 @@ class StockFragment : DaggerFragment() {
         })
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.loading.observe(viewLifecycleOwner, {
             if (it) {

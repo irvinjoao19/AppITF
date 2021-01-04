@@ -190,8 +190,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
     private fun sendProgramacionById(p: Programacion) {
         roomRepository.sendProgramacionOnline(p)
-            .subscribeOn(Schedulers.io())
             .delay(1000, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
                 override fun onComplete() {

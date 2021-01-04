@@ -72,7 +72,7 @@ class ReporteFragment : DaggerFragment(), View.OnClickListener {
 
         val tabLayoutAdapter =
             TabLayoutAdapter.ReporteForm(
-                activity!!.supportFragmentManager, tabLayout.tabCount, tipo
+                requireActivity().supportFragmentManager, tabLayout.tabCount, tipo
             )
         viewPager.adapter = tabLayoutAdapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
@@ -133,7 +133,7 @@ class ReporteFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             if (it != null) {
-                Util.toastMensaje(context!!, it)
+                Util.toastMensaje(requireContext(), it)
             }
         })
         editTextCiclo.setOnClickListener(this)

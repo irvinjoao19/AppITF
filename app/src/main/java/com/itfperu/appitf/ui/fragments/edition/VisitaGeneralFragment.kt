@@ -2,7 +2,6 @@ package com.itfperu.appitf.ui.fragments.edition
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.radiobutton.MaterialRadioButton
-import com.google.android.material.textfield.TextInputEditText
 import com.itfperu.appitf.R
 import com.itfperu.appitf.data.local.model.*
 import com.itfperu.appitf.data.viewModel.ProgramacionViewModel
@@ -26,9 +23,7 @@ import com.itfperu.appitf.data.viewModel.ViewModelFactory
 import com.itfperu.appitf.helper.Gps
 import com.itfperu.appitf.helper.Util
 import com.itfperu.appitf.ui.adapters.ComboDireccionAdapter
-import com.itfperu.appitf.ui.adapters.ComboEstadoAdapter
 import com.itfperu.appitf.ui.adapters.ComboVisitaAdapter
-import com.itfperu.appitf.ui.adapters.DireccionAdapter
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_visita_general.*
@@ -42,11 +37,11 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.editTextFechaProgramacion -> Util.getDateDialog(
-                context!!, editTextFechaProgramacion
+                requireContext(), editTextFechaProgramacion
             )
-            R.id.editTextHoraProgramacion -> Util.getHourDialog(context!!, editTextHoraProgramacion)
-            R.id.editTextFechaReporte -> Util.getDateDialog(context!!, editTextFechaReporte)
-            R.id.editTextHoraReporte -> Util.getHourDialog(context!!, editTextHoraReporte)
+            R.id.editTextHoraProgramacion -> Util.getHourDialog(requireContext(), editTextHoraProgramacion)
+            R.id.editTextFechaReporte -> Util.getDateDialog(requireContext(), editTextFechaReporte)
+            R.id.editTextHoraReporte -> Util.getHourDialog(requireContext(), editTextHoraReporte)
 
             R.id.editTextDireccion -> spinnerDialog(2, "Direcciones del Medico")
             R.id.editTextResultado -> spinnerDialog(1, "Resultado de Visitas")
@@ -97,7 +92,7 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun bindUI() {
-        viewPager = activity!!.findViewById(R.id.viewPager)
+        viewPager = requireActivity().findViewById(R.id.viewPager)
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(ProgramacionViewModel::class.java)
 
@@ -153,10 +148,10 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
 
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             viewPager?.currentItem = 1
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
 
         editTextFechaProgramacion.setOnClickListener(this)
@@ -175,7 +170,7 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formProgramacion() {
-        val gps = Gps(context!!)
+        val gps = Gps(requireContext())
         if (gps.isLocationEnabled()) {
             if (gps.latitude.toString() != "0.0" || gps.longitude.toString() != "0.0") {
                 p.nombreCiclo = editTextCiclo.text.toString()
@@ -203,7 +198,7 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
                 itfViewModel.validateProgramacion(p)
             }
         } else {
-            gps.showSettingsAlert(context!!)
+            gps.showSettingsAlert(requireContext())
         }
     }
 

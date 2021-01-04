@@ -135,6 +135,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
         roomRepository.sendActividad(body)
             .delay(1000, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
                 override fun onSubscribe(d: Disposable) {}
