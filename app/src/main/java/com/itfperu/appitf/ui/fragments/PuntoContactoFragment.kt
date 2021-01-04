@@ -2,12 +2,10 @@ package com.itfperu.appitf.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
@@ -93,7 +91,7 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
                 }
             })
         recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = puntoContactoAdapter
 
@@ -114,11 +112,11 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
             closeLoad()
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         fabSave.setOnClickListener(this)
     }
@@ -137,7 +135,7 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
 
         f = Filtro()
 
-        editTextFecha.setOnClickListener { Util.getDateDialog(context!!, editTextFecha) }
+        editTextFecha.setOnClickListener { Util.getDateDialog(requireContext(), editTextFecha) }
         fabSearch.setOnClickListener {
             val fecha = editTextFecha.text.toString()
             val search = Filtro(
@@ -149,7 +147,7 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmSend() {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Deseas enviar las solicitudes ?."))
             .setPositiveButton("Si") { dialog, _ ->
@@ -164,11 +162,11 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun confirmSave(p: PuntoContacto) {
-        val dialog = MaterialAlertDialogBuilder(context!!)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Mensaje")
             .setMessage(String.format("Desea registrar el punto de contacto?."))
             .setPositiveButton("Si") { dialog, _ ->
-                val gps = Gps(context!!)
+                val gps = Gps(requireContext())
                 if (gps.isLocationEnabled()) {
                     if (gps.latitude.toString() != "0.0" || gps.longitude.toString() != "0.0") {
                         p.latitud = gps.latitude.toString()
@@ -180,7 +178,7 @@ class PuntoContactoFragment : DaggerFragment(), View.OnClickListener {
                         itfViewModel.sendOnlinePuntoContacto(p)
                     }
                 } else {
-                    gps.showSettingsAlert(context!!)
+                    gps.showSettingsAlert(requireContext())
                 }
                 dialog.dismiss()
             }

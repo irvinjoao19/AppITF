@@ -147,7 +147,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                             e1.printStackTrace()
                         }
                     } else {
-                        mensajeError.postValue(t.message)
+                        mensajeError.postValue(t.toString())
                     }
                 }
             })
@@ -169,6 +169,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
     fun sendOnlinePuntoContacto(p: PuntoContacto) {
         roomRepository.sendOnlinePuntoContacto(p)
             .delay(1000, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
                 override fun onSubscribe(d: Disposable) {}
@@ -187,7 +188,7 @@ internal constructor(private val roomRepository: AppRepository, private val retr
                             e1.printStackTrace()
                         }
                     } else {
-                        mensajeError.postValue(t.message)
+                        mensajeError.postValue(t.toString())
                     }
                 }
             })
