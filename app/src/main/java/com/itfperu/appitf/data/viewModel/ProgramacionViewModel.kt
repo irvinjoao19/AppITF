@@ -289,20 +289,13 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<Mensaje> {
-                override fun onSubscribe(d: Disposable) {
-
-                }
-
+                override fun onSubscribe(d: Disposable) {}
+                override fun onComplete() {}
                 override fun onNext(t: Mensaje) {
                     mensajeError.value = t.mensaje
                 }
-
                 override fun onError(e: Throwable) {
                     insertProgramacion(p)
-                }
-
-                override fun onComplete() {
-
                 }
             })
     }

@@ -134,6 +134,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             Util.toastMensaje(requireContext(), it)
             if (it == "Medico Guardado") {
+                Util.executeMedicoWork(requireContext(),1)
                 requireActivity().finish()
             }
         })
