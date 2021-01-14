@@ -93,8 +93,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextNombre"
                 android:layout_width="match_parent"
-                android:hint="Ingrese Nombre"
                 android:layout_height="wrap_content"
+                android:hint="Ingrese Nombre"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -181,9 +181,9 @@
                 android:id="@+id/editTextCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Seleccione Categoria"
                 android:drawableEnd="@drawable/ic_down"
-                android:focusable="false" />
+                android:focusable="false"
+                android:hint="Seleccione Categoria" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -211,9 +211,9 @@
                 android:id="@+id/editTextEspecialidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Seleccione Especialidad 1"
                 android:drawableEnd="@drawable/ic_down"
-                android:focusable="false" />
+                android:focusable="false"
+                android:hint="Seleccione Especialidad 1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -242,8 +242,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
-                android:hint="Seleccione Especialidad 2"
-                android:focusable="false" />
+                android:focusable="false"
+                android:hint="Seleccione Especialidad 2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -302,8 +302,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
-                android:hint="Seleccione Sexo"
-                android:focusable="false" />
+                android:focusable="false"
+                android:hint="Seleccione Sexo" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -330,8 +330,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
-                android:hint="Ingrese Email"
                 android:layout_height="wrap_content"
+                android:hint="Ingrese Email"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -359,9 +359,40 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextTelefono"
                 android:layout_width="match_parent"
-                android:hint="Ingrese Telefono"
                 android:layout_height="wrap_content"
+                android:hint="Ingrese Telefono"
                 android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/layout13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Tipo Visita"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/layoutTipoVisita"
+            app:layout_constraintTop_toBottomOf="@+id/layoutTelefono" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutTipoVisita"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout13">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTipoVisita"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_down"
+                android:focusable="false"
+                android:hint="Seleccione Tipo de Visita" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -380,6 +411,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutTelefono" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutTipoVisita" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -132,4 +132,8 @@ interface OnItemClickListener {
     interface MonthListener {
         fun onItemClick(m: Month, view: View, position: Int)
     }
+
+    interface TipoVisitaListener {
+        fun onItemClick(t: TipoVisita, view: View, position: Int)
+    }
 }

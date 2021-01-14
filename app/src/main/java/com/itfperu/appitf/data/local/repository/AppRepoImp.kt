@@ -191,6 +191,10 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
             if (v1 != null) {
                 dataBase.visitaDao().insertVisitaListTask(v1)
             }
+            val v2: List<TipoVisita>? = s.tipoVisita
+            if (v2 != null) {
+                dataBase.tipoVisitaDao().insertTipoVisitaListTask(v2)
+            }
         }
     }
 
@@ -1944,5 +1948,13 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
         } else {
             dataBase.birthDayDao().getBirthDaysByMonth(mes)
         }
+    }
+
+    override fun getTipoVisita(): LiveData<List<TipoVisita>> {
+        return dataBase.tipoVisitaDao().getTipoVisitas()
+    }
+
+    override fun getTipoVisitaById(id: Int): LiveData<TipoVisita> {
+        return dataBase.tipoVisitaDao().getTipoVisitaById(id)
     }
 }

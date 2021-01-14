@@ -34,6 +34,8 @@ open class Medico {
     var visitadoPor: String = ""
     var direccion: String = ""
     var nombreCompleto: String = ""
+    var tipoVisitaId : Int = 0
+    var nombreTipoVisita : String = ""
 
     var active: Int = 0 // 1 -> para guardar , 2 -> por completar
 

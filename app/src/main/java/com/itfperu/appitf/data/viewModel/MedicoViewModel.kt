@@ -344,8 +344,8 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             })
     }
 
-    private fun insertDireccion(m: MedicoDireccion,t:Mensaje) {
-        roomRepository.insertDireccion(m,t)
+    private fun insertDireccion(m: MedicoDireccion, t: Mensaje) {
+        roomRepository.insertDireccion(m, t)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : CompletableObserver {
@@ -478,5 +478,13 @@ internal constructor(private val roomRepository: AppRepository, private val retr
 
                 override fun onError(e: Throwable) {}
             })
+    }
+
+    fun getTipoVisita(): LiveData<List<TipoVisita>> {
+        return roomRepository.getTipoVisita()
+    }
+
+    fun getTipoVisitaById(id: Int): LiveData<TipoVisita> {
+        return roomRepository.getTipoVisitaById(id)
     }
 }

@@ -198,4 +198,9 @@ class DataBaseModule {
     internal fun provideBirthDayDao(appDataBase: AppDataBase): BirthDayDao {
         return appDataBase.birthDayDao()
     }
+
+    @Provides
+    internal fun provideTipoVisitaDao(appDataBase: AppDataBase): TipoVisitaDao {
+        return appDataBase.tipoVisitaDao()
+    }
 }

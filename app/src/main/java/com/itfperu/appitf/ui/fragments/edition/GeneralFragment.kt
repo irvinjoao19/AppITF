@@ -41,8 +41,9 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
             R.id.editTextCategoria -> spinnerDialog(2, "Categoria")
             R.id.editTextEspecialidad -> spinnerDialog(3, "Especialidad")
             R.id.editTextEspecialidad2 -> spinnerDialog(4, "Especialidad 2")
-            R.id.editTextFechaN -> Util.getDateDialog(context!!, editTextFechaN)
+            R.id.editTextFechaN -> Util.getDateDialog(requireContext(), editTextFechaN)
             R.id.editTextSexo -> spinnerDialog(5, "Sexo")
+            R.id.editTextTipoVisita -> spinnerDialog(6, "Tipo Visita")
             R.id.fabGenerate -> if (tipoEnvio == 0) formGenerateCabecera() else formValidateMedico()
         }
     }
@@ -86,7 +87,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun bindUI() {
-        viewPager = activity!!.findViewById(R.id.viewPager)
+        viewPager = requireActivity().findViewById(R.id.viewPager)
         itfViewModel =
             ViewModelProvider(this, viewModelFactory).get(MedicoViewModel::class.java)
 
@@ -107,6 +108,12 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 editTextSexo.setText(if (it.sexo == "M") "Masculino" else "Femenino")
                 editTextEmail.setText(it.email)
                 editTextTelefono.setText(it.telefono)
+
+                itfViewModel.getTipoVisitaById(it.tipoVisitaId).observe(viewLifecycleOwner){t->
+                    if (t != null){
+                        editTextTipoVisita.setText(t.descripcion)
+                    }
+                }
             } else {
                 m.estado = 10
             }
@@ -124,6 +131,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         editTextEspecialidad2.setOnClickListener(this)
         editTextFechaN.setOnClickListener(this)
         editTextSexo.setOnClickListener(this)
+        editTextTipoVisita.setOnClickListener(this)
         fabGenerate.setOnClickListener(this)
 
         if (tipoEnvio == 0) {
@@ -135,7 +143,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         }
 
         itfViewModel.mensajeError.observe(viewLifecycleOwner, {
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             if (it == "Ok") {
@@ -143,7 +151,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 return@observe
             }
             viewPager?.currentItem = 1
-            Util.toastMensaje(context!!, it)
+            Util.toastMensaje(requireContext(), it)
         })
     }
 
@@ -162,6 +170,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         m.fechaNacimiento = editTextFechaN.text.toString()
         m.email = editTextEmail.text.toString()
         m.telefono = editTextTelefono.text.toString()
+        m.nombreTipoVisita = editTextTipoVisita.text.toString()
         m.active = 2
         itfViewModel.validateMedico(m)
     }
@@ -275,6 +284,23 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
                 a.add(Combos(1, "Masculino", "M"))
                 a.add(Combos(0, "Femenino", "F"))
                 comboAdapter.addItems(a)
+            }
+            6 -> {
+                val tipoVisitaAdapter =
+                    ComboTipoVisitaAdapter(object : OnItemClickListener.TipoVisitaListener {
+                        override fun onItemClick(t: TipoVisita, view: View, position: Int) {
+                            m.tipoVisitaId = t.tipoVisitaId
+                            editTextTipoVisita.setText(t.descripcion)
+                            dialog.dismiss()
+                        }
+                    })
+                recyclerView.adapter = tipoVisitaAdapter
+                itfViewModel.getTipoVisita().observe(viewLifecycleOwner) {
+                    if (it.isNullOrEmpty()) {
+                        itfViewModel.setError("Datos vacios favor de sincronizar")
+                    }
+                    tipoVisitaAdapter.addItems(it)
+                }
             }
         }
     }

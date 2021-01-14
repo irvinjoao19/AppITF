@@ -323,6 +323,7 @@ interface AppRepository {
     fun syncBirthDay(u: Int, m: Int): Observable<List<BirthDay>>
     fun insertBirthDays(p: List<BirthDay>): Completable
     fun getBirthDays(usuarioId: Int, mes: Int): LiveData<List<BirthDay>>
-
+    fun getTipoVisita(): LiveData<List<TipoVisita>>
+    fun getTipoVisitaById(id: Int): LiveData<TipoVisita>
 
 }
