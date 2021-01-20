@@ -28,6 +28,9 @@ interface ProgramacionDao {
     @Query("SELECT * FROM Programacion WHERE estadoProgramacion=:e AND (cmpMedico LIKE :s OR nombreMedico LIKE :s) ORDER BY nombreMedico,numeroVisita ASC")
     fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>>
 
+    @Query("SELECT * FROM Programacion WHERE (cmpMedico LIKE :s OR nombreMedico LIKE :s) ORDER BY nombreMedico,numeroVisita ASC")
+    fun getProgramaciones(s: String): LiveData<List<Programacion>>
+
     @Query("SELECT * FROM Programacion WHERE usuarioId =:u")
     fun getProgramacionesU(u: Int): LiveData<List<Programacion>>
 

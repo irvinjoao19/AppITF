@@ -1578,10 +1578,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
     }
 
     override fun getProgramaciones(e: Int, s: String): LiveData<List<Programacion>> {
-        return if (s.isEmpty()) {
-            dataBase.programacionDao().getProgramaciones(e)
+        return if (e == 0) {
+            if (s.isEmpty()) {
+                dataBase.programacionDao().getProgramaciones()
+            } else {
+                dataBase.programacionDao().getProgramaciones("%$s%")
+            }
         } else {
-            dataBase.programacionDao().getProgramaciones(e, String.format("%s%s%s", "%", s, "%"))
+            if (s.isEmpty()) {
+                dataBase.programacionDao().getProgramaciones(e)
+            } else {
+                dataBase.programacionDao()
+                    .getProgramaciones(e, String.format("%s%s%s", "%", s, "%"))
+            }
         }
     }
 
@@ -1619,12 +1628,19 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun verificateProgramacionDet(p: ProgramacionDet): Completable {
         return Completable.fromAction {
-            val validate: ProgramacionDet? =
+            val v1: ProgramacionDet? =
                 dataBase.programacionDetDao()
-                    .getValidateProducto(p.programacionId, p.ordenProgramacion)
-            if (validate != null) {
-                if (validate.programacionDetId != p.programacionDetId) {
+                    .getValidateProductoOrden(p.programacionId, p.ordenProgramacion)
+            if (v1 != null) {
+                if (v1.programacionDetId != p.programacionDetId) {
                     error("Ingrese otro numero de orden")
+                }
+            }
+            val v2: ProgramacionDet? = dataBase.programacionDetDao()
+                .getValidateProducto(p.programacionId, p.productoId)
+            if (v2 != null) {
+                if (v2.programacionDetId != p.programacionDetId) {
+                    error("Ingrese otro producto")
                 }
             }
         }

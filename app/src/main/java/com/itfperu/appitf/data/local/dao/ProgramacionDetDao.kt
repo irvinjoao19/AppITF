@@ -32,6 +32,9 @@ interface ProgramacionDetDao {
     fun getProgramacionByIdTask(id: Int): ProgramacionDet
 
     @Query("SELECT * FROM ProgramacionDet WHERE programacionId=:id AND ordenProgramacion =:o")
+    fun getValidateProductoOrden(id:Int,o:Int): ProgramacionDet
+
+    @Query("SELECT * FROM ProgramacionDet WHERE programacionId=:id AND productoId =:o")
     fun getValidateProducto(id:Int,o:Int): ProgramacionDet
 
     @Query("SELECT * FROM ProgramacionDet WHERE programacionId=:id")

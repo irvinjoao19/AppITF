@@ -199,10 +199,10 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
 
         editTextEstado.setOnClickListener { spinnerDialog(editTextEstado, f) }
         fabSearch.setOnClickListener {
-            if (f.estadoId == 0) {
-                itfViewModel.setError("Seleccione Estado")
-                return@setOnClickListener
-            }
+//            if (f.estadoId == 0) {
+//                itfViewModel.setError("Seleccione Estado")
+//                return@setOnClickListener
+//            }
             f.search = editTextSearch.text.toString()
             itfViewModel.search.value = Gson().toJson(f)
             dialog.dismiss()

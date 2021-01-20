@@ -213,6 +213,10 @@ internal constructor(private val roomRepository: AppRepository, private val retr
             mensajeError.value = "Seleccione Sexo"
             return
         }
+        if (m.tipoVisitaId == 0){
+            mensajeError.value = "Seleccione Tipo de visita"
+            return
+        }
         sendMedicoCabecera(m)
     }
 
