@@ -33,6 +33,7 @@ import javax.inject.Inject
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val ARG_PARAM3 = "param3"
 
 class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
@@ -59,8 +60,9 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
     private var usuarioId: Int = 0
     private var programacionId: Int = 0
     private var validacion: Int = 0
-    private var estado: Int =
-        0 // si el estado es diferente de 13 no se necesita agregar producto
+    private var estado: Int =0
+    private var estadoProgramacion: Int = 0
+        // si el estado es diferente de 13 no se necesita agregar producto
     private var cantidad: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +71,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         arguments?.let {
             programacionId = it.getInt(ARG_PARAM1)
             usuarioId = it.getInt(ARG_PARAM2)
+            estadoProgramacion = it.getInt(ARG_PARAM3)
         }
     }
 
@@ -104,7 +107,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
         })
 
         val productoAdapter =
-            ProgramacionDetAdapter(object : OnItemClickListener.ProgramacionDetListener {
+            ProgramacionDetAdapter(estadoProgramacion,object : OnItemClickListener.ProgramacionDetListener {
                 override fun onItemClick(p: ProgramacionDet, view: View, position: Int) {
                     when (view.id) {
                         R.id.imgDelete -> confirmDelete(p)
@@ -268,11 +271,12 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Int, param2: Int) =
+        fun newInstance(param1: Int, param2: Int,param3: Int) =
             VisitaProductoFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_PARAM1, param1)
                     putInt(ARG_PARAM2, param2)
+                    putInt(ARG_PARAM3, param3)
                 }
             }
     }

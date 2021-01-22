@@ -17,8 +17,8 @@ abstract class TabLayoutAdapter {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> GeneralFragment.newInstance(id, sid, usuarioId, t, e,tipoEnvio)
-                1 -> DireccionFragment.newInstance(id, sid, usuarioId, t, e,tipoEnvio)
+                0 -> GeneralFragment.newInstance(id, sid, usuarioId, t, e, tipoEnvio)
+                1 -> DireccionFragment.newInstance(id, sid, usuarioId, t, e, tipoEnvio)
                 else -> Fragment()
             }
         }
@@ -29,14 +29,14 @@ abstract class TabLayoutAdapter {
     }
 
     class VisitaForm(
-        fm: FragmentManager, var numberOfTabs: Int, var id: Int, var usuarioId: Int
+        fm: FragmentManager, var numberOfTabs: Int, var id: Int, var usuarioId: Int, var estado: Int
     ) :
         FragmentStatePagerAdapter(fm, numberOfTabs) {
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> VisitaGeneralFragment.newInstance(id, usuarioId)
-                1 -> VisitaProductoFragment.newInstance(id, usuarioId)
+                1 -> VisitaProductoFragment.newInstance(id, usuarioId, estado)
                 else -> Fragment()
             }
         }

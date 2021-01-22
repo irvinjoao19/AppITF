@@ -17,6 +17,5 @@ open class ProgramacionDet {
     var cantidad: Int = 0
     var stock: Int = 0
     var identity: Int = 0
-
     var active: Int = 0 // 1 -> para enviar 0 -> enviado o del servidor
 }

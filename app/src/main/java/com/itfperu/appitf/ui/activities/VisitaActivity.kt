@@ -23,11 +23,11 @@ class VisitaActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_visita)
         val b = intent.extras
         if (b != null){
-            bindUI(b.getInt("programacionId"),b.getInt("u"))
+            bindUI(b.getInt("programacionId"),b.getInt("u"),b.getInt("estado"))
         }
     }
 
-    private fun bindUI(id:Int,u:Int){
+    private fun bindUI(id:Int,u:Int,estado:Int){
         setSupportActionBar(toolbar)
         supportActionBar!!.title = "Nueva Visita"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -39,7 +39,7 @@ class VisitaActivity : DaggerAppCompatActivity() {
 
         val tabLayoutAdapter =
             TabLayoutAdapter.VisitaForm(
-                supportFragmentManager, tabLayout.tabCount, id, u
+                supportFragmentManager, tabLayout.tabCount, id, u,estado
             )
         viewPager.adapter = tabLayoutAdapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))

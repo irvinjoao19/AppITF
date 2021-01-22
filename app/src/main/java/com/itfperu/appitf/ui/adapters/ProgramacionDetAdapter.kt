@@ -9,7 +9,10 @@ import com.itfperu.appitf.data.local.model.ProgramacionDet
 import com.itfperu.appitf.ui.listeners.OnItemClickListener
 import kotlinx.android.synthetic.main.cardview_programacion_det.view.*
 
-class ProgramacionDetAdapter(private var listener: OnItemClickListener.ProgramacionDetListener) :
+class ProgramacionDetAdapter(
+    private var estado: Int,
+    private var listener: OnItemClickListener.ProgramacionDetListener
+) :
     RecyclerView.Adapter<ProgramacionDetAdapter.ViewHolder>() {
 
     private var perfiles = emptyList<ProgramacionDet>()
@@ -28,7 +31,7 @@ class ProgramacionDetAdapter(private var listener: OnItemClickListener.Programac
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setIsRecyclable(false)
-        holder.bind(perfiles[position], listener)
+        holder.bind(perfiles[position],estado, listener)
     }
 
     override fun getItemCount(): Int {
@@ -36,7 +39,7 @@ class ProgramacionDetAdapter(private var listener: OnItemClickListener.Programac
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(p: ProgramacionDet, listener: OnItemClickListener.ProgramacionDetListener) =
+        fun bind(p: ProgramacionDet,e:Int, listener: OnItemClickListener.ProgramacionDetListener) =
             with(itemView) {
                 textView1.text = String.format("Orden : %s", p.ordenProgramacion)
                 textView2.text = String.format("Codigo : %s", p.codigoProducto)
@@ -47,6 +50,13 @@ class ProgramacionDetAdapter(private var listener: OnItemClickListener.Programac
                 if (p.active == 0) {
                     imgDelete.visibility = View.GONE
                 }
+
+
+                if (e == 24) {
+                    imgDelete.visibility = View.GONE
+                }
+
+
                 imgDelete.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
                 itemView.setOnClickListener { v -> listener.onItemClick(p, v, adapterPosition) }
             }

@@ -107,6 +107,7 @@ class ProgramacionFragment : DaggerFragment(), View.OnClickListener {
                         Intent(context, VisitaActivity::class.java)
                             .putExtra("programacionId", p.programacionId)
                             .putExtra("u", usuarioId)
+                            .putExtra("estado", p.estadoProgramacion)
                     )
                 }
             }
