@@ -265,7 +265,7 @@ class VisitaGeneralFragment : DaggerFragment(), View.OnClickListener {
                 val direccionAdapter =
                     ComboDireccionAdapter(object : OnItemClickListener.MedicoDireccionListener {
                         override fun onItemClick(m: MedicoDireccion, view: View, position: Int) {
-                            p.direccionId = m.identity
+                            p.direccionId = m.medicoDireccionId
                             editTextDireccion.setText(
                                 String.format(
                                     "%s , %s - %s - %s", m.direccion, m.nombreDistrito,
