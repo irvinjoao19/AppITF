@@ -61,6 +61,7 @@ class RetrofitModule {
     }
 
     companion object {
-        private val BASE_URL = "http://itfperu.italfarmacoperu.com/webApiITF/api/ITF/"
+//        private val BASE_URL = "http://itfperu.italfarmacoperu.com/webApiITF/api/ITF/"
+        private val BASE_URL = "http://92.204.134.45/webApiITF/api/ITF/"
     }
 }
