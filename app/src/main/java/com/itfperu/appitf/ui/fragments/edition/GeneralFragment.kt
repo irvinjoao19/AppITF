@@ -159,7 +159,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
         m.medicoId = medicoId
         m.medicoSolId = solMedicoId
         m.usuarioId = usuarioId
-        m.cpmMedico = editTextCMP.text.toString()
+        m.cpmMedico = editTextCMP.text.toString().toInt().toString()
         m.nombreMedico = editTextNombre.text.toString()
         m.apellidoP = editTextApellidoP.text.toString()
         m.apellidoM = editTextApellidoM.text.toString()
@@ -178,7 +178,7 @@ class GeneralFragment : DaggerFragment(), View.OnClickListener {
     private fun formGenerateCabecera() {
         s.usuario = String.format(
             "%s - %s %s %s",
-            editTextCMP.text.toString(), editTextNombre.text.toString(),
+            editTextCMP.text.toString().toInt().toString(), editTextNombre.text.toString(),
             editTextApellidoP.text.toString(), editTextApellidoM.text.toString()
         )
         s.estadoSol = 11

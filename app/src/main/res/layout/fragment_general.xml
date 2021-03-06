@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Identificador"
+            android:text="@string/hint_identificador"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione" />
+                android:hint="@string/hint_seleccione" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="CMP"
+            android:text="@string/hint_cmp"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutCMP"
@@ -57,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toStartOf="@+id/layoutNombre"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout2">
@@ -65,8 +66,8 @@
                 android:id="@+id/editTextCMP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="CMP"
-                android:inputType="text" />
+                android:hint="@string/hint_cmp"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -74,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Nombres"
+            android:text="@string/hint_nombres"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutNombre"
@@ -94,7 +95,7 @@
                 android:id="@+id/editTextNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Nombre"
+                android:hint="@string/hint_ingrese_nombre"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Apellido Paterno"
+            android:text="@string/hint_apellido_paterno"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutApellidoP"
@@ -123,7 +124,7 @@
                 android:id="@+id/editTextApellidoP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Apellido Paterno"
+                android:hint="@string/hint_ingrese_apellido_paterno"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,7 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Apellido Materno"
+            android:text="@string/hint_apellido_materno"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutApellidoM"
@@ -152,7 +153,7 @@
                 android:id="@+id/editTextApellidoM"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Apellido Materno"
+                android:hint="@string/hint_ingrese_apellido_materno"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Categoria"
+            android:text="@string/hint_categoria"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutCategoria"
@@ -183,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione Categoria" />
+                android:hint="@string/hint_seleccione_categoria" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -191,7 +192,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Especialidad 1"
+            android:text="@string/hint_especialidad_1"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutEspecialidad"
@@ -213,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione Especialidad 1" />
+                android:hint="@string/hint_seleccione_especialidad_1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -221,7 +222,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Especialidad 2"
+            android:text="@string/hint_especialidad_2"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutEspecialidad2"
@@ -243,7 +244,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione Especialidad 2" />
+                android:hint="@string/hint_seleccione_especialidad_2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -251,7 +252,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Fecha Nacimiento"
+            android:text="@string/hint_fecha_nacimiento"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutFechaN"
@@ -273,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="dd/MM/yyyy" />
+                android:hint="@string/dd_mm_yyyy" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -281,7 +282,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Sexo"
+            android:text="@string/sexo"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/layoutSexo"
@@ -303,7 +304,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione Sexo" />
+                android:hint="@string/hint_seleccione_sexo" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -311,7 +312,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Email"
+            android:text="@string/hint_email"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutEmail"
@@ -331,7 +332,7 @@
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Email"
+                android:hint="@string/hint_ingrese_email"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -340,7 +341,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Telefono"
+            android:text="@string/hint_telefono"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutTelefono"
@@ -360,7 +361,7 @@
                 android:id="@+id/editTextTelefono"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ingrese Telefono"
+                android:hint="@string/hint_ingrese_telefono"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -369,7 +370,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Tipo Visita"
+            android:text="@string/hint_tipo_visita"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/layoutTipoVisita"
@@ -392,7 +393,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_down"
                 android:focusable="false"
-                android:hint="Seleccione Tipo de Visita" />
+                android:hint="@string/hint_seleccione_tipo_de_visita" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

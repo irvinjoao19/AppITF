@@ -134,7 +134,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
         itfViewModel.mensajeSuccess.observe(viewLifecycleOwner, {
             Util.toastMensaje(requireContext(), it)
             if (it == "Medico Guardado") {
-                Util.executeMedicoWork(requireContext(),1)
+                Util.executeMedicoWork(requireContext(), 1)
                 requireActivity().finish()
             }
         })
@@ -305,6 +305,7 @@ class DireccionFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun formValidate() {
+        fabSave.visibility = View.GONE
         s.solMedicoId = solMedicoId
         s.estadoSol = 11
         s.estado = 1

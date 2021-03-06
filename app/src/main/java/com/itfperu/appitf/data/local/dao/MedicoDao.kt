@@ -80,8 +80,8 @@ interface MedicoDao {
     @Query("UPDATE Medico SET active = 1 WHERE medicoId=:id")
     fun closeMedico(id: Int)
 
-    @Query("SELECT count(*) FROM Medico WHERE active = 2 AND medicoSolId =:id")
-    fun getMedicosInactivos(id: Int): Int
+    @Query("SELECT medicoId FROM Medico WHERE medicoSolId =:id")
+    fun getMedicosId(id: Int): Int
 
     @Query("UPDATE Medico SET identity =:codigoRetorno, active = 0 WHERE medicoId =:codigoBase")
     fun updateEnabledMedico(codigoBase: Int, codigoRetorno: Int)

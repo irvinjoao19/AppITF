@@ -1175,8 +1175,9 @@ class AppRepoImp(private val apiService: ApiService, private val dataBase: AppDa
 
     override fun insertSolMedicoCab(c: SolMedico): Completable {
         return Completable.fromAction {
-            val list = dataBase.medicoDao().getMedicosInactivos(c.solMedicoId)
-            if (list > 0) {
+            val id = dataBase.medicoDao().getMedicosId(c.solMedicoId)
+            val list = dataBase.medicoDireccionDao().getDireccionIdTask(id)
+            if (list.isEmpty()) {
                 error("Cada Medico debe de tener una direccion minimo")
             } else {
 //                c.usuario = dataBase.usuarioDao().getUsuarioNombre()
