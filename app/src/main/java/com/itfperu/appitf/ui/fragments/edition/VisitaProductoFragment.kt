@@ -44,7 +44,7 @@ class VisitaProductoFragment : DaggerFragment(), View.OnClickListener {
             } else
                 itfViewModel.setError("Completar el primer formulario.")
             R.id.fabSave -> when (estado) {
-                13 -> when (cantidad) {
+                13,15 -> when (cantidad) {
                     0 -> itfViewModel.setError("Debes de agregar un producto")
                     else -> formProgramacion()
                 }

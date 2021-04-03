@@ -58,53 +58,10 @@ import kotlin.math.*
 
 object Util {
 
-    val FolderImg = "Dsige/Lds"
-    val UrlFoto = "http://190.117.104.122/WebApi_Itf/Imagen/"
-
+    const val UrlFoto = "http://190.117.104.122/WebApi_Itf/Imagen/"
     private var FechaActual: String? = ""
-    private var date: Date? = null
-
     private const val img_height_default = 800
     private const val img_width_default = 600
-
-    @SuppressLint("SimpleDateFormat")
-    @Throws(ParseException::class)
-    fun formatToYesterdayOrToday(date: String): String {
-        var day = "Ult. Llamada"
-        if (date.isNotEmpty()) {
-
-//            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss a")
-//            sdf.timeZone = TimeZone.getTimeZone("GMT")
-//            val dateTime = sdf.parse(date)
-            val dateTime = SimpleDateFormat("dd/MM/yyyy HH:mm:ss a").parse(date)
-
-            val calendar = Calendar.getInstance()
-            calendar.time = dateTime
-            val today = Calendar.getInstance()
-            val yesterday = Calendar.getInstance()
-            yesterday.add(Calendar.DATE, -1)
-            val timeFormatter = SimpleDateFormat("HH:mm:ss aaa")
-
-            day =
-                if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(
-                        Calendar.DAY_OF_YEAR
-                    )
-                ) {
-                    "HOY " + timeFormatter.format(dateTime)
-                } else if (calendar.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) && calendar.get(
-                        Calendar.DAY_OF_YEAR
-                    ) == yesterday.get(
-                        Calendar.DAY_OF_YEAR
-                    )
-                ) {
-                    "AYER " + timeFormatter.format(dateTime)
-                } else {
-                    date
-                }
-        }
-
-        return day
-    }
 
     @SuppressLint("SimpleDateFormat")
     fun getFirstDay(): String {
@@ -172,32 +129,32 @@ object Util {
     }
 
     fun getFecha(): String {
-        date = Date()
+        val date = Date()
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd/MM/yyyy")
         return format.format(date)
 //        return "05/10/2019"
     }
 
     fun getHora(): String {
-        date = Date()
+        val date = Date()
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("HH:mm aaa")
         return format.format(date)
     }
 
     fun getFechaActual(): String {
-        date = Date()
+        val date = Date()
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         return format.format(date)
     }
 
     fun getHoraActual(): String {
-        date = Date()
+        val date = Date()
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("HH:mm:ss aaa")
         return format.format(date)
     }
 
     fun getFechaEditar(): String? {
-        date = Date()
+        val date = Date()
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("ddMMyyyy_HHmmssSSSS")
         FechaActual = format.format(date)
         return FechaActual
@@ -238,8 +195,9 @@ object Util {
         destination.close()
     }
 
+    @Suppress("DEPRECATION")
     private fun getRealPathFromURI(context: Context, contentUri: Uri): String {
-        var result: String = ""
+        var result = ""
         val proj = arrayOf(MediaStore.Video.Media.DATA)
         @SuppressLint("Recycle") val cursor =
             context.contentResolver.query(contentUri, proj, null, null, null)
@@ -347,14 +305,14 @@ object Util {
     }
 
 
-    private fun shrinkBitmap(file: String, width: Int, height: Int): Bitmap {
+    private fun shrinkBitmap(file: String): Bitmap {
 
         val options = BitmapFactory.Options()
         options.inSampleSize = 4
         options.inJustDecodeBounds = true
 
-        val heightRatio = ceil((options.outHeight / height.toFloat()).toDouble()).toInt()
-        val widthRatio = ceil((options.outWidth / width.toFloat()).toDouble()).toInt()
+        val heightRatio = ceil((options.outHeight / img_height_default.toFloat()).toDouble()).toInt()
+        val widthRatio = ceil((options.outWidth / img_width_default.toFloat()).toDouble()).toInt()
 
         if (heightRatio > 1 || widthRatio > 1) {
             if (heightRatio > widthRatio) {
@@ -372,8 +330,6 @@ object Util {
 
     private fun shrinkBitmapOnlyReduce(
         file: String,
-        width: Int,
-        height: Int,
         captionString: String?
     ) {
 
@@ -381,8 +337,8 @@ object Util {
         options.inSampleSize = 4
         options.inJustDecodeBounds = true
 
-        val heightRatio = ceil((options.outHeight / height.toFloat()).toDouble()).toInt()
-        val widthRatio = ceil((options.outWidth / width.toFloat()).toDouble()).toInt()
+        val heightRatio = ceil((options.outHeight / img_height_default.toFloat()).toDouble()).toInt()
+        val widthRatio = ceil((options.outWidth / img_width_default.toFloat()).toDouble()).toInt()
 
         if (heightRatio > 1 || widthRatio > 1) {
             if (heightRatio > widthRatio) {
@@ -518,15 +474,13 @@ object Util {
         if (degree <= 0) {
             shrinkBitmapOnlyReduce(
                 imagePath,
-                img_width_default,
-                img_height_default,
                 getDateTimeFormatString(Date(File(imagePath).lastModified()))
             )
             return imagePath
         }
         try {
 
-            var b: Bitmap? = shrinkBitmap(imagePath, img_width_default, img_height_default)
+            var b: Bitmap? = shrinkBitmap(imagePath)
             val matrix = Matrix()
             if (b!!.width > b.height) {
                 matrix.setRotate(degree.toFloat())
@@ -673,7 +627,7 @@ object Util {
         val mHour = c.get(Calendar.HOUR_OF_DAY)
         val mMinute = c.get(Calendar.MINUTE)
         val timePickerDialog =
-            TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            TimePickerDialog(context, { _, hourOfDay, minute ->
                 val hour = if (hourOfDay < 10) "0$hourOfDay" else hourOfDay.toString()
                 val minutes = if (minute < 10) "0$minute" else minute.toString()
                 val day = if (hourOfDay < 12) "a.m." else "p.m."
@@ -686,14 +640,14 @@ object Util {
         @SuppressLint("SimpleDateFormat") val format = SimpleDateFormat("dd/MM/yyyy")
         var date1 = Date()
         try {
-            date1 = format.parse(fechaFinal)
+            date1 = format.parse(fechaFinal)!!
         } catch (e: ParseException) {
             e.printStackTrace()
         }
 
         var date2 = Date()
         try {
-            date2 = format.parse(fechaInicial)
+            date2 = format.parse(fechaInicial)!!
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -773,7 +727,7 @@ object Util {
     @Throws(IOException::class)
     fun deleteDirectory(file: File) {
         if (file.isDirectory) {
-            for (ct: File in file.listFiles()) {
+            for (ct: File in file.listFiles()!!) {
                 ct.delete()
             }
         }
@@ -1002,7 +956,7 @@ object Util {
     }
 
     // execute services
-    fun executeMedicoWork(context:Context,tipo: Int) {
+    fun executeMedicoWork(context: Context, tipo: Int) {
 //        val downloadConstraints = Constraints.Builder()
 //            .setRequiresCharging(true)
 //            .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -1020,7 +974,7 @@ object Util {
         WorkManager.getInstance(context).enqueue((downloadImageWork))
     }
 
-    fun executeDireccionWork(context:Context,tipo: Int) {
+    fun executeDireccionWork(context: Context, tipo: Int) {
 //        val downloadConstraints = Constraints.Builder()
 //            .setRequiresCharging(true)
 //            .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -1038,7 +992,7 @@ object Util {
         WorkManager.getInstance(context).enqueue((downloadImageWork))
     }
 
-    fun executeTarget(context:Context,tipoTarget: String, tipo: Int) {
+    fun executeTarget(context: Context, tipoTarget: String, tipo: Int) {
 //        val downloadConstraints = Constraints.Builder()
 //            .setRequiresCharging(true)
 //            .setRequiredNetworkType(NetworkType.CONNECTED)
